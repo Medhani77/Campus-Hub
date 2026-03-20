@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rewards System - CINEC Campus Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-dark: #0a2540;
+            --primary-blue: #1e4d7b;
+            --accent-gold: #d4a574;
+            --accent-coral: #e07856;
+            --neutral-100: #ffffff;
+            --neutral-200: #f5f7fa;
+            --neutral-300: #e1e8ed;
+            --neutral-700: #2c3e50;
+            --success: #10b981;
+            --font-display: 'Fraunces', serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --shadow-sm: 0 2px 8px rgba(10, 37, 64, 0.08);
+            --shadow-md: 0 4px 16px rgba(10, 37, 64, 0.12);
+            --shadow-lg: 0 8px 32px rgba(10, 37, 64, 0.16);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--neutral-200);
+            color: var(--neutral-700);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .top-bar {
+            background: var(--primary-dark);
+            color: var(--neutral-100);
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+        }
+
+        .top-bar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header {
+            background: var(--neutral-100);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent-gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--neutral-700);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .btn-back {
+            padding: 0.5rem 1.5rem;
+            background: var(--accent-gold);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: var(--accent-coral);
+            transform: scale(1.05);
+        }
+
+        /* Hero */
+        .page-hero {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-blue));
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .page-hero h1 {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Points Summary Card */
+        .points-summary {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-coral));
+            color: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .points-main {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .points-main h2 {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .points-value {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .points-rank {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .points-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-action:hover {
+            background: white;
+            color: var(--accent-coral);
+        }
+
+        /* Tier Card */
+        .tier-card {
+            background: var(--neutral-100);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .tier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .tier-header h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+        }
+
+        .tier-badge {
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-coral));
+            color: white;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .tier-progress {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--neutral-700);
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: var(--neutral-300);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-coral));
+            border-radius: 6px;
+            transition: width 0.5s;
+        }
+
+        .tier-benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .benefit-item {
+            padding: 1rem;
+            background: var(--neutral-200);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .benefit-icon {
+            font-size: 1.5rem;
+        }
+
+        /* Rewards Grid */
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .reward-card {
+            background: var(--neutral-100);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .reward-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .reward-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .reward-content {
+            padding: 1.5rem;
+        }
+
+        .reward-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .reward-description {
+            color: var(--neutral-700);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .reward-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--neutral-300);
+        }
+
+        .reward-points {
+            font-weight: 700;
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+        }
+
+        .btn-redeem {
+            padding: 0.5rem 1.5rem;
+            background: var(--accent-gold);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-redeem:hover {
+            background: var(--accent-coral);
+        }
+
+        .btn-redeem:disabled {
+            background: var(--neutral-300);
+            cursor: not-allowed;
+        }
+
+        /* History Section */
+        .history-section {
+            margin-top: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--primary-dark);
+        }
+
+        .history-list {
+            background: var(--neutral-100);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--neutral-300);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-info {
+            flex: 1;
+        }
+
+        .history-title {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .history-date {
+            font-size: 0.85rem;
+            color: var(--neutral-700);
+            opacity: 0.7;
+        }
+
+        .history-points {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .points-earned {
+            color: var(--success);
+        }
+
+        .points-redeemed {
+            color: var(--accent-coral);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--neutral-300);
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--neutral-700);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: -2px;
+        }
+
+        .tab.active {
+            color: var(--accent-gold);
+            border-bottom-color: var(--accent-gold);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div>🏆 Rewards System</div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="home.html" class="logo">CINEC<span>Hub</span></a>
+            <ul class="nav-links">
+                <li><a href="home.html">Dashboard</a></li>
+                <li><a href="LIBRARY.html">Library</a></li>
+                <li><a href="Cafe.html">Cafe</a></li>
+                <li><a href="Marketplace.html">Marketplace</a></li>
+            </ul>
+            <a href="home.html" class="btn-back">← Back to Home</a>
+        </nav>
+    </header>
+
+    <!-- Page Hero -->
+    <div class="page-hero">
+        <h1>🏆 Rewards Center</h1>
+        <p>Earn points and unlock exclusive benefits</p>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Points Summary -->
+        <div class="points-summary">
+            <div class="points-main">
+                <h2>Your Points Balance</h2>
+                <div class="points-value" id="totalPoints">1,250</div>
+                <div class="points-rank">🌟 Gold Tier Member</div>
+            </div>
+            <div class="points-actions">
+                <button class="btn-action" onclick="showHistory()">View History</button>
+                <button class="btn-action" onclick="showHowToEarn()">How to Earn</button>
+            </div>
+        </div>
+
+        <!-- Tier Progress -->
+        <div class="tier-card">
+            <div class="tier-header">
+                <h3>Your Tier Progress</h3>
+                <div class="tier-badge">GOLD</div>
+            </div>
+            <div class="tier-progress">
+                <div class="progress-label">
+                    <span>Current: 1,250 points</span>
+                    <span>Next tier: 2,000 points (Platinum)</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 62.5%"></div>
+                </div>
+            </div>
+            <div class="tier-benefits">
+                <div class="benefit-item">
+                    <span class="benefit-icon">✅</span>
+                    <span>10% cafe discount</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">✅</span>
+                    <span>Priority library access</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">✅</span>
+                    <span>Free event tickets</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">✅</span>
+                    <span>Marketplace fee waiver</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('rewards')">Available Rewards</button>
+            <button class="tab" onclick="switchTab('history')">Transaction History</button>
+        </div>
+
+        <!-- Available Rewards Tab -->
+        <div class="tab-content active" id="rewards-tab">
+            <div class="section-header">
+                <h2>Redeem Your Points</h2>
+            </div>
+            <div class="rewards-grid">
+                <div class="reward-card">
+                    <div class="reward-image">☕</div>
+                    <div class="reward-content">
+                        <h3 class="reward-title">Free Coffee</h3>
+                        <p class="reward-description">Get a free coffee from any campus cafe</p>
+                        <div class="reward-footer">
+                            <span class="reward-points">150 pts</span>
+                            <button class="btn-redeem" onclick="redeemReward('coffee', 150)">Redeem</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reward-card">
+                    <div class="reward-image">📚</div>
+                    <div class="reward-content">
+                        <h3 class="reward-title">Library Extension</h3>
+                        <p class="reward-description">Extend your book borrowing period by 2 weeks</p>
+                        <div class="reward-footer">
+                            <span class="reward-points">200 pts</span>
+                            <button class="btn-redeem" onclick="redeemReward('library', 200)">Redeem</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reward-card">
+                    <div class="reward-image">🎟️</div>
+                    <div class="reward-content">
+                        <h3 class="reward-title">Event Pass</h3>
+                        <p class="reward-description">Free entry to premium campus events</p>
+                        <div class="reward-footer">
+                            <span class="reward-points">300 pts</span>
+                            <button class="btn-redeem" onclick="redeemReward('event', 300)">Redeem</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reward-card">
+                    <div class="reward-image">🍕</div>
+                    <div class="reward-content">
+                        <h3 class="reward-title">Cafe Meal Voucher</h3>
+                        <p class="reward-description">Free meal at campus cafeteria</p>
+                        <div class="reward-footer">
+                            <span class="reward-points">500 pts</span>
+                            <button class="btn-redeem" onclick="redeemReward('meal', 500)">Redeem</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reward-card">
+                    <div class="reward-image">🎁</div>
+                    <div class="reward-content">
+                        <h3 class="reward-title">CINEC Merch</h3>
+                        <p class="reward-description">Get official CINEC merchandise</p>
+                        <div class="reward-footer">
+                            <span class="reward-points">750 pts</span>
+                            <button class="btn-redeem" onclick="redeemReward('merch', 750)">Redeem</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reward-card">
+                    <div class="reward-image">🏊</div>
+                    <div class="reward-content">
+                        <h3 class="reward-title">Gym Membership</h3>
+                        <p class="reward-description">1 month free gym access</p>
+                        <div class="reward-footer">
+                            <span class="reward-points">1000 pts</span>
+                            <button class="btn-redeem" onclick="redeemReward('gym', 1000)">Redeem</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reward-card">
+                    <div class="reward-image">🎓</div>
+                    <div class="reward-content">
+                        <h3 class="reward-title">Course Discount</h3>
+                        <p class="reward-description">10% off on certification courses</p>
+                        <div class="reward-footer">
+                            <span class="reward-points">1500 pts</span>
+                            <button class="btn-redeem" onclick="redeemReward('course', 1500)" disabled>Insufficient</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reward-card">
+                    <div class="reward-image">💻</div>
+                    <div class="reward-content">
+                        <h3 class="reward-title">Tech Voucher</h3>
+                        <p class="reward-description">Rs. 5000 voucher for tech purchases</p>
+                        <div class="reward-footer">
+                            <span class="reward-points">2500 pts</span>
+                            <button class="btn-redeem" onclick="redeemReward('tech', 2500)" disabled>Insufficient</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Tab -->
+        <div class="tab-content" id="history-tab">
+            <div class="history-list">
+                <div class="history-item">
+                    <div class="history-info">
+                        <div class="history-title">Library book borrowed</div>
+                        <div class="history-date">March 18, 2026</div>
+                    </div>
+                    <div class="history-points points-earned">+50</div>
+                </div>
+                <div class="history-item">
+                    <div class="history-info">
+                        <div class="history-title">Attended campus event</div>
+                        <div class="history-date">March 15, 2026</div>
+                    </div>
+                    <div class="history-points points-earned">+100</div>
+                </div>
+                <div class="history-item">
+                    <div class="history-info">
+                        <div class="history-title">Redeemed: Free Coffee</div>
+                        <div class="history-date">March 12, 2026</div>
+                    </div>
+                    <div class="history-points points-redeemed">-150</div>
+                </div>
+                <div class="history-item">
+                    <div class="history-info">
+                        <div class="history-title">Submitted assignment early</div>
+                        <div class="history-date">March 10, 2026</div>
+                    </div>
+                    <div class="history-points points-earned">+75</div>
+                </div>
+                <div class="history-item">
+                    <div class="history-info">
+                        <div class="history-title">Marketplace sale</div>
+                        <div class="history-date">March 8, 2026</div>
+                    </div>
+                    <div class="history-points points-earned">+25</div>
+                </div>
+                <div class="history-item">
+                    <div class="history-info">
+                        <div class="history-title">Volunteered at campus event</div>
+                        <div class="history-date">March 5, 2026</div>
+                    </div>
+                    <div class="history-points points-earned">+200</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get current points from localStorage or use default
+        let currentPoints = parseInt(localStorage.getItem('reward_points')) || 1250;
+        document.getElementById('totalPoints').textContent = currentPoints.toLocaleString();
+
+        function switchTab(tabName) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+
+        function redeemReward(rewardName, points) {
+            if (currentPoints >= points) {
+                if (confirm(`Redeem this reward for ${points} points?`)) {
+                    currentPoints -= points;
+                    localStorage.setItem('reward_points', currentPoints);
+                    document.getElementById('totalPoints').textContent = currentPoints.toLocaleString();
+                    
+                    alert(`✅ Reward Redeemed!\n\nYou've successfully redeemed: ${rewardName}\nRemaining points: ${currentPoints}`);
+                    
+                    // Update UI
+                    updateRedeemButtons();
+                    updateProgressBar();
+                }
+            } else {
+                alert(`❌ Insufficient Points!\n\nYou need ${points} points but only have ${currentPoints} points.`);
+            }
+        }
+
+        function updateRedeemButtons() {
+            document.querySelectorAll('.btn-redeem').forEach(btn => {
+                const points = parseInt(btn.parentElement.querySelector('.reward-points').textContent);
+                if (currentPoints < points) {
+                    btn.disabled = true;
+                    btn.textContent = 'Insufficient';
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = 'Redeem';
+                }
+            });
+        }
+
+        function updateProgressBar() {
+            const nextTier = 2000;
+            const progress = (currentPoints / nextTier) * 100;
+            document.querySelector('.progress-fill').style.width = progress + '%';
+        }
+
+        function showHistory() {
+            switchTab('history');
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab')[1].classList.add('active');
+        }
+
+        function showHowToEarn() {
+            alert(`📚 How to Earn Points:\n\n• Borrow library books: +50 pts\n• Attend campus events: +100 pts\n• Submit assignments early: +75 pts\n• Volunteer: +200 pts\n• Marketplace sales: +25 pts\n• Complete surveys: +30 pts\n• Refer friends: +150 pts`);
+        }
+
+        // Initialize on load
+        updateRedeemButtons();
+    </script>
+</body>
+</html>
