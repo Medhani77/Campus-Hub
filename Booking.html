@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facility Booking - CINEC Campus Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-dark: #0a2540; --primary-blue: #1e4d7b; --accent-gold: #d4a574;
+            --accent-coral: #e07856; --neutral-100: #ffffff; --neutral-200: #f5f7fa;
+            --neutral-300: #e1e8ed; --neutral-700: #2c3e50; --font-display: 'Fraunces', serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif; --shadow-md: 0 4px 16px rgba(10, 37, 64, 0.12);
+        }
+        body { font-family: var(--font-body); background: var(--neutral-200); color: var(--neutral-700); }
+        .top-bar { background: var(--primary-dark); color: var(--neutral-100); padding: 0.5rem 0; text-align: center; }
+        header { background: var(--neutral-100); box-shadow: 0 2px 8px rgba(10, 37, 64, 0.08); position: sticky; top: 0; z-index: 1000; }
+        nav { max-width: 1400px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-display); font-size: 1.75rem; font-weight: 800; color: var(--primary-dark); text-decoration: none; }
+        .logo span { color: var(--accent-gold); }
+        .btn-back { padding: 0.5rem 1.5rem; background: var(--accent-gold); color: white; border: none; border-radius: 8px; font-weight: 600; text-decoration: none; }
+        .page-hero { background: linear-gradient(135deg, var(--primary-dark), var(--primary-blue)); color: white; padding: 3rem 2rem; text-align: center; }
+        .page-hero h1 { font-family: var(--font-display); font-size: 3rem; margin-bottom: 0.5rem; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
+        .facilities-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+        .facility-card { background: var(--neutral-100); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-md); transition: all 0.3s; cursor: pointer; }
+        .facility-card:hover { transform: translateY(-5px); }
+        .facility-image { height: 180px; background: linear-gradient(135deg, var(--primary-blue), var(--accent-gold)); display: flex; align-items: center; justify-content: center; font-size: 5rem; }
+        .facility-info { padding: 2rem; }
+        .facility-name { font-family: var(--font-display); font-size: 1.4rem; color: var(--primary-dark); margin-bottom: 0.75rem; }
+        .facility-details { color: var(--neutral-700); opacity: 0.8; margin-bottom: 1rem; }
+        .facility-meta { display: flex; gap: 1rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--neutral-700); }
+        .btn-book { width: 100%; padding: 1rem; background: var(--accent-gold); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
+        .btn-book:hover { background: var(--accent-coral); }
+        .booking-form { background: var(--neutral-100); border-radius: 16px; padding: 2rem; box-shadow: var(--shadow-md); display: none; }
+        .booking-form.active { display: block; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--primary-dark); }
+        .form-input { width: 100%; padding: 0.9rem; border: 2px solid var(--neutral-300); border-radius: 10px; font-size: 1rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    </style>
+</head>
+<body>
+    <div class="top-bar">🎯 Facility Booking - Reserve Labs, Rooms & Equipment</div>
+    <header><nav><a href="home.html" class="logo">CINEC<span>Hub</span></a><a href="home.html" class="btn-back">← Back to Home</a></nav></header>
+    <div class="page-hero"><h1>🎯 Facility Booking</h1><p>Book campus facilities and equipment for your activities</p></div>
+    <div class="container">
+        <div class="facilities-grid">
+            <div class="facility-card" onclick="showBookingForm('Computer Lab A')">
+                <div class="facility-image">💻</div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Computer Lab A</h3>
+                    <p class="facility-details">40 high-performance workstations with latest software</p>
+                    <div class="facility-meta">
+                        <span>⏰ 8AM - 8PM</span>
+                        <span>👥 40 seats</span>
+                    </div>
+                    <button class="btn-book">Book Now</button>
+                </div>
+            </div>
+            <div class="facility-card" onclick="showBookingForm('Meeting Room 1')">
+                <div class="facility-image">🏢</div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Meeting Room 1</h3>
+                    <p class="facility-details">Professional meeting space with projector</p>
+                    <div class="facility-meta">
+                        <span>⏰ 24/7</span>
+                        <span>👥 15 people</span>
+                    </div>
+                    <button class="btn-book">Book Now</button>
+                </div>
+            </div>
+            <div class="facility-card" onclick="showBookingForm('Sports Hall')">
+                <div class="facility-image">🏀</div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Sports Hall</h3>
+                    <p class="facility-details">Multi-purpose indoor sports facility</p>
+                    <div class="facility-meta">
+                        <span>⏰ 6AM - 10PM</span>
+                        <span>👥 100 people</span>
+                    </div>
+                    <button class="btn-book">Book Now</button>
+                </div>
+            </div>
+            <div class="facility-card" onclick="showBookingForm('Auditorium')">
+                <div class="facility-image">🎭</div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Main Auditorium</h3>
+                    <p class="facility-details">500-seat auditorium with A/V equipment</p>
+                    <div class="facility-meta">
+                        <span>⏰ 8AM - 10PM</span>
+                        <span>👥 500 seats</span>
+                    </div>
+                    <button class="btn-book">Book Now</button>
+                </div>
+            </div>
+            <div class="facility-card" onclick="showBookingForm('Photography Studio')">
+                <div class="facility-image">📷</div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Photography Studio</h3>
+                    <p class="facility-details">Professional lighting and backdrop setup</p>
+                    <div class="facility-meta">
+                        <span>⏰ 9AM - 6PM</span>
+                        <span>👥 10 people</span>
+                    </div>
+                    <button class="btn-book">Book Now</button>
+                </div>
+            </div>
+            <div class="facility-card" onclick="showBookingForm('Music Room')">
+                <div class="facility-image">🎵</div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Music Practice Room</h3>
+                    <p class="facility-details">Soundproof room with instruments</p>
+                    <div class="facility-meta">
+                        <span>⏰ 10AM - 8PM</span>
+                        <span>👥 5 people</span>
+                    </div>
+                    <button class="btn-book">Book Now</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="booking-form" id="bookingForm">
+            <h2 style="font-family: var(--font-display); font-size: 2rem; color: var(--primary-dark); margin-bottom: 2rem;">Book <span id="facilityName">Facility</span></h2>
+            <form onsubmit="submitBooking(event)">
+                <div class="form-group">
+                    <label>Purpose of Booking</label>
+                    <input type="text" class="form-input" required placeholder="e.g., Group Study, Project Meeting">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Number of People</label>
+                        <input type="number" class="form-input" required min="1" placeholder="e.g., 10">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Start Time</label>
+                        <input type="time" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Time</label>
+                        <input type="time" class="form-input" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Additional Requirements</label>
+                    <input type="text" class="form-input" placeholder="e.g., Projector, Whiteboard, Audio System">
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="button" class="btn-book" style="background: var(--neutral-300); color: var(--neutral-700);" onclick="hideBookingForm()">Cancel</button>
+                    <button type="submit" class="btn-book">Confirm Booking</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        function showBookingForm(facilityName) {
+            document.getElementById('bookingForm').classList.add('active');
+            document.getElementById('facilityName').textContent = facilityName;
+            document.getElementById('bookingForm').scrollIntoView({ behavior: 'smooth' });
+        }
+        function hideBookingForm() {
+            document.getElementById('bookingForm').classList.remove('active');
+        }
+        function submitBooking(e) {
+            e.preventDefault();
+            const facility = document.getElementById('facilityName').textContent;
+            alert(`✅ Booking Confirmed!\n\nFacility: ${facility}\n\nYou will receive a confirmation email shortly.\nPlease arrive 10 minutes before your booking time.\n\nBooking ID: BK${Math.floor(Math.random() * 10000)}`);
+            hideBookingForm();
+        }
+    </script>
+</body>
+</html>

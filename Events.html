@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Events - CINEC Campus Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-dark: #0a2540; --primary-blue: #1e4d7b; --accent-gold: #d4a574;
+            --accent-coral: #e07856; --neutral-100: #ffffff; --neutral-200: #f5f7fa;
+            --neutral-300: #e1e8ed; --neutral-700: #2c3e50; --font-display: 'Fraunces', serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif; --shadow-md: 0 4px 16px rgba(10, 37, 64, 0.12);
+        }
+        body { font-family: var(--font-body); background: var(--neutral-200); color: var(--neutral-700); }
+        .top-bar { background: var(--primary-dark); color: var(--neutral-100); padding: 0.5rem 0; text-align: center; }
+        header { background: var(--neutral-100); box-shadow: 0 2px 8px rgba(10, 37, 64, 0.08); position: sticky; top: 0; z-index: 1000; }
+        nav { max-width: 1400px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-display); font-size: 1.75rem; font-weight: 800; color: var(--primary-dark); text-decoration: none; }
+        .logo span { color: var(--accent-gold); }
+        .btn-back { padding: 0.5rem 1.5rem; background: var(--accent-gold); color: white; border: none; border-radius: 8px; font-weight: 600; text-decoration: none; }
+        .page-hero { background: linear-gradient(135deg, var(--primary-dark), var(--primary-blue)); color: white; padding: 3rem 2rem; text-align: center; }
+        .page-hero h1 { font-family: var(--font-display); font-size: 3rem; margin-bottom: 0.5rem; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 3rem 2rem; }
+        .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 2rem; }
+        .event-card { background: var(--neutral-100); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-md); transition: all 0.3s; }
+        .event-card:hover { transform: translateY(-5px); }
+        .event-header { padding: 2rem; background: linear-gradient(135deg, var(--primary-blue), var(--accent-gold)); color: white; }
+        .event-date { font-size: 3rem; font-weight: 700; line-height: 1; margin-bottom: 0.5rem; }
+        .event-month { font-size: 1.2rem; opacity: 0.9; }
+        .event-body { padding: 2rem; }
+        .event-title { font-family: var(--font-display); font-size: 1.5rem; color: var(--primary-dark); margin-bottom: 1rem; }
+        .event-info { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem; }
+        .event-detail { display: flex; align-items: center; gap: 0.5rem; color: var(--neutral-700); }
+        .event-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .event-tag { padding: 0.25rem 0.75rem; background: var(--neutral-200); border-radius: 12px; font-size: 0.85rem; }
+        .btn-rsvp { width: 100%; padding: 1rem; background: var(--accent-gold); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .btn-rsvp:hover { background: var(--accent-coral); }
+    </style>
+</head>
+<body>
+    <div class="top-bar">📅 Campus Events - Join & Connect with Community</div>
+    <header><nav><a href="home.html" class="logo">CINEC<span>Hub</span></a><a href="home.html" class="btn-back">← Back to Home</a></nav></header>
+    <div class="page-hero"><h1>📅 Campus Events</h1><p>Discover and join exciting events on campus</p></div>
+    <div class="container">
+        <div class="events-grid">
+            <div class="event-card">
+                <div class="event-header">
+                    <div class="event-date">22</div>
+                    <div class="event-month">MAR 2026</div>
+                </div>
+                <div class="event-body">
+                    <h3 class="event-title">AI Ethics Guest Lecture</h3>
+                    <div class="event-info">
+                        <div class="event-detail">🕐 2:00 PM - 4:00 PM</div>
+                        <div class="event-detail">📍 Main Auditorium</div>
+                        <div class="event-detail">👥 200 seats available</div>
+                    </div>
+                    <div class="event-tags">
+                        <span class="event-tag">Academic</span>
+                        <span class="event-tag">Technology</span>
+                        <span class="event-tag">Free</span>
+                    </div>
+                    <button class="btn-rsvp" onclick="rsvpEvent('AI Ethics Lecture', 100)">RSVP Now</button>
+                </div>
+            </div>
+            <div class="event-card">
+                <div class="event-header">
+                    <div class="event-date">25</div>
+                    <div class="event-month">MAR 2026</div>
+                </div>
+                <div class="event-body">
+                    <h3 class="event-title">Student Art Exhibition</h3>
+                    <div class="event-info">
+                        <div class="event-detail">🕐 All Day Event</div>
+                        <div class="event-detail">📍 Arts Building Gallery</div>
+                        <div class="event-detail">👥 Open to all</div>
+                    </div>
+                    <div class="event-tags">
+                        <span class="event-tag">Arts</span>
+                        <span class="event-tag">Culture</span>
+                        <span class="event-tag">Free</span>
+                    </div>
+                    <button class="btn-rsvp" onclick="rsvpEvent('Art Exhibition', 50)">Register Interest</button>
+                </div>
+            </div>
+            <div class="event-card">
+                <div class="event-header">
+                    <div class="event-date">28</div>
+                    <div class="event-month">MAR 2026</div>
+                </div>
+                <div class="event-body">
+                    <h3 class="event-title">Spring Sports Tournament</h3>
+                    <div class="event-info">
+                        <div class="event-detail">🕐 9:00 AM - 5:00 PM</div>
+                        <div class="event-detail">📍 Athletic Center</div>
+                        <div class="event-detail">👥 Team registration required</div>
+                    </div>
+                    <div class="event-tags">
+                        <span class="event-tag">Sports</span>
+                        <span class="event-tag">Competition</span>
+                        <span class="event-tag">Prize: Rs. 50K</span>
+                    </div>
+                    <button class="btn-rsvp" onclick="rsvpEvent('Sports Tournament', 200)">Register Team</button>
+                </div>
+            </div>
+            <div class="event-card">
+                <div class="event-header">
+                    <div class="event-date">01</div>
+                    <div class="event-month">APR 2026</div>
+                </div>
+                <div class="event-body">
+                    <h3 class="event-title">Research Symposium 2026</h3>
+                    <div class="event-info">
+                        <div class="event-detail">🕐 10:00 AM - 4:00 PM</div>
+                        <div class="event-detail">📍 Science Hall</div>
+                        <div class="event-detail">👥 Limited seats</div>
+                    </div>
+                    <div class="event-tags">
+                        <span class="event-tag">Research</span>
+                        <span class="event-tag">Academic</span>
+                        <span class="event-tag">Networking</span>
+                    </div>
+                    <button class="btn-rsvp" onclick="rsvpEvent('Research Symposium', 150)">Reserve Seat</button>
+                </div>
+            </div>
+            <div class="event-card">
+                <div class="event-header">
+                    <div class="event-date">05</div>
+                    <div class="event-month">APR 2026</div>
+                </div>
+                <div class="event-body">
+                    <h3 class="event-title">Career Fair 2026</h3>
+                    <div class="event-info">
+                        <div class="event-detail">🕐 9:00 AM - 5:00 PM</div>
+                        <div class="event-detail">📍 Main Campus Grounds</div>
+                        <div class="event-detail">👥 50+ Companies</div>
+                    </div>
+                    <div class="event-tags">
+                        <span class="event-tag">Career</span>
+                        <span class="event-tag">Networking</span>
+                        <span class="event-tag">Free</span>
+                    </div>
+                    <button class="btn-rsvp" onclick="rsvpEvent('Career Fair', 100)">Get Early Access</button>
+                </div>
+            </div>
+            <div class="event-card">
+                <div class="event-header">
+                    <div class="event-date">10</div>
+                    <div class="event-month">APR 2026</div>
+                </div>
+                <div class="event-body">
+                    <h3 class="event-title">Hackathon 2026</h3>
+                    <div class="event-info">
+                        <div class="event-detail">🕐 24 Hours</div>
+                        <div class="event-detail">📍 Innovation Lab</div>
+                        <div class="event-detail">👥 Teams of 2-4</div>
+                    </div>
+                    <div class="event-tags">
+                        <span class="event-tag">Tech</span>
+                        <span class="event-tag">Competition</span>
+                        <span class="event-tag">Prize: Rs. 100K</span>
+                    </div>
+                    <button class="btn-rsvp" onclick="rsvpEvent('Hackathon', 200)">Register Team</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function rsvpEvent(eventName, points) {
+            alert(`✅ RSVP Confirmed!\n\nYou're registered for: ${eventName}\n\nConfirmation sent to your email.\nReminder will be sent 24 hours before the event.\n\nEarn ${points} reward points by attending! 🎉`);
+        }
+    </script>
+</body>
+</html>
