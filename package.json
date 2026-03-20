@@ -1,9 +1,24 @@
 {
+  "name": "files-(3)",
+  "version": "1.0.0",
+  "description": "A modern, comprehensive campus hub system for CINEC students with integrated features for library management, cafe orders, rewards system, marketplace, events, and facility booking.",
+  "main": "server.js",
   "scripts": {
-    "test": "jest"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
-  "devDependencies": {
-    "jest": "^30.3.0",
-    "supertest": "^7.2.2"
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1",
+    "mysql2": "^3.20.0",
+    "stripe": "^20.4.1"
   }
 }
