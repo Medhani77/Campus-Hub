@@ -1,205 +1,400 @@
-# CINEC Campus Hub - Complete Documentation
+# 🎓 ORYN Campus Hub
 
-## 📋 Overview
-A modern, comprehensive campus hub system for CINEC students with integrated features for library management, cafe orders, rewards system, marketplace, events, and facility booking.
-
-## 🎨 Design Features
-- **Consistent Design Language**: All pages follow the same color scheme and typography
-- **Responsive Layout**: Works on desktop, tablet, and mobile devices
-- **Smooth Animations**: Professional transitions and hover effects
-- **User-Friendly Navigation**: Easy to navigate between all sections
-
-## 📁 File Structure
-
-### Core Pages
-1. **index.html** - Login page (your existing login system)
-2. **home.html** - Main dashboard/hub (NEW - updated design)
-3. **Register.html** - Student registration form (NEW)
-
-### Feature Pages
-4. **LIBRARY.html** - Digital library with book browsing and borrowing
-5. **Cafe.html** - Campus cafe menu and online ordering
-6. **REWARD.html** - Rewards system with points and redemptions
-7. **Marketplace.html** - Student marketplace for buying/selling items
-8. **Events.html** - Campus events calendar and RSVP system
-9. **Booking.html** - Facility booking system for labs, rooms, equipment
-
-## 🔗 Navigation Flow
-
-```
-index.html (Login)
-    ↓
-home.html (Dashboard)
-    ├── LIBRARY.html
-    ├── Cafe.html
-    ├── REWARD.html
-    ├── Marketplace.html
-    ├── Events.html
-    └── Booking.html
-```
-
-## 🎯 Key Features by Page
-
-### 1. Home Page (home.html)
-- Welcome message with student name
-- Quick access cards to all features
-- Latest announcements
-- Upcoming events preview
-- Campus resources grid
-- Integrated search functionality
-
-### 2. Digital Library (LIBRARY.html)
-- Browse books by category
-- Search functionality
-- Book availability status
-- Borrow books online
-- Earns reward points (50 pts per book)
-
-### 3. Campus Cafe (Cafe.html)
-- Menu with categories (Hot Drinks, Cold Drinks, Food, Snacks)
-- Add items to cart
-- Shopping cart summary
-- Online ordering system
-- Earns reward points (25 pts per order)
-
-### 4. Rewards System (REWARD.html)
-- Points balance display
-- Tier progress tracking (Bronze → Silver → Gold → Platinum)
-- Redeemable rewards catalog
-- Transaction history
-- Multiple reward tiers with benefits
-
-### 5. Student Marketplace (Marketplace.html)
-- Buy and sell items within campus
-- Categories: Textbooks, Electronics, Clothing, Other
-- Contact sellers directly
-- Post new listings
-- View your active listings
-
-### 6. Campus Events (Events.html)
-- Upcoming events grid
-- Event details (date, time, location, capacity)
-- RSVP system
-- Event categories and tags
-- Rewards points for attendance
-
-### 7. Facility Booking (Booking.html)
-- Book computer labs, meeting rooms, sports facilities
-- Available facilities grid
-- Booking form with date/time selection
-- Capacity information
-- Instant confirmation
-
-## 💾 Local Storage Features
-
-The system uses browser localStorage to persist data:
-
-```javascript
-// Student Information
-localStorage.setItem('student_name', 'Full Name');
-localStorage.setItem('student_index_no', 'EG/2024/IT/XXXX');
-localStorage.setItem('student_id', 'database_id');
-
-// Rewards Points
-localStorage.setItem('reward_points', '1250');
-```
-
-## 🎨 Color Scheme
-
-```css
---primary-dark: #0a2540    (Navy Blue)
---primary-blue: #1e4d7b    (Medium Blue)
---accent-gold: #d4a574     (Gold)
---accent-coral: #e07856    (Coral)
---neutral-100: #ffffff     (White)
---neutral-200: #f5f7fa     (Light Gray)
-```
-
-## 🔧 Setup Instructions
-
-1. **Place all HTML files in the same directory**
-2. **Ensure your existing backend is running** (for login functionality)
-3. **Open index.html to start** - Login with credentials
-4. **After login**, you'll be redirected to home.html
-5. **Navigate** using the top menu or quick access cards
-
-## 🌐 Backend Integration Points
-
-The system expects these backend endpoints:
-
-```javascript
-// Login
-POST http://localhost:3000/login
-Body: { indexNo, password }
-Response: { success, user: { id, index_no, full_name, email } }
-
-// Registration
-POST http://localhost:3000/register
-Body: { fullName, email, indexNo, password, ... }
-Response: { success, message }
-```
-
-## 📱 Responsive Breakpoints
-
-- Desktop: > 968px
-- Tablet: 768px - 968px
-- Mobile: < 768px
-
-## ✨ Interactive Features
-
-### Points System
-- Library borrowing: +50 points
-- Cafe orders: +25 points
-- Event attendance: +100-200 points
-- Marketplace sales: +25 points
-
-### Redemptions
-- Free Coffee: 150 points
-- Library Extension: 200 points
-- Event Pass: 300 points
-- Cafe Meal: 500 points
-- CINEC Merch: 750 points
-- Gym Membership: 1000 points
-
-## 🎓 Tier System
-
-| Tier | Points Required | Benefits |
-|------|----------------|----------|
-| Bronze | 0 - 499 | Basic access |
-| Silver | 500 - 999 | 5% cafe discount |
-| Gold | 1000 - 1999 | 10% cafe discount, Priority library access |
-| Platinum | 2000+ | 15% discount, Free event tickets, Premium benefits |
-
-## 🔐 Security Notes
-
-- Passwords are sent to backend for validation
-- Session management via localStorage
-- Logout clears all local data
-- Form validation on all input fields
-
-## 📞 Support
-
-For issues or questions:
-- Email: support@cinec.edu
-- Phone: +94 11-2 413 000
-- IT Help Desk available in footer links
-
-## 🚀 Future Enhancements
-
-Potential additions:
-- Real-time chat system
-- Mobile app version
-- Push notifications
-- Integration with academic systems
-- Payment gateway for cafe/marketplace
-- QR code check-ins
-- Grade management
-- Course enrollment
-
-## 📝 License
-
-© 2026 CINEC Campus Hub. All rights reserved.
+> *A comprehensive student campus management portal* — providing a unified digital space for campus bookings, events, services, and community engagement.
 
 ---
 
-**Note**: This is a frontend demonstration. For production use, implement proper backend authentication, database integration, and security measures.
+## 📋 Table of Contents
+
+- [About the Project](#about-the-project)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Database Setup](#database-setup)
+  - [Running the App](#running-the-app)
+- [API Endpoints](#api-endpoints)
+- [Team](#team)
+- [Project Management](#project-management)
+- [Sprint Progress](#sprint-progress)
+- [License](#license)
+
+---
+
+## 🏫 About the Project
+
+*ORYN Campus Hub* is an MVP web application developed as part of the *5CS024 module* collaborative software development project. The platform serves as a one-stop digital hub for university students, enabling them to access campus facilities, book resources, stay informed about events, and engage with campus services — all from a single interface.
+
+The system is built with a *Node.js/Express backend, a **MySQL relational database, and a **vanilla HTML/CSS/JavaScript frontend*.
+
+---
+
+## ✨ Features
+
+| Module | Description |
+|--------|-------------|
+| 🏠 *Home Portal* | Central landing page with navigation to all campus services |
+| 🔐 *Student Login* | Secure student authentication portal |
+| 📝 *Student Registration* | Full student account creation with personal and academic details |
+| 📅 *Facility Booking* | Book campus facilities (sports halls, labs, meeting rooms, study spaces) and register for events |
+| 🎉 *Campus Events* | Browse and register for upcoming campus events |
+| 📚 *Digital Library* | Access library resources, extend loans, and reserve study rooms |
+| ☕ *ORYN Café* | View the campus café menu — main dishes, snacks, hot drinks, and desserts |
+| 🏋️ *Fitness Centre* | Explore gym facilities and fitness class schedules |
+| 🏛️ *Clubs & Societies* | Discover and join student clubs and societies |
+| 🗺️ *Campus Map* | Interactive campus navigation and building directory |
+| 🚌 *Transit* | Campus bus routes and transport schedules |
+| 🛒 *Marketplace* | Student peer-to-peer marketplace for buying and selling items |
+| 🎁 *Rewards* | Student loyalty rewards and points system |
+| 💼 *Careers* | Internship listings and career opportunity board |
+| 💬 *Social Feedback* | Student feedback and social interaction module |
+| ℹ️ *About* | Campus information and university overview |
+
+---
+
+## 🛠️ Tech Stack
+
+### Backend
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-000000?style=flat&logo=express&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
+
+| Technology | Purpose |
+|-----------|---------|
+| *Node.js* | Server-side JavaScript runtime |
+| *Express.js* | REST API framework and middleware |
+| *MySQL* | Relational database for student and booking data |
+| *mysql2* | Node.js MySQL client with connection pooling |
+| *cors* | Cross-Origin Resource Sharing middleware |
+
+### Frontend
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+
+| Technology | Purpose |
+|-----------|---------|
+| *HTML5* | Page structure and UI layout |
+| *CSS3* | Styling, animations, responsive design |
+| *Vanilla JavaScript* | Client-side interactivity and API calls |
+| *Google Fonts* | Typography (Inter, Plus Jakarta Sans, Fraunces, Playfair Display) |
+
+### Development Tools
+| Tool | Purpose |
+|------|---------|
+| *VS Code* | Primary code editor |
+| *Postman* | API testing and endpoint verification |
+| *GitHub* | Version control and source code management |
+
+### Project Management Tools
+| Tool | Purpose |
+|------|---------|
+| *Jira* | Sprint planning, issue tracking, velocity reporting |
+| *Trello* | Visual Kanban board for task management |
+| *Basecamp* | Team communication, file sharing, meeting notes |
+| *Excel* | Sprint progress tracker and workload distribution |
+| *Google Forms* | Weekly team check-in surveys |
+
+---
+
+## 📁 Project Structure
+
+
+oryn-campus-hub/
+│
+├── frontend/                    # All HTML/CSS/JS frontend pages
+│   ├── home.html                # Main student portal landing page
+│   ├── student-login.html       # Student login page
+│   ├── Register.html            # Student registration page
+│   ├── Booking.html             # Facility booking & event registration
+│   ├── Events.html              # Campus events listing
+│   ├── LIBRARY.html             # Digital library module
+│   ├── Cafe.html                # Campus café menu
+│   ├── fitness.html             # Fitness centre information
+│   ├── clubs.html               # Student clubs & societies
+│   ├── map.html                 # Campus map
+│   ├── transit.html             # Campus transport
+│   ├── Marketplace.html         # Student marketplace
+│   ├── REWARD.html              # Loyalty rewards system
+│   ├── careers.html             # Careers & internships board
+│   ├── social_feedback.html     # Social feedback module
+│   ├── About.html               # About the campus
+│   └── assets/                  # Images and media files
+│
+├── backend/                     # Node.js / Express server
+│   ├── server.js                # Main Express application entry point
+│   ├── routes/                  # API route handlers
+│   │   ├── auth.js              # Login / registration routes
+│   │   └── booking.js           # Booking routes
+│   ├── db/
+│   │   └── connection.js        # MySQL connection pool setup
+│   └── package.json             # Node dependencies
+│
+├── database/
+│   └── schema.sql               # MySQL database schema
+│
+└── README.md                    # This file
+
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Make sure you have the following installed on your machine:
+
+- [Node.js](https://nodejs.org/) (v16 or higher)
+- [MySQL](https://www.mysql.com/) (v8.0 or higher)
+- [Git](https://git-scm.com/)
+- A code editor — [VS Code](https://code.visualstudio.com/) recommended
+
+---
+
+### Installation
+
+*1. Clone the repository*
+
+bash
+git clone https://github.com/YOUR_USERNAME/oryn-campus-hub.git
+cd oryn-campus-hub
+
+
+*2. Install backend dependencies*
+
+bash
+cd backend
+npm install
+
+
+The following packages will be installed:
+
+
+express
+mysql2
+cors
+dotenv
+
+
+---
+
+### Database Setup
+
+*1. Start your MySQL server and log in*
+
+bash
+mysql -u root -p
+
+
+*2. Create the database*
+
+sql
+CREATE DATABASE oryn_campus_hub;
+USE oryn_campus_hub;
+
+
+*3. Run the schema file*
+
+bash
+mysql -u root -p oryn_campus_hub < database/schema.sql
+
+
+*4. The students table schema:*
+
+sql
+CREATE TABLE students (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  fullName    VARCHAR(100)  NOT NULL,
+  email       VARCHAR(100)  NOT NULL UNIQUE,
+  mobile      VARCHAR(20),
+  nic         VARCHAR(20),
+  address     TEXT,
+  indexNo     VARCHAR(30)   NOT NULL UNIQUE,
+  faculty     VARCHAR(100),
+  programme   VARCHAR(100),
+  year        VARCHAR(10),
+  username    VARCHAR(50)   NOT NULL UNIQUE,
+  password    VARCHAR(255)  NOT NULL,
+  dob         DATE,
+  gender      VARCHAR(20),
+  createdAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+> ⚠️ *Security Note:* Password hashing (bcrypt) will be implemented in Sprint 2. Do *not* deploy with plain-text passwords in production.
+
+*5. Configure environment variables*
+
+Create a .env file in the backend/ directory:
+
+env
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_mysql_password
+DB_NAME=oryn_campus_hub
+PORT=3000
+
+
+> ⚠️ *Important:* Never commit your .env file. It is listed in .gitignore.
+
+---
+
+### Running the App
+
+*1. Start the backend server*
+
+bash
+cd backend
+node server.js
+
+
+You should see:
+
+
+Server running on http://localhost:3000
+Connected to MySQL database: oryn_campus_hub
+
+
+*2. Open the frontend*
+
+Open any HTML file directly in your browser, or use a local server extension such as *Live Server* (VS Code):
+
+
+frontend/home.html  →  Open with Live Server
+
+
+> The frontend connects to the backend at http://localhost:3000.
+
+---
+
+## 🔌 API Endpoints
+
+Base URL: http://localhost:3000
+
+| Method | Endpoint | Description | Request Body |
+|--------|----------|-------------|-------------|
+| POST | /register | Register a new student | { fullName, email, mobile, nic, address, indexNo, faculty, programme, year, username, password, dob, gender } |
+| POST | /login | Student login (Sprint 2) | { username, password } |
+| POST | /booking | Create a facility booking (Sprint 2) | { studentId, facilityId, date, time } |
+| GET  | /bookings/:id | Get bookings for a student (Sprint 2) | — |
+
+### Example — Register Student
+
+*Request:*
+http
+POST /register
+Content-Type: application/json
+
+{
+  "fullName": "Medhani Niwoda",
+  "email": "medhani@university.ac.lk",
+  "mobile": "0771234567",
+  "indexNo": "CS2021001",
+  "faculty": "Computing",
+  "programme": "BSc Computer Science",
+  "year": "2",
+  "username": "medhani21",
+  "password": "securepassword",
+  "dob": "2002-05-14",
+  "gender": "Female"
+}
+
+
+*Response (Success):*
+json
+{
+  "success": true,
+  "message": "Student registered successfully"
+}
+
+
+*Response (Error):*
+json
+{
+  "success": false,
+  "message": "Username or email already exists"
+}
+
+
+---
+
+## 👥 Team
+
+| Name | Role |
+|------|------|
+| *Medhani Niwoda* | 📋 Project Manager |
+| *Pulindu Balasooriya* | ⚙️ Backend Developer |
+| *Saduni Priyalakshi* | 🎨 Frontend Developer |
+| *Dewmi Umegha* | 🧪 QA Tester |
+| *Udara Nethmi* | 🗄️ Database Administrator |
+| *Ginuka Weragoda* | 📊 Business Analyst |
+
+---
+
+## 📊 Project Management
+
+This project follows an *Agile Sprint methodology*.
+
+| Tool | Usage |
+|------|-------|
+| [Jira](https://jira.atlassian.com) | Sprint planning, issue tracking, velocity |
+| [Trello](https://trello.com) | Kanban task board |
+| [Basecamp](https://basecamp.com) | Team communication & file sharing |
+| [GitHub](https://github.com) | Version control, pull requests, issues |
+
+### Branching Strategy
+
+
+main          ← stable, demo-ready code only
+├── dev       ← integration branch
+│   ├── feature/registration-api
+│   ├── feature/booking-ui
+│   ├── feature/login-page
+│   └── fix/cors-config
+
+
+> All feature work is done on feature branches. PRs must be reviewed before merging into dev. main is only updated before demos.
+
+---
+
+## 📅 Sprint Progress
+
+### Sprint 1 — ✅ Complete
+
+| Feature | Status |
+|---------|--------|
+| Student Registration (Frontend) | ✅ Done |
+| Student Registration (Backend API) | ✅ Done |
+| MySQL Database Setup | ✅ Done |
+| Student Login Page (UI) | ✅ Done |
+| Facility Booking Page (UI) | ✅ Done |
+| Campus Events Page (UI) | ✅ Done |
+| Home Portal | ✅ Done |
+| Café Menu Page | ✅ Done |
+| Library Page | ✅ Done |
+| Clubs & Societies Page | ✅ Done |
+
+### Sprint 2 — 🔄 Planned
+
+| Feature | Status |
+|---------|--------|
+| JWT Authentication | 🔄 Planned |
+| Password Hashing (bcrypt) | 🔄 Planned |
+| Booking API (POST/GET) | 🔄 Planned |
+| Student Dashboard | 🔄 Planned |
+| Admin Panel | 🔄 Planned |
+| Rewards System Backend | 🔄 Planned |
+
+---
+
+## 📄 License
+
+This project was developed for academic purposes as part of *5CS024 — Collaborative Software Development*.
+
+---
+
+<div align="center">
+  <strong>ORYN Campus Hub</strong> · Built with ❤️ by Medhani · Pulindu · Saduni · Dewmi · Udara · Ginuka · 5CS024 MVP Sprint 1
+</div>
