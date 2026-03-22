@@ -105,22 +105,39 @@ The system is built with a *Node.js/Express backend, a **MySQL relational databa
 oryn-campus-hub/
 │
 ├── frontend/                    # All HTML/CSS/JS frontend pages
+
 │   ├── home.html                # Main student portal landing page
+
 │   ├── student-login.html       # Student login page
+
 │   ├── Register.html            # Student registration page
+
 │   ├── Booking.html             # Facility booking & event registration
+
 │   ├── Events.html              # Campus events listing
+
 │   ├── LIBRARY.html             # Digital library module
+
 │   ├── Cafe.html                # Campus café menu
+
 │   ├── fitness.html             # Fitness centre information
+
 │   ├── clubs.html               # Student clubs & societies
+
 │   ├── map.html                 # Campus map
+
 │   ├── transit.html             # Campus transport
+
 │   ├── Marketplace.html         # Student marketplace
+
 │   ├── REWARD.html              # Loyalty rewards system
+
 │   ├── careers.html             # Careers & internships board
+
 │   ├── social_feedback.html     # Social feedback module
+
 │   ├── About.html               # About the campus
+
 │   └── assets/                  # Images and media files
 │
 ├── backend/                     # Node.js / Express server
