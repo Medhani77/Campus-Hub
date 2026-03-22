@@ -141,21 +141,31 @@ oryn-campus-hub/
 │   └── assets/                  # Images and media files
 │
 ├── backend/                     # Node.js / Express server
+
 │   ├── server.js                # Main Express application entry point
+
 │   ├── routes/                  # API route handlers
+
 │   │   ├── auth.js              # Login / registration routes
+
 │   │   └── booking.js           # Booking routes
+
 │   ├── db/
+
 │   │   └── connection.js        # MySQL connection pool setup
+
 │   └── package.json             # Node dependencies
+
 │
 ├── database/
+
 │   └── schema.sql               # MySQL database schema
+
 │
 └── README.md                    # This file
 
 
----
+-----------------
 
 ## 🚀 Getting Started
 
