@@ -1,11 +1,13 @@
 {
-  "name": "files-(3)",
+  "name": "oryn",
   "version": "1.0.0",
-  "main": "server.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "jest"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
+  "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
@@ -17,10 +19,5 @@
     "multer": "^2.1.1",
     "mysql2": "^3.20.0",
     "stripe": "^20.4.1"
-  },
-  "devDependencies": {
-    "cypress": "^15.12.0",
-    "jest": "^30.3.0",
-    "supertest": "^7.2.2"
   }
 }
