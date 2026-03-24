@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORYN Clubs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            --orange:#289fc4;
+            --orange-dim:rgba(163, 119, 15, 0.15);
+            --orange-glow:rgba(255,107,53,0.4);
+            --green:#4CAF50;
+            --white:#fff;
+            --glass:rgba(255,255,255,0.05);
+            --glass-hover:rgba(255,255,255,0.08);
+            --border:rgba(255,255,255,0.1);
+            --muted:rgba(255,255,255,0.62);
+        }
+        body { font-family:'Inter',sans-serif; background:linear-gradient(135deg,#0a0a0a,#161616,#0a0a0a); color:#e8e8e8; min-height:100vh; line-height:1.6; }
+
+        header { background:rgba(255,255,255,0.05); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1000; }
+        nav { max-width:1400px; margin:0 auto; padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; }
+        .logo-section { display:flex; align-items:center; gap:1rem; }
+        .campus-logo { height:60px; object-fit:contain; filter:drop-shadow(0 2px 8px rgba(255,107,53,0.3)); }
+        .brand-name { font-size:1.75rem; font-weight:800; color:var(--white); text-decoration:none; }
+        .brand-name span { color:var(--orange); }
+        .btn-back { padding:.75rem 1.5rem; background:rgba(255,107,53,0.2); color:var(--orange); border:2px solid var(--orange); border-radius:50px; font-weight:600; text-decoration:none; transition:all .3s; }
+        .btn-back:hover { background:var(--orange); color:var(--white); transform:translateY(-2px); }
+
+        .hero-slideshow { position:relative; height:600px; overflow:hidden; background:#000; }
+        .hslide { position:absolute; inset:0; opacity:0; transition:opacity 1.5s ease-in-out; }
+        .hslide.active { opacity:1; }
+        .hslide img { width:100%; height:100%; object-fit:cover; filter:brightness(.6); }
+        .slide-overlay { position:absolute; inset:0; background:linear-gradient(135deg,rgba(0,0,0,.72),rgba(255,107,53,.22)); display:flex; align-items:center; justify-content:center; }
+        .hero-content { text-align:center; color:var(--white); max-width:860px; padding:2rem; animation:slideUp .9s ease-out; }
+        @keyframes slideUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+        .hero-tag { display:inline-block; padding:.4rem 1.2rem; background:var(--orange-dim); border:1px solid var(--orange); border-radius:50px; font-size:.78rem; font-weight:700; letter-spacing:2px; color:var(--orange); text-transform:uppercase; margin-bottom:1.2rem; }
+        .hero-content h1 { font-family:'Playfair Display',serif; font-size:4rem; font-weight:800; line-height:1.1; margin-bottom:1rem; text-shadow:0 4px 20px rgba(0,0,0,.5); }
+        .hero-content h1 span { color:var(--orange); }
+        .hero-content p { font-size:1.2rem; margin-bottom:2rem; opacity:.9; }
+        .hero-stats { display:flex; gap:3rem; justify-content:center; flex-wrap:wrap; margin-bottom:2rem; }
+        .hero-stat .num { font-size:2rem; font-weight:900; color:var(--orange); line-height:1; }
+        .hero-stat .lbl { font-size:.75rem; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
+        .hero-btns { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+        .cta-btn { padding:1rem 2.5rem; font-weight:700; border-radius:50px; font-size:1rem; border:2px solid transparent; cursor:pointer; transition:all .3s; text-decoration:none; font-family:'Inter',sans-serif; }
+        .cta-btn.primary { background:var(--orange); color:var(--white); border-color:var(--orange); }
+        .cta-btn.primary:hover { background:transparent; color:var(--orange); transform:translateY(-3px); box-shadow:0 8px 25px var(--orange-glow); }
+        .cta-btn.secondary { background:transparent; color:var(--white); border-color:var(--white); }
+        .cta-btn.secondary:hover { background:var(--white); color:#0a0a0a; transform:translateY(-3px); }
+        .slide-dots { position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; gap:.75rem; z-index:10; }
+        .dot { width:12px; height:12px; border-radius:50%; background:rgba(255,255,255,.4); border:1px solid rgba(255,255,255,.3); cursor:pointer; transition:all .3s; }
+        .dot.active { background:var(--orange); width:35px; border-radius:6px; }
+
+        .stats-bar { background:rgba(255,107,53,.08); border-top:1px solid rgba(255,107,53,.2); border-bottom:1px solid rgba(255,107,53,.2); padding:1.5rem 2rem; }
+        .stats-bar-inner { max-width:1400px; margin:0 auto; display:flex; justify-content:space-around; flex-wrap:wrap; gap:1.5rem; }
+        .stat-item { text-align:center; }
+        .stat-item .val { font-size:2rem; font-weight:900; color:var(--orange); line-height:1; }
+        .stat-item .key { font-size:.72rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-top:.2rem; }
+
+        .container { max-width:1400px; margin:0 auto; padding:4rem 2rem; }
+        .section-label { font-size:.72rem; font-weight:700; letter-spacing:3px; color:var(--orange); text-transform:uppercase; margin-bottom:.5rem; }
+        .section-title { font-family:'Playfair Display',serif; font-size:2.4rem; font-weight:800; color:var(--white); margin-bottom:2.5rem; }
+        .section-title span { color:var(--orange); }
+
+        .club-img-tabs { display:grid; grid-template-columns:repeat(5,1fr); gap:1rem; margin-bottom:3rem; }
+        .cit { border-radius:18px; overflow:hidden; border:2px solid var(--border); cursor:pointer; position:relative; aspect-ratio:3/4; transition:all .35s cubic-bezier(.175,.885,.32,1.275); }
+        .cit:hover { transform:translateY(-8px) scale(1.02); border-color:var(--orange); box-shadow:0 16px 40px rgba(255,107,53,.3); }
+        .cit.active { border-color:var(--orange); box-shadow:0 0 0 3px rgba(255,107,53,.35), 0 14px 40px rgba(255,107,53,.3); transform:translateY(-6px); }
+        .cit img { width:100%; height:100%; object-fit:cover; transition:transform .45s ease; filter:brightness(.82); }
+        .cit:hover img, .cit.active img { transform:scale(1.07); filter:brightness(1); }
+        .cit-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,.82) 0%,transparent 55%); }
+        .cit.active .cit-overlay { background:linear-gradient(to top,rgba(0,0,0,.7) 0%,rgba(255,107,53,.12) 100%); }
+        .cit-label { position:absolute; bottom:.8rem; left:0; right:0; text-align:center; font-size:.88rem; font-weight:800; color:var(--white); letter-spacing:.3px; text-shadow:0 2px 8px rgba(0,0,0,.9); padding:0 .5rem; }
+        .cit.active .cit-label { color:var(--orange); }
+        .cit-active-bar { position:absolute; top:0; left:0; right:0; height:3px; background:var(--orange); border-radius:0 0 4px 4px; opacity:0; transition:opacity .3s; }
+        .cit.active .cit-active-bar { opacity:1; }
+
+        .club-panel { display:none; animation:fadeUp .35s ease; }
+        .club-panel.active { display:block; }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+        .club-detail { background:var(--glass); backdrop-filter:blur(20px); border-radius:24px; border:1px solid var(--border); overflow:hidden; margin-bottom:3rem; display:grid; grid-template-columns:1fr 1.4fr; }
+        .cd-img { position:relative; min-height:400px; overflow:hidden; }
+        .cd-img img { width:100%; height:100%; object-fit:cover; }
+        .cd-img-overlay { position:absolute; inset:0; background:linear-gradient(to right,transparent 60%,rgba(0,0,0,.5)); }
+        .cd-info { padding:3rem; display:flex; flex-direction:column; justify-content:center; }
+        .cd-tag { display:inline-block; background:rgba(255,107,53,.2); border:1px solid rgba(255,107,53,.4); color:var(--orange); padding:.35rem 1rem; border-radius:20px; font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:1.2rem; }
+        .cd-name { font-family:'Playfair Display',serif; font-size:2.2rem; font-weight:800; color:var(--white); margin-bottom:.6rem; line-height:1.2; }
+        .cd-category { font-size:.85rem; font-weight:700; color:var(--orange); text-transform:uppercase; letter-spacing:1px; margin-bottom:1rem; }
+        .cd-desc { color:var(--muted); font-size:.97rem; line-height:1.75; margin-bottom:1.8rem; }
+        .cd-stats { display:flex; gap:2rem; margin-bottom:2rem; flex-wrap:wrap; }
+        .cd-stat .v { font-size:1.7rem; font-weight:900; color:var(--orange); line-height:1; }
+        .cd-stat .k { font-size:.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+        .btn-join-main { padding:1.1rem 2.8rem; background:var(--orange); color:var(--white); border:none; border-radius:50px; font-weight:800; font-size:1rem; cursor:pointer; transition:all .3s; font-family:'Inter',sans-serif; align-self:flex-start; }
+        .btn-join-main:hover { background:#e5592a; transform:translateY(-3px); box-shadow:0 8px 28px var(--orange-glow); }
+        .btn-join-main.joined-state { background:rgba(76,175,80,.2); color:var(--green); border:2px solid var(--green); }
+        .btn-join-main.joined-state:hover { background:var(--green); color:var(--white); box-shadow:0 8px 28px rgba(76,175,80,.4); }
+
+        .join-form-wrap { background:var(--glass); backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:24px; padding:3rem; max-width:680px; margin:0 auto; }
+        .join-form-wrap h3 { font-family:'Playfair Display',serif; font-size:1.8rem; color:var(--white); margin-bottom:.4rem; }
+        .join-form-wrap .jf-sub { color:var(--muted); font-size:.93rem; margin-bottom:2rem; line-height:1.6; }
+        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+        .form-group { margin-bottom:1.4rem; }
+        .form-group label { display:block; font-size:.85rem; font-weight:700; color:rgba(255,255,255,.85); margin-bottom:.5rem; letter-spacing:.3px; }
+        .form-ctrl { width:100%; padding:.95rem 1rem; background:rgba(255,255,255,.08); border:2px solid rgba(255,255,255,.12); border-radius:12px; color:var(--white); font-size:.95rem; font-family:'Inter',sans-serif; transition:all .3s; }
+        .form-ctrl::placeholder { color:rgba(255,255,255,.35); }
+        .form-ctrl:focus { outline:none; border-color:var(--orange); background:rgba(255,255,255,.12); }
+        .form-ctrl option { background:#1a1a1a; }
+        textarea.form-ctrl { resize:vertical; min-height:100px; }
+        .btn-submit-form { width:100%; padding:1.15rem; background:var(--orange); color:var(--white); border:none; border-radius:12px; font-weight:800; font-size:1rem; cursor:pointer; transition:all .3s; font-family:'Inter',sans-serif; }
+        .btn-submit-form:hover { background:#e5592a; transform:translateY(-2px); box-shadow:0 8px 28px var(--orange-glow); }
+
+        .toast { position:fixed; bottom:2rem; right:2rem; z-index:3000; background:linear-gradient(135deg,#1a3a1a,#0d240d); border:1px solid var(--green); border-radius:16px; padding:1.1rem 1.5rem; color:var(--white); transform:translateX(200%); transition:transform .4s ease; max-width:360px; box-shadow:0 12px 40px rgba(76,175,80,.3); }
+        .toast.show { transform:translateX(0); }
+        .toast-title { font-size:.95rem; font-weight:700; color:var(--green); margin-bottom:.2rem; }
+        .toast-msg { font-size:.82rem; color:rgba(255,255,255,.72); }
+
+        footer { background:rgba(0,0,0,.8); backdrop-filter:blur(20px); padding:3rem 2rem 1.5rem; border-top:1px solid var(--border); margin-top:2rem; }
+        .footer-grid { max-width:1400px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:2rem; margin-bottom:2rem; }
+        .fs h3 { color:var(--orange); margin-bottom:1rem; font-size:1rem; }
+        .fs ul { list-style:none; }
+        .fs ul li,.fs a { color:var(--muted); text-decoration:none; display:block; margin-bottom:.5rem; font-size:.9rem; transition:color .3s; }
+        .fs a:hover { color:var(--orange); }
+        .footer-bottom { text-align:center; padding-top:2rem; border-top:1px solid var(--border); color:var(--muted); font-size:.85rem; }
+
+        @media(max-width:900px) { .club-img-tabs{grid-template-columns:repeat(3,1fr);} .club-detail{grid-template-columns:1fr;} .cd-img{min-height:280px;} .hero-content h1{font-size:2.6rem;} }
+        @media(max-width:600px) { .club-img-tabs{grid-template-columns:repeat(2,1fr);} .form-row{grid-template-columns:1fr;} .hero-content h1{font-size:2rem;} }
+        ::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-track{background:rgba(255,255,255,.04);} ::-webkit-scrollbar-thumb{background:rgba(255,107,53,.5);border-radius:3px;}
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <div class="logo-section">
+            <img src="LOGO.jpg" alt="ORYN" class="campus-logo">
+            <a href="home.html" class="brand-name">ORYN <span>CLUBS</span></a>
+        </div>
+        <a href="home.html" class="btn-back">Home</a>
+    </nav>
+</header>
+<div class="hero-slideshow">
+    <div class="hslide active">
+        <img src="athletic.jpg" alt="Athletic Club">
+        <div class="slide-overlay"><div class="hero-content">
+            <div class="hero-tag">ORYN Student Life</div>
+            <h1>Find Your <span>Community</span></h1>
+            <p>Join clubs, build skills, and pursue your passions on campus</p>
+            <div class="hero-stats">
+                <div class="hero-stat"><div class="num">5</div><div class="lbl">Active Clubs</div></div>
+                <div class="hero-stat"><div class="num">800+</div><div class="lbl">Members</div></div>
+                <div class="hero-stat"><div class="num">40+</div><div class="lbl">Events / Year</div></div>
+            </div>
+            <div class="hero-btns">
+                <button class="cta-btn primary" onclick="document.getElementById('clubs-section').scrollIntoView({behavior:'smooth'})">Explore Clubs</button>
+                <a href="home.html" class="cta-btn secondary">Campus Hub</a>
+            </div>
+        </div></div>
+    </div>
+    <div class="hslide">
+        <img src="aesthetic.jpg" alt="Aesthetic Club">
+        <div class="slide-overlay"><div class="hero-content">
+            <div class="hero-tag">Arts and Culture</div>
+            <h1>Create. <span>Express.</span> Inspire.</h1>
+            <p>Explore your artistic side with the Aesthetic Club — where creativity has no limits</p>
+            <div class="hero-btns">
+                <button class="cta-btn primary" onclick="showClub('aesthetic')">Join Aesthetic Club</button>
+            </div>
+        </div></div>
+    </div>
+    <div class="hslide">
+        <img src="ieee.jpg" alt="IEEE Club">
+        <div class="slide-overlay"><div class="hero-content">
+            <div class="hero-tag">Technology</div>
+            <h1>Engineer the <span>Future</span></h1>
+            <p>Join IEEE — where engineering meets innovation, research and global community</p>
+            <div class="hero-btns">
+                <button class="cta-btn primary" onclick="showClub('ieee')">Join IEEE Club</button>
+            </div>
+        </div></div>
+    </div>
+    <div class="slide-dots">
+        <div class="dot active" onclick="goSlide(0)"></div>
+        <div class="dot" onclick="goSlide(1)"></div>
+        <div class="dot" onclick="goSlide(2)"></div>
+    </div>
+</div>
+<div class="stats-bar">
+    <div class="stats-bar-inner">
+        <div class="stat-item"><div class="val">5</div><div class="key">Clubs</div></div>
+        <div class="stat-item"><div class="val">800+</div><div class="key">Members</div></div>
+        <div class="stat-item"><div class="val">40+</div><div class="key">Events / Year</div></div>
+        <div class="stat-item"><div class="val">Free</div><div class="key">To Join</div></div>
+        <div class="stat-item"><div class="val">All</div><div class="key">Faculties</div></div>
+    </div>
+</div>
+<div class="container" id="clubs-section">
+
+    <p class="section-label">Our Clubs</p>
+    <h2 class="section-title">Select a <span>Club to Explore</span></h2>
+    <div class="club-img-tabs">
+
+        <div class="cit active" id="tab-athletic" onclick="showClub('athletic')">
+            <div class="cit-active-bar"></div>
+            <img src="athletic.jpg" alt="Athletic Club">
+            <div class="cit-overlay"></div>
+            <div class="cit-label">Athletic Club</div>
+        </div>
+
+        <div class="cit" id="tab-aesthetic" onclick="showClub('aesthetic')">
+            <div class="cit-active-bar"></div>
+            <img src="aesthetic.jpg" alt="Aesthetic Club">
+            <div class="cit-overlay"></div>
+            <div class="cit-label">Aesthetic Club</div>
+        </div>
+
+        <div class="cit" id="tab-aiesec" onclick="showClub('aiesec')">
+            <div class="cit-active-bar"></div>
+            <img src="aiesec.jpg" alt="AIESEC Club">
+            <div class="cit-overlay"></div>
+            <div class="cit-label">AIESEC</div>
+        </div>
+
+        <div class="cit" id="tab-leo" onclick="showClub('leo')">
+            <div class="cit-active-bar"></div>
+            <img src="leo.jpg" alt="LEO Club">
+            <div class="cit-overlay"></div>
+            <div class="cit-label">LEO Club</div>
+        </div>
+
+        <div class="cit" id="tab-ieee" onclick="showClub('ieee')">
+            <div class="cit-active-bar"></div>
+            <img src="ieee.jpg" alt="IEEE Club">
+            <div class="cit-overlay"></div>
+            <div class="cit-label">IEEE Club</div>
+        </div>
+
+    </div>
+    <div class="club-panel active" id="panel-athletic">
+        <div class="club-detail">
+            <div class="cd-img">
+                <img src="athletic.jpg" alt="Athletic Club">
+                <div class="cd-img-overlay"></div>
+            </div>
+            <div class="cd-info">
+                <span class="cd-tag">Sports and Fitness</span>
+                <div class="cd-name">Athletic Club</div>
+                <div class="cd-category">Sports, Training and Competitions</div>
+                <p class="cd-desc">The ORYN Athletic Club is the home of sport on campus. From multi-sport tournaments to daily training sessions, we build champions across football, basketball, badminton, athletics and more. Whether you are a competitive athlete or just starting out, our expert coaches and supportive team will push you to be your best.</p>
+                <div class="cd-stats">
+                    <div class="cd-stat"><div class="v">280+</div><div class="k">Members</div></div>
+                    <div class="cd-stat"><div class="v">Daily</div><div class="k">Training</div></div>
+                    <div class="cd-stat"><div class="v">15+</div><div class="k">Sports</div></div>
+                    <div class="cd-stat"><div class="v">Free</div><div class="k">To Join</div></div>
+                </div>
+                <button class="btn-join-main" onclick="scrollToForm()">Join Athletic Club</button>
+            </div>
+        </div>
+        <div class="join-form-wrap">
+            <h3>Join Athletic Club</h3>
+            <p class="jf-sub">Fill in the form below to apply for membership. Our coordinator will contact you within 48 hours to confirm your spot and share training schedules.</p>
+            <div class="form-row">
+                <div class="form-group"><label>Full Name</label><input type="text" class="form-ctrl" placeholder="Your full name"></div>
+                <div class="form-group"><label>Student ID</label><input type="text" class="form-ctrl" placeholder="e.g. STU2026001"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Email Address</label><input type="email" class="form-ctrl" placeholder="student@oryuncampus.edu"></div>
+                <div class="form-group"><label>Phone Number</label><input type="tel" class="form-ctrl" placeholder="+94 77 123 4567"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Faculty</label>
+                    <select class="form-ctrl">
+                        <option value="">Select Faculty</option>
+                        <option>Faculty of Computing</option>
+                        <option>Faculty of Engineering</option>
+                        <option>Faculty of Business</option>
+                        <option>Faculty of Medicine</option>
+                        <option>Faculty of Arts</option>
+                        <option>Faculty of Science</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Year of Study</label>
+                    <select class="form-ctrl">
+                        <option value="">Select Year</option>
+                        <option>Year 1</option>
+                        <option>Year 2</option>
+                        <option>Year 3</option>
+                        <option>Year 4</option>
+                        <option>Postgraduate</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"><label>Sport(s) of Interest</label>
+                <select class="form-ctrl">
+                    <option value="">Select your sport</option>
+                    <option>Football</option>
+                    <option>Basketball</option>
+                    <option>Badminton</option>
+                    <option>Athletics / Running</option>
+                    <option>Volleyball</option>
+                    <option>Cricket</option>
+                    <option>Multiple Sports</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Tell us about your athletic background</label>
+                <textarea class="form-ctrl" placeholder="Previous clubs, competitions, achievements or why you want to join..."></textarea>
+            </div>
+            <button class="btn-submit-form" onclick="submitJoin('Athletic Club')">Submit Application</button>
+        </div>
+    </div>
+
+    <div class="club-panel" id="panel-aesthetic">
+        <div class="club-detail">
+            <div class="cd-img">
+                <img src="aesthetic.jpg" alt="Aesthetic Club">
+                <div class="cd-img-overlay"></div>
+            </div>
+            <div class="cd-info">
+                <span class="cd-tag">Arts and Culture</span>
+                <div class="cd-name">Aesthetic Club</div>
+                <div class="cd-category">Music, Drama, Visual Arts and Performance</div>
+                <p class="cd-desc">The Aesthetic Club is ORYN's creative heart. We bring together students who love music, drama, visual arts, performance and everything in between. From campus exhibitions and theatre productions to live music nights and art installations, we create experiences that move people. All disciplines welcome — no experience required, only passion.</p>
+                <div class="cd-stats">
+                    <div class="cd-stat"><div class="v">160+</div><div class="k">Members</div></div>
+                    <div class="cd-stat"><div class="v">Weekly</div><div class="k">Sessions</div></div>
+                    <div class="cd-stat"><div class="v">3+</div><div class="k">Shows / Year</div></div>
+                    <div class="cd-stat"><div class="v">Free</div><div class="k">To Join</div></div>
+                </div>
+                <button class="btn-join-main" onclick="scrollToForm()">Join Aesthetic Club</button>
+            </div>
+        </div>
+        <div class="join-form-wrap">
+            <h3>Join Aesthetic Club</h3>
+            <p class="jf-sub">Tell us about your creative interest. Our team will review your application and welcome you to the next session.</p>
+            <div class="form-row">
+                <div class="form-group"><label>Full Name</label><input type="text" class="form-ctrl" placeholder="Your full name"></div>
+                <div class="form-group"><label>Student ID</label><input type="text" class="form-ctrl" placeholder="e.g. STU2026001"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Email Address</label><input type="email" class="form-ctrl" placeholder="student@oryuncampus.edu"></div>
+                <div class="form-group"><label>Phone Number</label><input type="tel" class="form-ctrl" placeholder="+94 77 123 4567"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Faculty</label>
+                    <select class="form-ctrl">
+                        <option value="">Select Faculty</option>
+                        <option>Faculty of Computing</option>
+                        <option>Faculty of Engineering</option>
+                        <option>Faculty of Business</option>
+                        <option>Faculty of Medicine</option>
+                        <option>Faculty of Arts</option>
+                        <option>Faculty of Science</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Year of Study</label>
+                    <select class="form-ctrl">
+                        <option value="">Select Year</option>
+                        <option>Year 1</option>
+                        <option>Year 2</option>
+                        <option>Year 3</option>
+                        <option>Year 4</option>
+                        <option>Postgraduate</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"><label>Creative Discipline</label>
+                <select class="form-ctrl">
+                    <option value="">Select your interest</option>
+                    <option>Music — Vocals / Instruments</option>
+                    <option>Drama and Theater</option>
+                    <option>Visual Art and Illustration</option>
+                    <option>Photography and Film</option>
+                    <option>Dance and Performance</option>
+                    <option>Creative Writing</option>
+                    <option>Multiple Disciplines</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Tell us about your creative background</label>
+                <textarea class="form-ctrl" placeholder="Previous experience, skills, performances, or why you want to join..."></textarea>
+            </div>
+            <button class="btn-submit-form" onclick="submitJoin('Aesthetic Club')">Submit Application</button>
+        </div>
+    </div>
+
+    <div class="club-panel" id="panel-aiesec">
+        <div class="club-detail">
+            <div class="cd-img">
+                <img src="aiesec.jpg" alt="AIESEC">
+                <div class="cd-img-overlay"></div>
+            </div>
+            <div class="cd-info">
+                <span class="cd-tag">Leadership and Development</span>
+                <div class="cd-name">AIESEC</div>
+                <div class="cd-category">Global Leadership, Exchange and Social Impact</div>
+                <p class="cd-desc">AIESEC is the world's largest youth-led organisation, present in over 120 countries. At ORYN, the AIESEC chapter empowers students through leadership development programmes, global exchange opportunities, and social impact projects. Build your professional skills, travel the world, and become a global citizen making a real difference.</p>
+                <div class="cd-stats">
+                    <div class="cd-stat"><div class="v">120+</div><div class="k">Members</div></div>
+                    <div class="cd-stat"><div class="v">120+</div><div class="k">Countries</div></div>
+                    <div class="cd-stat"><div class="v">Global</div><div class="k">Exchanges</div></div>
+                    <div class="cd-stat"><div class="v">Free</div><div class="k">To Join</div></div>
+                </div>
+                <button class="btn-join-main" onclick="scrollToForm()">Join AIESEC</button>
+            </div>
+        </div>
+        <div class="join-form-wrap">
+            <h3>Join AIESEC</h3>
+            <p class="jf-sub">Apply to become a member of the world's largest youth-led organisation. Our recruitment team will contact you with the next steps.</p>
+            <div class="form-row">
+                <div class="form-group"><label>Full Name</label><input type="text" class="form-ctrl" placeholder="Your full name"></div>
+                <div class="form-group"><label>Student ID</label><input type="text" class="form-ctrl" placeholder="e.g. STU2026001"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Email Address</label><input type="email" class="form-ctrl" placeholder="student@oryuncampus.edu"></div>
+                <div class="form-group"><label>Phone Number</label><input type="tel" class="form-ctrl" placeholder="+94 77 123 4567"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Faculty</label>
+                    <select class="form-ctrl">
+                        <option value="">Select Faculty</option>
+                        <option>Faculty of Computing</option>
+                        <option>Faculty of Engineering</option>
+                        <option>Faculty of Business</option>
+                        <option>Faculty of Medicine</option>
+                        <option>Faculty of Arts</option>
+                        <option>Faculty of Science</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Year of Study</label>
+                    <select class="form-ctrl">
+                        <option value="">Select Year</option>
+                        <option>Year 1</option>
+                        <option>Year 2</option>
+                        <option>Year 3</option>
+                        <option>Year 4</option>
+                        <option>Postgraduate</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"><label>Area of Interest</label>
+                <select class="form-ctrl">
+                    <option value="">Select area</option>
+                    <option>Global Volunteer Exchange</option>
+                    <option>Global Talent Programme</option>
+                    <option>Leadership Development</option>
+                    <option>Social Entrepreneurship</option>
+                    <option>Corporate Relations</option>
+                    <option>Marketing and Communications</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Why do you want to join AIESEC?</label>
+                <textarea class="form-ctrl" placeholder="Your motivation, leadership goals, or what you want to gain from AIESEC..."></textarea>
+            </div>
+            <button class="btn-submit-form" onclick="submitJoin('AIESEC')">Submit Application</button>
+        </div>
+    </div>
+    <div class="club-panel" id="panel-leo">
+        <div class="club-detail">
+            <div class="cd-img">
+                <img src="leo.jpg" alt="LEO Club">
+                <div class="cd-img-overlay"></div>
+            </div>
+            <div class="cd-info">
+                <span class="cd-tag">Service and Leadership</span>
+                <div class="cd-name">LEO Club</div>
+                <div class="cd-category">Community Service, Volunteering and Character Building</div>
+                <p class="cd-desc">LEO Club ORYN is part of the worldwide Lions International organisation — one of the largest service club networks on the planet. We develop leadership, experience and opportunity in young people who volunteer to build stronger communities. Blood donation drives, community clean-up campaigns, charity fundraisers and much more — LEO members lead with purpose.</p>
+                <div class="cd-stats">
+                    <div class="cd-stat"><div class="v">95+</div><div class="k">Members</div></div>
+                    <div class="cd-stat"><div class="v">Monthly</div><div class="k">Projects</div></div>
+                    <div class="cd-stat"><div class="v">Global</div><div class="k">Network</div></div>
+                    <div class="cd-stat"><div class="v">Free</div><div class="k">To Join</div></div>
+                </div>
+                <button class="btn-join-main" onclick="scrollToForm()">Join LEO Club</button>
+            </div>
+        </div>
+        <div class="join-form-wrap">
+            <h3>Join LEO Club</h3>
+            <p class="jf-sub">Become a LEO — a servant leader who makes a difference in the community. Apply below and our membership team will be in touch.</p>
+            <div class="form-row">
+                <div class="form-group"><label>Full Name</label><input type="text" class="form-ctrl" placeholder="Your full name"></div>
+                <div class="form-group"><label>Student ID</label><input type="text" class="form-ctrl" placeholder="e.g. STU2026001"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Email Address</label><input type="email" class="form-ctrl" placeholder="student@oryuncampus.edu"></div>
+                <div class="form-group"><label>Phone Number</label><input type="tel" class="form-ctrl" placeholder="+94 77 123 4567"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Faculty</label>
+                    <select class="form-ctrl">
+                        <option value="">Select Faculty</option>
+                        <option>Faculty of Computing</option>
+                        <option>Faculty of Engineering</option>
+                        <option>Faculty of Business</option>
+                        <option>Faculty of Medicine</option>
+                        <option>Faculty of Arts</option>
+                        <option>Faculty of Science</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Year of Study</label>
+                    <select class="form-ctrl">
+                        <option value="">Select Year</option>
+                        <option>Year 1</option>
+                        <option>Year 2</option>
+                        <option>Year 3</option>
+                        <option>Year 4</option>
+                        <option>Postgraduate</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"><label>Service Area of Interest</label>
+                <select class="form-ctrl">
+                    <option value="">Select area</option>
+                    <option>Community Service Projects</option>
+                    <option>Health and Welfare Campaigns</option>
+                    <option>Environmental Initiatives</option>
+                    <option>Fundraising and Events</option>
+                    <option>Youth Development</option>
+                    <option>All Areas</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Why do you want to serve as a LEO?</label>
+                <textarea class="form-ctrl" placeholder="Your community values, past volunteer experience, or what motivates you to serve..."></textarea>
+            </div>
+            <button class="btn-submit-form" onclick="submitJoin('LEO Club')">Submit Application</button>
+        </div>
+    </div>
+    <div class="club-panel" id="panel-ieee">
+        <div class="club-detail">
+            <div class="cd-img">
+                <img src="ieee.jpg" alt="IEEE Club">
+                <div class="cd-img-overlay"></div>
+            </div>
+            <div class="cd-info">
+                <span class="cd-tag">Technology</span>
+                <div class="cd-name">IEEE Club</div>
+                <div class="cd-category">Engineering, Electronics and Innovation</div>
+                <p class="cd-desc">IEEE ORYN Student Branch connects engineering and technology students with the world's largest professional technical organisation. We run workshops on electronics, embedded systems, IoT, robotics and AI. Members get access to research resources, industry networking, national and international conferences, and a community of engineers shaping the future of technology.</p>
+                <div class="cd-stats">
+                    <div class="cd-stat"><div class="v">140+</div><div class="k">Members</div></div>
+                    <div class="cd-stat"><div class="v">Weekly</div><div class="k">Workshops</div></div>
+                    <div class="cd-stat"><div class="v">Global</div><div class="k">Network</div></div>
+                    <div class="cd-stat"><div class="v">Free</div><div class="k">To Join</div></div>
+                </div>
+                <button class="btn-join-main" onclick="scrollToForm()">Join IEEE Club</button>
+            </div>
+        </div>
+        <div class="join-form-wrap">
+            <h3>Join IEEE Club</h3>
+            <p class="jf-sub">Apply to join the IEEE ORYN Student Branch. Our technical team will review your application and confirm your membership by email.</p>
+            <div class="form-row">
+                <div class="form-group"><label>Full Name</label><input type="text" class="form-ctrl" placeholder="Your full name"></div>
+                <div class="form-group"><label>Student ID</label><input type="text" class="form-ctrl" placeholder="e.g. STU2026001"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Email Address</label><input type="email" class="form-ctrl" placeholder="student@oryuncampus.edu"></div>
+                <div class="form-group"><label>Phone Number</label><input type="tel" class="form-ctrl" placeholder="+94 77 123 4567"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Faculty</label>
+                    <select class="form-ctrl">
+                        <option value="">Select Faculty</option>
+                        <option>Faculty of Computing</option>
+                        <option>Faculty of Engineering</option>
+                        <option>Faculty of Business</option>
+                        <option>Faculty of Medicine</option>
+                        <option>Faculty of Arts</option>
+                        <option>Faculty of Science</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Year of Study</label>
+                    <select class="form-ctrl">
+                        <option value="">Select Year</option>
+                        <option>Year 1</option>
+                        <option>Year 2</option>
+                        <option>Year 3</option>
+                        <option>Year 4</option>
+                        <option>Postgraduate</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"><label>Technical Area of Interest</label>
+                <select class="form-ctrl">
+                    <option value="">Select area</option>
+                    <option>Embedded Systems and IoT</option>
+                    <option>Robotics and Automation</option>
+                    <option>Artificial Intelligence and ML</option>
+                    <option>Electronics and Circuit Design</option>
+                    <option>Networking and Communications</option>
+                    <option>Power Systems and Energy</option>
+                    <option>Multiple Areas</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Technical background and motivation</label>
+                <textarea class="form-ctrl" placeholder="Projects, skills, programming languages, competitions, or why you want to join IEEE..."></textarea>
+            </div>
+            <button class="btn-submit-form" onclick="submitJoin('IEEE Club')">Submit Application</button>
+        </div>
+    </div>
+
+</div>
+<div class="toast" id="toast">
+    <div class="toast-title" id="toastTitle">Application Submitted!</div>
+    <div class="toast-msg" id="toastMsg">We will be in touch within 48 hours.</div>
+</div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="fs">
+            <h3>Our Clubs</h3>
+            <ul>
+                <li>Athletic Club</li>
+                <li>Aesthetic Club</li>
+                <li>AIESEC</li>
+                <li>LEO Club</li>
+                <li>IEEE Club</li>
+            </ul>
+        </div>
+        <div class="fs">
+            <h3>Contact</h3>
+            <ul>
+                <li><a href="mailto:clubs@oryuncampus.edu">clubs@oryuncampus.edu</a></li>
+               
+            </ul>
+        </div>
+        <div class="fs">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="home.html">Campus Hub</a></li>
+                <li><a href="Events.html">Events</a></li>
+                <li><a href="community.html">Community</a></li>
+                <li><a href="REWARD.html">Rewards</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 ORYN Campus Clubs. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+let cur = 0;
+const slides = document.querySelectorAll('.hslide');
+const dots   = document.querySelectorAll('.dot');
+function goSlide(n) {
+    slides[cur].classList.remove('active');
+    dots[cur].classList.remove('active');
+    cur = n;
+    slides[cur].classList.add('active');
+    dots[cur].classList.add('active');
+}
+setInterval(() => goSlide((cur + 1) % slides.length), 5500);
+
+function showClub(id) {
+    document.querySelectorAll('.cit').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.club-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    document.getElementById('panel-' + id).classList.add('active');
+    document.getElementById('clubs-section').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function scrollToForm() {
+    const activePanel = document.querySelector('.club-panel.active');
+    if (activePanel) {
+        const form = activePanel.querySelector('.join-form-wrap');
+        if (form) form.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
+}
+
+function submitJoin(clubName) {
+    showToast('Application Submitted!', 'Welcome! We will contact you within 48 hours regarding your ' + clubName + ' membership.');
+}
+
+function showToast(title, msg) {
+    document.getElementById('toastTitle').textContent = title;
+    document.getElementById('toastMsg').textContent   = msg;
+    const el = document.getElementById('toast');
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 5000);
+}
+</script>
+</body>
+</html>

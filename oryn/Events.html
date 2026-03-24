@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Events - ORYN Campus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            --red:#82960d; --orange:#a7664e; --gold:#C7A25D;
+            --blue:#002147; --accent:#E63946;
+            --white:#fff; --glass:rgba(255,255,255,0.06);
+            --border:rgba(255,255,255,0.12); --muted:rgba(255,255,255,0.68);
+            --green:#22C55E;
+        }
+        body { font-family:'Inter',sans-serif; background:linear-gradient(135deg,#0a0509,#160810,#0a0509); color:var(--white); line-height:1.6; }
+
+        .top-bar { background:rgba(0,33,71,.95); backdrop-filter:blur(10px); border-bottom:1px solid rgba(255,255,255,.1); padding:.55rem 2rem; text-align:center; font-size:.85rem; color:rgba(255,255,255,.82); font-weight:500; letter-spacing:.3px; }
+
+        header { background:rgba(255,255,255,0.05); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1000; }
+        nav { max-width:1400px; margin:0 auto; padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; }
+        .logo-section { display:flex; align-items:center; gap:1rem; }
+        .campus-logo { height:60px; object-fit:contain; filter:drop-shadow(0 2px 8px rgba(230,57,70,0.3)); }
+        .brand-name { font-family:'Playfair Display',serif; font-size:1.75rem; font-weight:800; color:var(--white); text-decoration:none; }
+        .brand-name span { color:var(--red); }
+        .btn-back { padding:.75rem 1.5rem; background:rgba(230,57,70,.2); color:var(--red); border:2px solid var(--red); border-radius:50px; font-weight:600; text-decoration:none; transition:all .3s; }
+        .btn-back:hover { background:var(--red); color:#fff; transform:translateY(-2px); }
+
+        .hero-slideshow { position:relative; height:600px; overflow:hidden; background:#000; }
+        .slide { position:absolute; inset:0; opacity:0; transition:opacity 1.5s ease-in-out; }
+        .slide.active { opacity:1; }
+        .slide img { width:100%; height:100%; object-fit:cover; filter:brightness(.58); }
+        .slide-overlay { position:absolute; inset:0; background:linear-gradient(135deg,rgba(0,33,71,.82),rgba(230,57,70,.28)); display:flex; align-items:center; justify-content:center; }
+        .slide-content { text-align:center; color:var(--white); max-width:900px; padding:2rem; animation:slideUp .9s ease-out; }
+        @keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+        .slide-content h1 { font-family:'Playfair Display',serif; font-size:4rem; font-weight:800; margin-bottom:1.2rem; line-height:1.1; text-shadow:0 4px 25px rgba(0,0,0,.5); }
+        .slide-content h1 span { color:#ff9080; }
+        .slide-content p { font-size:1.3rem; margin-bottom:2rem; opacity:.95; }
+        .cta-btn { display:inline-block; padding:1.2rem 3rem; background:linear-gradient(135deg,var(--red),var(--orange)); color:#fff; font-weight:700; border-radius:50px; text-decoration:none; transition:all .3s; font-size:1.05rem; box-shadow:0 6px 25px rgba(230,57,70,.4); border:none; cursor:pointer; font-family:'Inter',sans-serif; }
+        .cta-btn:hover { background:linear-gradient(135deg,var(--orange),var(--gold)); transform:translateY(-3px); box-shadow:0 8px 30px rgba(230,57,70,.5); }
+
+        .slide-arrow { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.14); backdrop-filter:blur(12px); border:2px solid rgba(255,255,255,.28); color:#fff; font-size:2.2rem; padding:1rem 1.5rem; cursor:pointer; transition:all .3s; z-index:10; border-radius:14px; line-height:1; }
+        .slide-arrow:hover { background:rgba(255,255,255,.25); transform:translateY(-50%) scale(1.08); }
+        .slide-arrow.prev { left:2rem; }
+        .slide-arrow.next { right:2rem; }
+
+        .slide-dots { position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; gap:.75rem; z-index:10; }
+        .dot { width:13px; height:13px; border-radius:50%; background:rgba(255,255,255,.4); border:1px solid rgba(255,255,255,.3); cursor:pointer; transition:all .3s; }
+        .dot.active { background:var(--red); width:36px; border-radius:7px; }
+
+        .container { max-width:1400px; margin:0 auto; padding:4rem 2rem; }
+        .section-title { font-family:'Playfair Display',serif; text-align:center; font-size:2.8rem; font-weight:800; color:var(--white); margin-bottom:.75rem; }
+        .section-title span { color:var(--red); }
+        .section-sub { text-align:center; color:var(--muted); font-size:1.05rem; margin-bottom:3rem; }
+
+        .events-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); gap:2rem; }
+
+        .event-card { background:rgba(255,255,255,.07); backdrop-filter:blur(20px); border-radius:22px; overflow:hidden; border:1px solid rgba(255,255,255,.1); transition:all .35s cubic-bezier(.175,.885,.32,1.275); }
+        .event-card:hover { transform:translateY(-10px); box-shadow:0 18px 50px rgba(230,57,70,.22); border-color:rgba(230,57,70,.5); }
+
+        .event-photo { position:relative; height:220px; overflow:hidden; }
+        .event-photo img { width:100%; height:100%; object-fit:cover; transition:transform .5s ease; filter:brightness(.82); }
+        .event-card:hover .event-photo img { transform:scale(1.07); filter:brightness(1); }
+        .event-photo-overlay { position:absolute; inset:0; background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.68)); }
+        .event-date-badge { position:absolute; top:1.1rem; left:1.2rem; background:linear-gradient(135deg,var(--red),var(--orange)); color:#fff; border-radius:14px; padding:.6rem 1rem; text-align:center; min-width:62px; }
+        .edb-day { font-size:1.8rem; font-weight:900; line-height:1; }
+        .edb-month { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.8px; }
+        .event-status-badge { position:absolute; top:1.1rem; right:1.2rem; padding:.3rem .85rem; border-radius:20px; font-size:.76rem; font-weight:700; backdrop-filter:blur(8px); }
+        .esb-open { background:rgba(34,197,94,.28); color:#86efac; border:1px solid rgba(34,197,94,.4); }
+        .esb-limited { background:rgba(255,107,53,.28); color:#fca5a5; border:1px solid rgba(255,107,53,.4); }
+
+        .event-body { padding:1.8rem; }
+        .event-category { font-size:.72rem; font-weight:800; color:var(--red); text-transform:uppercase; letter-spacing:1px; margin-bottom:.5rem; }
+        .event-title { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:800; color:var(--white); margin-bottom:1rem; line-height:1.3; }
+        .event-details { display:flex; flex-direction:column; gap:.55rem; margin-bottom:1.2rem; }
+        .event-detail { display:flex; align-items:center; gap:.65rem; font-size:.88rem; color:var(--muted); }
+        .detail-dot { width:6px; height:6px; border-radius:50%; background:var(--red); flex-shrink:0; }
+        .event-desc { color:var(--muted); font-size:.88rem; line-height:1.65; margin-bottom:1.4rem; }
+        .event-tags { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+        .event-tag { padding:.28rem .85rem; background:rgba(230,57,70,.15); border:1px solid rgba(230,57,70,.3); color:rgba(255,160,140,.9); border-radius:20px; font-size:.76rem; font-weight:700; }
+        .btn-register { width:100%; padding:1rem; background:linear-gradient(135deg,var(--red),var(--orange)); color:#fff; border:none; border-radius:12px; font-weight:700; font-size:.97rem; cursor:pointer; transition:all .3s; font-family:'Inter',sans-serif; letter-spacing:.2px; }
+        .btn-register:hover { background:linear-gradient(135deg,var(--orange),var(--gold)); transform:translateY(-2px); box-shadow:0 6px 22px rgba(230,57,70,.45); }
+
+        .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.85); backdrop-filter:blur(10px); z-index:9999; align-items:center; justify-content:center; padding:1rem; }
+        .modal-overlay.open { display:flex; }
+        .modal { background:linear-gradient(135deg,#1a0a10,#12050d); border:1px solid rgba(230,57,70,.3); border-radius:26px; padding:3rem; max-width:580px; width:100%; max-height:92vh; overflow-y:auto; position:relative; animation:modalIn .3s ease-out; }
+        @keyframes modalIn { from{opacity:0;transform:scale(.92)} to{opacity:1;transform:scale(1)} }
+        .modal-close { position:absolute; top:1.4rem; right:1.4rem; background:rgba(255,255,255,.1); border:none; color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:1rem; font-weight:700; transition:all .3s; font-family:'Inter',sans-serif; }
+        .modal-close:hover { background:var(--red); }
+        .modal-event-info { background:rgba(230,57,70,.12); border:1px solid rgba(230,57,70,.25); border-radius:16px; padding:1.4rem 1.6rem; margin-bottom:2rem; }
+        .modal-event-name { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:800; color:var(--white); margin-bottom:.3rem; }
+        .modal-event-date { font-size:.88rem; color:rgba(255,160,140,.85); font-weight:600; }
+        .modal h2 { font-family:'Playfair Display',serif; font-size:1.8rem; color:var(--white); margin-bottom:.35rem; }
+        .modal-sub { color:var(--muted); font-size:.9rem; margin-bottom:1.8rem; line-height:1.6; }
+        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+        .form-group { margin-bottom:1.35rem; }
+        .form-group label { display:block; font-size:.83rem; font-weight:700; color:rgba(255,255,255,.82); margin-bottom:.45rem; letter-spacing:.25px; }
+        .form-ctrl { width:100%; padding:.95rem 1rem; background:rgba(255,255,255,.08); border:2px solid rgba(255,255,255,.12); border-radius:12px; color:#fff; font-size:.95rem; font-family:'Inter',sans-serif; transition:all .3s; }
+        .form-ctrl::placeholder { color:rgba(255,255,255,.35); }
+        .form-ctrl:focus { outline:none; border-color:var(--red); background:rgba(255,255,255,.11); }
+        .form-ctrl option { background:#1a0a10; }
+        textarea.form-ctrl { resize:vertical; min-height:85px; }
+        .btn-submit { width:100%; padding:1.15rem; background:linear-gradient(135deg,var(--red),var(--orange)); color:#fff; border:none; border-radius:12px; font-weight:800; font-size:1.05rem; cursor:pointer; transition:all .3s; font-family:'Inter',sans-serif; }
+        .btn-submit:hover { background:linear-gradient(135deg,var(--orange),var(--gold)); transform:translateY(-2px); box-shadow:0 8px 28px rgba(230,57,70,.5); }
+
+        .toast { display:none; position:fixed; bottom:2rem; right:2rem; background:var(--green); color:#fff; padding:1.2rem 2rem; border-radius:16px; font-weight:700; z-index:99999; box-shadow:0 8px 28px rgba(34,197,94,.4); max-width:380px; font-size:.95rem; }
+        .toast.show { display:block; animation:toastIn .4s ease-out; }
+        @keyframes toastIn { from{opacity:0;transform:translateX(100px)} to{opacity:1;transform:translateX(0)} }
+
+        footer { background:rgba(0,0,0,.8); backdrop-filter:blur(20px); padding:3rem 2rem 1.5rem; border-top:1px solid var(--border); margin-top:4rem; }
+        .footer-grid { max-width:1400px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:2rem; margin-bottom:2rem; }
+        .fs h3 { color:var(--red); margin-bottom:1rem; font-size:1rem; }
+        .fs ul { list-style:none; }
+        .fs ul li,.fs a { color:var(--muted); text-decoration:none; display:block; margin-bottom:.5rem; font-size:.9rem; transition:color .3s; }
+        .fs a:hover { color:var(--red); }
+        .footer-bottom { text-align:center; padding-top:2rem; border-top:1px solid var(--border); color:var(--muted); font-size:.85rem; }
+        .footer-bottom a { color:var(--red); text-decoration:none; }
+
+        @media(max-width:768px) { .hero-slideshow{height:480px;} .slide-content h1{font-size:2.5rem;} .events-grid{grid-template-columns:1fr;} .form-row{grid-template-columns:1fr;} .slide-arrow{padding:.8rem 1rem;font-size:1.6rem;} }
+        ::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-track{background:rgba(255,255,255,.04);} ::-webkit-scrollbar-thumb{background:rgba(230,57,70,.5);border-radius:3px;}
+    </style>
+</head>
+<body>
+
+<div class="top-bar">Discover Amazing Events — Join Our Vibrant Campus Community</div>
+
+<header>
+    <nav>
+        <div class="logo-section">
+            <img src="LOGO.jpg" alt="ORYN Campus Logo" class="campus-logo">
+            <a href="home.html" class="brand-name">ORYN <span>CAMPUS</span></a>
+        </div>
+        <a href="home.html" class="btn-back">Home</a>
+    </nav>
+</header>
+
+<div class="hero-slideshow">
+    <button class="slide-arrow prev" onclick="changeSlide(-1)">&#8249;</button>
+    <button class="slide-arrow next" onclick="changeSlide(1)">&#8250;</button>
+
+    <div class="slide active">
+        <img src="event1.jpeg" alt="Fitness Event">
+        <div class="slide-overlay"><div class="slide-content">
+            <h1>Join Dynamic <span>Fitness Events</span></h1>
+            <p>Experience group fitness, dance classes, and wellness activities that transform your campus life</p>
+            <a href="#events" class="cta-btn">Explore Events</a>
+        </div></div>
+    </div>
+    <div class="slide">
+        <img src="event2.jpeg" alt="Music Night">
+        <div class="slide-overlay"><div class="slide-content">
+            <h1>Live Concerts and <span>Music Nights</span></h1>
+            <p>Immerse yourself in electrifying performances and unforgettable musical experiences</p>
+            <a href="#events" class="cta-btn">See Schedule</a>
+        </div></div>
+    </div>
+    <div class="slide">
+        <img src="event3.jpeg" alt="Dance Performance">
+        <div class="slide-overlay"><div class="slide-content">
+            <h1>Contemporary <span>Dance and Arts</span></h1>
+            <p>Witness breathtaking performances and learn from world-class dance instructors</p>
+            <a href="#events" class="cta-btn">Book Your Spot</a>
+        </div></div>
+    </div>
+    <div class="slide">
+        <img src="event4.jpg" alt="Campus Events">
+        <div class="slide-overlay"><div class="slide-content">
+            <h1>Epic <span>Campus Experiences</span></h1>
+            <p>From festivals to competitions, create memories that last a lifetime</p>
+            <a href="#events" class="cta-btn">Join Now</a>
+        </div></div>
+    </div>
+
+    <div class="slide-dots">
+        <div class="dot active" onclick="goSlide(0)"></div>
+        <div class="dot" onclick="goSlide(1)"></div>
+        <div class="dot" onclick="goSlide(2)"></div>
+        <div class="dot" onclick="goSlide(3)"></div>
+    </div>
+</div>
+<div class="container" id="events">
+    <h2 class="section-title">Upcoming <span>Events</span></h2>
+    <p class="section-sub">Register for any event below — fill in the form and your spot is confirmed instantly</p>
+
+    <div class="events-grid">
+
+        <div class="event-card">
+            <div class="event-photo">
+                <img src="event1.jpeg" alt="Dance Fitness Bootcamp">
+                <div class="event-photo-overlay"></div>
+                <div class="event-date-badge"><div class="edb-day">22</div><div class="edb-month">Mar 2026</div></div>
+                <span class="event-status-badge esb-open">Open</span>
+            </div>
+            <div class="event-body">
+                <div class="event-category">Fitness and Dance</div>
+                <div class="event-title">Dance Fitness Bootcamp</div>
+                <div class="event-details">
+                    <div class="event-detail"><div class="detail-dot"></div>6:00 PM to 8:00 PM</div>
+                    <div class="event-detail"><div class="detail-dot"></div>Main Dance Studio</div>
+                    <div class="event-detail"><div class="detail-dot"></div>30 spots available</div>
+                    <div class="event-detail"><div class="detail-dot"></div>Free entry</div>
+                </div>
+                <p class="event-desc">An energetic two-hour cardio dance session designed for all fitness levels. Led by certified instructors — no experience required.</p>
+                <div class="event-tags"><span class="event-tag">Dance</span><span class="event-tag">Cardio</span><span class="event-tag">All Levels</span></div>
+                <button class="btn-register" onclick="openRegModal('Dance Fitness Bootcamp','22 March 2026 — 6:00 PM to 8:00 PM — Main Dance Studio')">Register Now</button>
+            </div>
+        </div>
+        <div class="event-card">
+            <div class="event-photo">
+                <img src="event2.jpeg" alt="Music Night">
+                <div class="event-photo-overlay"></div>
+                <div class="event-date-badge"><div class="edb-day">25</div><div class="edb-month">Mar 2026</div></div>
+                <span class="event-status-badge esb-open">Open</span>
+            </div>
+            <div class="event-body">
+                <div class="event-category">Music and Arts</div>
+                <div class="event-title">Music and Movement Night</div>
+                <div class="event-details">
+                    <div class="event-detail"><div class="detail-dot"></div>7:00 PM to 10:00 PM</div>
+                    <div class="event-detail"><div class="detail-dot"></div>Campus Amphitheater</div>
+                    <div class="event-detail"><div class="detail-dot"></div>200+ attendees expected</div>
+                    <div class="event-detail"><div class="detail-dot"></div>Free for ORYN students</div>
+                </div>
+                <p class="event-desc">An evening of live performances, social dancing, and campus music showcasing student bands and visiting artists.</p>
+                <div class="event-tags"><span class="event-tag">Music</span><span class="event-tag">Social</span><span class="event-tag">Live Performance</span></div>
+                <button class="btn-register" onclick="openRegModal('Music and Movement Night','25 March 2026 — 7:00 PM to 10:00 PM — Campus Amphitheater')">Register Now</button>
+            </div>
+        </div>
+
+        <div class="event-card">
+            <div class="event-photo">
+                <img src="event3.jpeg" alt="Sports Tournament">
+                <div class="event-photo-overlay"></div>
+                <div class="event-date-badge"><div class="edb-day">28</div><div class="edb-month">Mar 2026</div></div>
+                <span class="event-status-badge esb-limited">Limited</span>
+            </div>
+            <div class="event-body">
+                <div class="event-category">Sports and Competition</div>
+                <div class="event-title">Spring Sports Tournament</div>
+                <div class="event-details">
+                    <div class="event-detail"><div class="detail-dot"></div>9:00 AM to 5:00 PM</div>
+                    <div class="event-detail"><div class="detail-dot"></div>Athletic Center</div>
+                    <div class="event-detail"><div class="detail-dot"></div>Team registration required</div>
+                    <div class="event-detail"><div class="detail-dot"></div>Prize: Rs. 50,000</div>
+                </div>
+                <p class="event-desc">Inter-faculty knockout tournament across multiple sports. Register your team and compete for the Spring Championship trophy and cash prize.</p>
+                <div class="event-tags"><span class="event-tag">Sports</span><span class="event-tag">Competition</span><span class="event-tag">Prize</span></div>
+                <button class="btn-register" onclick="openRegModal('Spring Sports Tournament','28 March 2026 — 9:00 AM to 5:00 PM — Athletic Center')">Register Team</button>
+            </div>
+        </div>
+
+        <div class="event-card">
+            <div class="event-photo">
+                <img src="event4.jpg" alt="Dance Masterclass">
+                <div class="event-photo-overlay"></div>
+                <div class="event-date-badge"><div class="edb-day">01</div><div class="edb-month">Apr 2026</div></div>
+                <span class="event-status-badge esb-limited">Limited — 20 spots</span>
+            </div>
+            <div class="event-body">
+                <div class="event-category">Performing Arts</div>
+                <div class="event-title">Contemporary Dance Masterclass</div>
+                <div class="event-details">
+                    <div class="event-detail"><div class="detail-dot"></div>4:00 PM to 6:00 PM</div>
+                    <div class="event-detail"><div class="detail-dot"></div>Arts Center Theater</div>
+                    <div class="event-detail"><div class="detail-dot"></div>20 spots only</div>
+                    <div class="event-detail"><div class="detail-dot"></div>Ticket: Rs. 500</div>
+                </div>
+                <p class="event-desc">An intensive contemporary and ballet masterclass taught by a visiting professional choreographer. Intermediate to advanced level recommended.</p>
+                <div class="event-tags"><span class="event-tag">Ballet</span><span class="event-tag">Advanced</span><span class="event-tag">Masterclass</span></div>
+                <button class="btn-register" onclick="openRegModal('Contemporary Dance Masterclass','1 April 2026 — 4:00 PM to 6:00 PM — Arts Center Theater')">Book Spot</button>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+<div class="modal-overlay" id="regModal" onclick="closeIfBg(event)">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal()">X</button>
+
+        <h2>Event <span style="color:var(--red)">Registration</span></h2>
+        <p class="modal-sub">Fill in all fields to confirm your registration. You will receive a confirmation email within 24 hours with your event pass and details.</p>
+
+        <div class="modal-event-info">
+            <div class="modal-event-name" id="modalEventName">Event Name</div>
+            <div class="modal-event-date" id="modalEventDate">Date and Time</div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" class="form-ctrl" id="rFullName" placeholder="Your full name">
+            </div>
+            <div class="form-group">
+                <label>Student ID</label>
+                <input type="text" class="form-ctrl" id="rStudentId" placeholder="e.g. STU2026001">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" class="form-ctrl" id="rEmail" placeholder="student@oryuncampus.edu">
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" class="form-ctrl" id="rPhone" placeholder="+94 77 123 4567">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Faculty</label>
+                <select class="form-ctrl" id="rFaculty">
+                    <option value="">Select Faculty</option>
+                    <option>Faculty of Computing</option>
+                    <option>Faculty of Engineering</option>
+                    <option>Faculty of Business</option>
+                    <option>Faculty of Medicine</option>
+                    <option>Faculty of Arts</option>
+                    <option>Faculty of Aviation</option>
+                    <option>Faculty of Science</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Year of Study</label>
+                <select class="form-ctrl" id="rYear">
+                    <option value="">Select Year</option>
+                    <option>Year 1</option>
+                    <option>Year 2</option>
+                    <option>Year 3</option>
+                    <option>Year 4</option>
+                    <option>Postgraduate</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Number of Attendees</label>
+            <select class="form-ctrl" id="rAttendees">
+                <option>1 — Just me</option>
+                <option>2 — Me and a friend</option>
+                <option>Team of 3</option>
+                <option>Team of 4</option>
+                <option>Team of 5 or more</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Dietary Requirements or Special Notes (optional)</label>
+            <textarea class="form-ctrl" id="rNotes" placeholder="Any dietary requirements, accessibility needs, or special requests..."></textarea>
+        </div>
+
+        <button class="btn-submit" onclick="submitRegistration()">Confirm Registration</button>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="fs">
+            <h3>Events Info</h3>
+            <ul>
+                <li>All events open to ORYN students</li>
+                <li>Confirmation email within 24 hours</li>
+                <li>Earn reward points per event</li>
+                <li>Free cancellation up to 48 hrs before</li>
+            </ul>
+        </div>
+        <div class="fs">
+            <h3>Contact</h3>
+            <ul>
+                <li><a href="tel:+94111234567">+94 11 123 4567</a></li>
+                <li><a href="mailto:events@oryuncampus.edu">events@oryuncampus.edu</a></li>
+                
+            </ul>
+        </div>
+        <div class="fs">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="home.html">Campus Hub</a></li>
+                <li><a href="Booking.html">Facility Booking</a></li>
+                <li><a href="REWARD.html">Reward Points</a></li>
+                <li><a href="clubs.html">Campus Clubs</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 ORYN Campus Events. All rights reserved. | <a href="#terms">Terms</a> | <a href="#privacy">Privacy</a></p>
+    </div>
+</footer>
+
+<script>
+let cur = 0;
+const slides = document.querySelectorAll('.slide');
+const dots   = document.querySelectorAll('.dot');
+
+function showSlide(i) {
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    if (i >= slides.length) i = 0;
+    if (i < 0) i = slides.length - 1;
+    cur = i;
+    slides[cur].classList.add('active');
+    dots[cur].classList.add('active');
+}
+function changeSlide(dir) { showSlide(cur + dir); }
+function goSlide(i) { showSlide(i); }
+setInterval(() => showSlide(cur + 1), 5500);
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+        e.preventDefault();
+        const t = document.querySelector(a.getAttribute('href'));
+        if (t) t.scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+});
+
+let currentEventName = '';
+function openRegModal(name, date) {
+    currentEventName = name;
+    document.getElementById('modalEventName').textContent = name;
+    document.getElementById('modalEventDate').textContent = date;
+    document.getElementById('regModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+    document.getElementById('regModal').classList.remove('open');
+    document.body.style.overflow = '';
+}
+function closeIfBg(e) {
+    if (e.target.id === 'regModal') closeModal();
+}
+
+function submitRegistration() {
+    const name    = document.getElementById('rFullName').value.trim();
+    const stu     = document.getElementById('rStudentId').value.trim();
+    const email   = document.getElementById('rEmail').value.trim();
+    const faculty = document.getElementById('rFaculty').value;
+    const year    = document.getElementById('rYear').value;
+
+    if (!name || !stu || !email || !faculty || !year) {
+        showToast('Please fill in all required fields.');
+        return;
+    }
+
+    const pts = parseInt(localStorage.getItem('reward_points') || '0') + 100;
+    localStorage.setItem('reward_points', pts);
+
+    closeModal();
+    showToast('Registration confirmed for "' + currentEventName + '"! Check your email for your event pass. You earned 100 reward points.');
+
+    ['rFullName','rStudentId','rEmail','rPhone','rNotes'].forEach(id => {
+        document.getElementById(id).value = '';
+    });
+    document.getElementById('rFaculty').value = '';
+    document.getElementById('rYear').value    = '';
+}
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 5000);
+}
+</script>
+</body>
+</html>

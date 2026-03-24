@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transit - ORYN Campus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            --green:#538a0b;
+            --green2:#059669;
+            --red:#ef4444;
+            --yellow:#f59e0b;
+            --white:#fff;
+            --glass:rgba(255,255,255,0.05);
+            --border:rgba(255,255,255,0.1);
+            --muted:rgba(255,255,255,0.65);
+        }
+        body { font-family:'Inter',sans-serif; background:linear-gradient(135deg,#050e09,#0a0a0a,#050e09); color:var(--white); line-height:1.6; }
+
+        
+        header { background:rgba(255,255,255,0.04); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1000; }
+        nav { max-width:1400px; margin:0 auto; padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; }
+        .logo-section { display:flex; align-items:center; gap:1rem; }
+        .campus-logo { height:55px; object-fit:contain; filter:drop-shadow(0 2px 8px rgba(16,185,129,0.4)); }
+        .brand-name { font-size:1.6rem; font-weight:800; color:var(--white); text-decoration:none; }
+        .brand-name span { color:var(--green); }
+        .btn-back { padding:.7rem 1.5rem; background:rgba(16,185,129,0.15); color:var(--green); border:2px solid var(--green); border-radius:50px; font-weight:600; text-decoration:none; transition:all .3s; }
+        .btn-back:hover { background:var(--green); color:#000; transform:translateY(-2px); }
+
+        
+        .hero-slideshow { position:relative; height:580px; overflow:hidden; background:#000; }
+        .slide { position:absolute; top:0; left:0; width:100%; height:100%; opacity:0; transition:opacity 1.5s ease-in-out; }
+        .slide.active { opacity:1; }
+        .slide img { width:100%; height:100%; object-fit:cover; object-position:center; filter:brightness(.72); display:block; }
+        .slide-overlay { position:absolute; inset:0; background:linear-gradient(135deg,rgba(0,0,0,.75),rgba(16,185,129,.2)); display:flex; align-items:center; justify-content:center; }
+        .slide-content { text-align:center; color:var(--white); max-width:900px; padding:2rem; animation:slideUp 1s ease-out; }
+        @keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+        .slide-content h1 { font-size:4rem; font-weight:800; margin-bottom:1rem; text-shadow:0 4px 20px rgba(0,0,0,.5); line-height:1.1; }
+        .slide-content p { font-size:1.3rem; margin-bottom:2rem; opacity:.95; }
+        .cta-btns { display:flex; gap:1.5rem; justify-content:center; flex-wrap:wrap; }
+        .cta-btn { padding:1.1rem 2.8rem; font-weight:700; border-radius:50px; text-decoration:none; transition:all .3s; font-size:1rem; border:2px solid transparent; cursor:pointer; font-family:'Inter',sans-serif; }
+        .cta-btn.primary { background:var(--green); color:#000; border-color:var(--green); }
+        .cta-btn.primary:hover { background:transparent; color:var(--green); transform:translateY(-3px); box-shadow:0 8px 25px rgba(16,185,129,.4); }
+        .cta-btn.secondary { background:transparent; color:var(--white); border-color:var(--white); }
+        .cta-btn.secondary:hover { background:var(--white); color:#000; transform:translateY(-3px); }
+        .slide-dots { position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; gap:.75rem; z-index:10; }
+        .dot { width:12px; height:12px; border-radius:50%; background:rgba(255,255,255,.4); cursor:pointer; transition:all .3s; border:1px solid rgba(255,255,255,.3); }
+        .dot.active { background:var(--green); width:35px; border-radius:6px; box-shadow:0 2px 15px rgba(16,185,129,.6); }
+        .container { max-width:1400px; margin:0 auto; padding:4rem 2rem; }
+        .section-title { text-align:center; font-size:2.8rem; font-weight:800; color:var(--white); margin-bottom:.75rem; }
+        .section-title span { color:var(--green); }
+        .section-sub { text-align:center; color:var(--muted); font-size:1.05rem; margin-bottom:3rem; }
+        .loc-panel { background:rgba(16,185,129,.08); border:2px solid rgba(16,185,129,.3); backdrop-filter:blur(20px); border-radius:24px; padding:2.5rem; margin-bottom:4rem; display:flex; gap:2rem; align-items:center; flex-wrap:wrap; }
+        .loc-indicator { width:76px; height:76px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem; font-weight:700; flex-shrink:0; transition:all .5s; }
+        .loc-off { background:rgba(239,68,68,.18); border:3px solid rgba(239,68,68,.35); color:rgba(239,68,68,.9); }
+        .loc-on { background:rgba(16,185,129,.2); border:3px solid var(--green); color:var(--green); animation:gpulse 2s infinite; }
+        @keyframes gpulse { 0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.4)} 50%{box-shadow:0 0 0 18px rgba(16,185,129,0)} }
+        .loc-info { flex:1; min-width:200px; }
+        .loc-info h3 { font-size:1.35rem; font-weight:700; color:var(--white); margin-bottom:.3rem; }
+        .loc-info p { color:var(--muted); font-size:.95rem; }
+        .loc-stats { display:flex; gap:2rem; }
+        .ls-item { text-align:center; }
+        .ls-val { font-size:2rem; font-weight:800; color:var(--green); line-height:1; }
+        .ls-lbl { font-size:.8rem; color:var(--muted); margin-top:.2rem; }
+        .share-btn { padding:1.1rem 2.5rem; border:none; border-radius:50px; font-weight:700; font-size:1rem; cursor:pointer; transition:all .3s; white-space:nowrap; font-family:'Inter',sans-serif; }
+        .share-start { background:var(--green); color:#000; }
+        .share-start:hover { background:var(--green2); transform:scale(1.05); box-shadow:0 6px 25px rgba(16,185,129,.4); }
+        .share-stop { background:var(--red); color:#fff; }
+        .share-stop:hover { transform:scale(1.05); box-shadow:0 6px 25px rgba(239,68,68,.4); }
+        .bus-tabs { display:flex; gap:1rem; justify-content:center; margin-bottom:2.5rem; flex-wrap:wrap; }
+        .bus-tab { padding:.8rem 2rem; background:var(--glass); border:2px solid var(--border); color:var(--white); border-radius:50px; cursor:pointer; font-weight:600; transition:all .3s; font-family:'Inter',sans-serif; font-size:.95rem; }
+        .bus-tab.active,.bus-tab:hover { background:var(--green); border-color:var(--green); color:#000; }
+        .buses-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.5rem; margin-bottom:4rem; }
+        .bus-card { background:var(--glass); backdrop-filter:blur(20px); border-radius:20px; border:1px solid var(--border); overflow:hidden; transition:all .35s cubic-bezier(.175,.885,.32,1.275); }
+        .bus-card:hover { transform:translateY(-8px); box-shadow:0 16px 45px rgba(16,185,129,.2); border-color:var(--green); }
+        .bus-card-img { position:relative; height:190px; overflow:hidden; }
+        .bus-card-img img { width:100%; height:100%; object-fit:cover; transition:transform .5s ease; filter:brightness(.85); }
+        .bus-card:hover .bus-card-img img { transform:scale(1.06); filter:brightness(1); }
+        .bus-card-img-overlay { position:absolute; inset:0; background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.65) 100%); }
+        .bus-card-img-label { position:absolute; bottom:.85rem; left:1rem; font-size:1.1rem; font-weight:800; color:var(--white); text-shadow:0 2px 8px rgba(0,0,0,.8); }
+        .bus-card-top { padding:1rem 1.5rem 0; display:flex; justify-content:space-between; align-items:flex-start; }
+        .bus-icon { font-size:1.6rem; font-weight:800; color:var(--white); background:rgba(16,185,129,.15); border:1px solid rgba(16,185,129,.3); padding:.4rem .9rem; border-radius:10px; }
+        .bus-live-badge { display:flex; align-items:center; gap:.4rem; padding:.35rem .9rem; border-radius:20px; font-size:.78rem; font-weight:700; }
+        .bl-live { background:rgba(16,185,129,.2); color:var(--green); border:1px solid rgba(16,185,129,.4); }
+        .bl-sched { background:rgba(245,158,11,.2); color:var(--yellow); border:1px solid rgba(245,158,11,.4); }
+        .bl-dot { width:7px; height:7px; border-radius:50%; animation:blink 1s infinite; }
+        .bl-live .bl-dot { background:var(--green); }
+        .bl-sched .bl-dot { background:var(--yellow); animation:none; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+        .bus-card-body { padding:1.2rem 1.5rem 1.5rem; }
+        .bus-number { font-size:1rem; font-weight:700; color:var(--muted); margin-bottom:.3rem; letter-spacing:.3px; text-transform:uppercase; }
+        .bus-route-name { font-size:1.25rem; font-weight:800; color:var(--white); margin-bottom:1.5rem; line-height:1.3; }
+        .time-rows { display:flex; flex-direction:column; gap:.65rem; margin-bottom:1.5rem; }
+        .time-row { display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,.04); border-radius:10px; padding:.7rem 1rem; border:1px solid rgba(255,255,255,.07); }
+        .time-row .stop-name { color:var(--muted); font-size:.9rem; font-weight:500; }
+        .time-row .stop-time { color:var(--white); font-size:.95rem; font-weight:700; }
+        .time-row.next { background:rgba(16,185,129,.12); border-color:rgba(16,185,129,.3); }
+        .time-row.next .stop-name { color:rgba(255,255,255,.85); }
+        .time-row.next .stop-time { color:var(--green); font-size:1.05rem; }
+        .next-label { background:var(--green); color:#000; font-size:.65rem; font-weight:800; padding:.15rem .5rem; border-radius:6px; margin-left:.5rem; }
+        .btn-track { width:100%; padding:.9rem; background:rgba(16,185,129,.15); border:2px solid var(--green); color:var(--green); border-radius:12px; font-weight:700; cursor:pointer; transition:all .3s; font-size:.95rem; font-family:'Inter',sans-serif; }
+        .btn-track:hover { background:var(--green); color:#000; }
+        .rewards-section { background:rgba(16,185,129,.07); border:1px solid rgba(16,185,129,.25); border-radius:24px; padding:3rem; margin-bottom:4rem; }
+        .rewards-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:2rem; margin-bottom:2.5rem; }
+        .rewards-top h2 { font-size:2rem; font-weight:800; color:var(--white); }
+        .rewards-top p { color:var(--muted); margin-top:.3rem; font-size:.95rem; }
+        .points-big { text-align:center; }
+        .points-num { font-size:4rem; font-weight:800; color:var(--green); line-height:1; }
+        .points-lbl { color:var(--muted); font-size:.9rem; margin-top:.3rem; }
+        .reward-tiers { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; }
+        .tier { background:var(--glass); border:1px solid var(--border); border-radius:16px; padding:1.5rem; text-align:center; transition:all .3s; }
+        .tier:hover { border-color:var(--green); background:rgba(16,185,129,.08); transform:translateY(-4px); }
+        .tier-name { font-weight:700; color:var(--white); margin-bottom:.3rem; font-size:1rem; }
+        .tier-pts { font-size:1.6rem; font-weight:800; color:var(--green); }
+        .tier-desc { font-size:.8rem; color:var(--muted); margin-top:.3rem; }
+        .toast { display:none; position:fixed; bottom:2rem; right:2rem; background:var(--green); color:#000; padding:1.1rem 1.8rem; border-radius:16px; font-weight:700; z-index:9999; box-shadow:0 6px 24px rgba(16,185,129,.5); max-width:360px; font-size:.95rem; }
+        .toast.show { display:block; animation:toastIn .35s ease-out; }
+        @keyframes toastIn { from{opacity:0;transform:translateX(80px)} to{opacity:1;transform:translateX(0)} }
+        footer { background:rgba(0,0,0,.8); backdrop-filter:blur(20px); padding:3rem 2rem 1.5rem; border-top:1px solid var(--border); margin-top:2rem; }
+        .footer-grid { max-width:1400px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:2rem; margin-bottom:2rem; }
+        .fs h3 { color:var(--green); margin-bottom:1rem; font-size:1rem; }
+        .fs ul { list-style:none; }
+        .fs ul li,.fs a { color:var(--muted); text-decoration:none; display:block; margin-bottom:.5rem; font-size:.9rem; transition:color .3s; }
+        .fs a:hover { color:var(--green); }
+        .footer-bottom { text-align:center; padding-top:2rem; border-top:1px solid var(--border); color:var(--muted); font-size:.85rem; }
+        .footer-bottom a { color:var(--green); text-decoration:none; }
+
+        @media(max-width:900px) { .bus-img-card { grid-template-columns:1fr; } .bic-photo { height:280px; } }
+        @media(max-width:768px) { .slide-content h1{font-size:2.5rem;} .hero-slideshow{height:450px;} .cta-btns{flex-direction:column;align-items:center;} .section-title{font-size:2rem;} .loc-panel{flex-direction:column;text-align:center;} .loc-stats{justify-content:center;} .share-btn{width:100%;} }
+        ::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-track{background:rgba(255,255,255,.04);} ::-webkit-scrollbar-thumb{background:rgba(16,185,129,.5);border-radius:3px;}
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <div class="logo-section">
+            <img src="LOGO.jpg" alt="ORYN Logo" class="campus-logo">
+            <a href="home.html" class="brand-name">ORYN <span>TRANSIT</span></a>
+        </div>
+        <a href="home.html" class="btn-back">Back to Home</a>
+    </nav>
+</header>
+<div class="hero-slideshow">
+    <div class="slide active">
+        <img src="transit.jpg" alt="ORYN Campus Buses">
+        <div class="slide-overlay"><div class="slide-content">
+            <h1>ORYN Transit</h1>
+            <p>Track buses, share your location, and earn reward points every trip</p>
+            <div class="cta-btns">
+                <button class="cta-btn primary" onclick="toggleSharing()">Share My Location</button>
+                <a href="#buses" class="cta-btn secondary">View Schedules</a>
+            </div>
+        </div></div>
+    </div>
+    <div class="slide">
+        <img src="transit1.jpg" alt="ORYN Bus Fleet">
+        <div class="slide-overlay"><div class="slide-content">
+            <h1>Always On Time</h1>
+            <p>Live arrival times and route schedules for all campus buses</p>
+            <div class="cta-btns">
+                <a href="#buses" class="cta-btn primary">Bus Schedules</a>
+                <button class="cta-btn secondary" onclick="toggleSharing()">Start Sharing</button>
+            </div>
+        </div></div>
+    </div>
+    <div class="slide">
+        <img src="transit1.jpg" alt="ORYN Transit Rewards" style="filter:brightness(.55) saturate(1.3);">
+        <div class="slide-overlay"><div class="slide-content">
+            <h1>Earn While You Ride</h1>
+            <p>Share your location on every trip to unlock reward points and perks</p>
+            <div class="cta-btns">
+                <a href="#rewards" class="cta-btn primary">My Rewards</a>
+                <button class="cta-btn secondary" onclick="toggleSharing()">Start Earning</button>
+            </div>
+        </div></div>
+    </div>
+    <div class="slide-dots">
+        <div class="dot active" onclick="goSlide(0)"></div>
+        <div class="dot" onclick="goSlide(1)"></div>
+        <div class="dot" onclick="goSlide(2)"></div>
+    </div>
+</div>
+
+<div class="container">
+    <h2 class="section-title">Live <span>Location Sharing</span></h2>
+    <p class="section-sub">Share your location in real-time to help fellow students track buses and earn reward points</p>
+
+    <div class="loc-panel">
+        <div class="loc-indicator loc-off" id="locInd">OFF</div>
+        <div class="loc-info">
+            <h3 id="locTitle">Location Sharing: Inactive</h3>
+            <p id="locDesc">Enable location sharing to earn 5 points per trip and help track buses in real-time</p>
+        </div>
+        <div class="loc-stats" id="locStats" style="display:none">
+            <div class="ls-item"><div class="ls-val" id="tripsVal">0</div><div class="ls-lbl">Trips Today</div></div>
+            <div class="ls-item"><div class="ls-val" id="ptsVal">0</div><div class="ls-lbl">Points Earned</div></div>
+            <div class="ls-item"><div class="ls-val" id="kmVal">0.0</div><div class="ls-lbl">km Shared</div></div>
+        </div>
+        <button class="share-btn share-start" id="shareBtn" onclick="toggleSharing()">Start Sharing Location</button>
+    </div>
+
+    <h2 class="section-title" id="buses">Bus <span>Schedules</span></h2>
+    <p class="section-sub">Select a day type to view the correct timetable for your journey</p>
+
+    <div class="bus-tabs">
+        <button class="bus-tab active" onclick="setTab('weekday',this)">Weekday</button>
+        <button class="bus-tab" onclick="setTab('saturday',this)">Saturday</button>
+        <button class="bus-tab" onclick="setTab('sunday',this)">Sunday / Holiday</button>
+    </div>
+    <div class="buses-grid" id="tab-weekday">
+        <div class="bus-card">
+            <div class="bus-card-img">
+                <img src="bus_a.jpg" alt="ORYN Bus A">
+                <div class="bus-card-img-overlay"></div>
+                <div class="bus-card-img-label">Bus A — Colombo City</div>
+            </div>
+            <div class="bus-card-top">
+                <div class="bus-icon">Bus A</div>
+                <div class="bus-live-badge bl-live"><div class="bl-dot"></div> LIVE</div>
+            </div>
+            <div class="bus-card-body">
+                <div class="bus-number">Route A</div>
+                <div class="bus-route-name">Campus ↔ Colombo City</div>
+                <div class="time-rows">
+                    <div class="time-row next">
+                        <span class="stop-name">Next Departure <span class="next-label">NEXT</span></span>
+                        <span class="stop-time" id="busA-next">—</span>
+                    </div>
+                    <div class="time-row"><span class="stop-name">07:30 AM</span><span class="stop-time">Campus → Colombo City</span></div>
+                    <div class="time-row"><span class="stop-name">03:30 PM</span><span class="stop-time">Campus → Colombo City</span></div>
+                    <div class="time-row"><span class="stop-name">05:00 PM</span><span class="stop-time">Last Return — Campus</span></div>
+                </div>
+                <button class="btn-track" onclick="trackBus('Bus A')">Track Bus A</button>
+            </div>
+        </div>
+
+        <div class="bus-card">
+            <div class="bus-card-img">
+                <img src="bus_b.jpg" alt="ORYN Bus B">
+                <div class="bus-card-img-overlay"></div>
+                <div class="bus-card-img-label">Bus B — Kadawatha</div>
+            </div>
+            <div class="bus-card-top">
+                <div class="bus-icon">Bus B</div>
+                <div class="bus-live-badge bl-live"><div class="bl-dot"></div> LIVE</div>
+            </div>
+            <div class="bus-card-body">
+                <div class="bus-number">Route B</div>
+                <div class="bus-route-name">Campus  ↔ Kadawatha</div>
+                <div class="time-rows">
+                    <div class="time-row next">
+                        <span class="stop-name">Next Departure <span class="next-label">NEXT</span></span>
+                        <span class="stop-time" id="busB-next">—</span>
+                    </div>
+                    <div class="time-row"><span class="stop-name">07:00 AM</span><span class="stop-time">Kadawatha→ Campus </span></div>
+                    <div class="time-row"><span class="stop-name">04:30 PM</span><span class="stop-time">Campus  → Kadawatha</span></div>
+                    <div class="time-row"><span class="stop-name">06:00 PM</span><span class="stop-time">Last Run — Kadawatha</span></div>
+                </div>
+                <button class="btn-track" onclick="trackBus('Bus B')">Track Bus B</button>
+            </div>
+        </div>
+
+        <div class="bus-card">
+            <div class="bus-card-img">
+                <img src="bus_c.jpg" alt="ORYN Bus C">
+                <div class="bus-card-img-overlay"></div>
+                <div class="bus-card-img-label">Bus C — City Center</div>
+            </div>
+            <div class="bus-card-top">
+                <div class="bus-icon">Bus C</div>
+                <div class="bus-live-badge bl-sched"><div class="bl-dot"></div> SCHEDULED</div>
+            </div>
+            <div class="bus-card-body">
+                <div class="bus-number">Route C</div>
+                <div class="bus-route-name">Campus ↔ City Center</div>
+                <div class="time-rows">
+                    <div class="time-row next">
+                        <span class="stop-name">Next Departure <span class="next-label">NEXT</span></span>
+                        <span class="stop-time" id="busC-next">—</span>
+                    </div>
+                     <div class="time-row"><span class="stop-name">07:00 AM</span><span class="stop-time">Campus → City Center</span></div>
+                     <div class="time-row"><span class="stop-name">08:00 AM</span><span class="stop-time">City Center → Campus</span></div>
+                     <div class="time-row"><span class="stop-name">05:30 PM</span><span class="stop-time">City Center → Campus</span></div>
+                     <div class="time-row"><span class="stop-name">06:30 PM</span><span class="stop-time">Last Run — Residence</span></div>
+                </div>
+                <button class="btn-track" onclick="trackBus('Bus C')">Track Bus C</button>
+            </div>
+        </div>
+
+    </div>
+    <div class="buses-grid" id="tab-saturday" style="display:none">
+        <div class="bus-card"><div class="bus-card-top"><div class="bus-icon">Bus A</div><div class="bus-live-badge bl-sched"><div class="bl-dot"></div> SCHEDULED</div></div><div class="bus-card-body"><div class="bus-number">Route A</div><div class="bus-route-name">Campus ↔ Colombo City</div><div class="time-rows"><div class="time-row next"><span class="stop-name">Saturday Schedule <span class="next-label">SAT</span></span><span class="stop-time">Reduced</span></div><div class="time-row"><span class="stop-name">08:00 AM</span><span class="stop-time">Colombo City → Campus</span></div><div class="time-row"><span class="stop-name">11:00 AM</span><span class="stop-time">Campus → Colombo City</span></div><div class="time-row"><span class="stop-name">02:00 PM</span><span class="stop-time">Colombo City → Campus</span></div><div class="time-row"><span class="stop-name">05:00 PM</span><span class="stop-time">Last Run — Campus</span></div></div><button class="btn-track" onclick="trackBus('Bus A')">Track Bus A</button></div></div>
+        <div class="bus-card"><div class="bus-card-top"><div class="bus-icon">Bus B</div><div class="bus-live-badge bl-sched"><div class="bl-dot"></div> SCHEDULED</div></div><div class="bus-card-body"><div class="bus-number">Route B</div><div class="bus-route-name">Campus↔ Kadawatha</div><div class="time-rows"><div class="time-row next"><span class="stop-name">Saturday Schedule <span class="next-label">SAT</span></span><span class="stop-time">Reduced</span></div><div class="time-row"><span class="stop-name">08:30 AM</span><span class="stop-time">Kadawatha → Campus </span></div><div class="time-row"><span class="stop-name">12:00 PM</span><span class="stop-time">Campus → Kadawatha</span></div><div class="time-row"><span class="stop-name">04:00 PM</span><span class="stop-time">Last Run — Kadawatha</span></div></div><button class="btn-track" onclick="trackBus('Bus B')">Track Bus B</button></div></div>
+        <div class="bus-card"><div class="bus-card-top"><div class="bus-icon">Bus C</div><div class="bus-live-badge bl-sched"><div class="bl-dot"></div> SCHEDULED</div></div><div class="bus-card-body"><div class="bus-number">Route C</div><div class="bus-route-name">Campuss ↔ City Center</div><div class="time-rows"><div class="time-row next"><span class="stop-name">Saturday Schedule <span class="next-label">SAT</span></span><span class="stop-time">Reduced</span></div><div class="time-row"><span class="stop-name">09:00 AM</span><span class="stop-time">Campus → City Center</span></div><div class="time-row"><span class="stop-name">01:00 PM</span><span class="stop-time">City Center → Campus</span></div><div class="time-row"><span class="stop-name">05:00 PM</span><span class="stop-time">Last Run — Residence</span></div></div><button class="btn-track" onclick="trackBus('Bus C')">Track Bus C</button></div></div>
+    </div>
+    <div class="buses-grid" id="tab-sunday" style="display:none">
+        <div class="bus-card"><div class="bus-card-top"><div class="bus-icon">Bus A</div><div class="bus-live-badge bl-sched"><div class="bl-dot"></div> SCHEDULED</div></div><div class="bus-card-body"><div class="bus-number">Route A</div><div class="bus-route-name">Main Campus ↔ Colombo City</div><div class="time-rows"><div class="time-row next"><span class="stop-name">Sunday / Holiday <span class="next-label">SUN</span></span><span class="stop-time">Limited</span></div><div class="time-row"><span class="stop-name">09:00 AM</span><span class="stop-time">Colombo City → Campus</span></div><div class="time-row"><span class="stop-name">01:00 PM</span><span class="stop-time">Campus → Colombo City</span></div><div class="time-row"><span class="stop-name">04:00 PM</span><span class="stop-time">Last Run — Campus</span></div></div><button class="btn-track" onclick="trackBus('Bus A')">Track Bus A</button></div></div>
+        <div class="bus-card"><div class="bus-card-top"><div class="bus-icon">Bus C</div><div class="bus-live-badge bl-sched"><div class="bl-dot"></div> SCHEDULED</div></div><div class="bus-card-body"><div class="bus-number">Route C</div><div class="bus-route-name">Residence Halls ↔ City Center</div><div class="time-rows"><div class="time-row next"><span class="stop-name">Sunday / Holiday <span class="next-label">SUN</span></span><span class="stop-time">Limited</span></div><div class="time-row"><span class="stop-name">10:00 AM</span><span class="stop-time">Campus → City Center</span></div><div class="time-row"><span class="stop-name">03:00 PM</span><span class="stop-time">Last Return — Residence</span></div></div><button class="btn-track" onclick="trackBus('Bus C')">Track Bus C</button></div></div>
+    </div>
+    <div class="rewards-section" id="rewards">
+        <div class="rewards-top">
+            <div>
+                <h2>Transit Rewards</h2>
+                <p>Share your location on trips to earn points towards campus perks</p>
+            </div>
+            <div class="points-big">
+                <div class="points-num" id="totalPts">0</div>
+                <div class="points-lbl">Total Points</div>
+            </div>
+        </div>
+        <div class="reward-tiers">
+            <div class="tier">
+                <div class="tier-name">Free Coffee</div>
+                <div class="tier-pts">50 pts</div>
+                <div class="tier-desc">1 cafe drink</div>
+            </div>
+            <div class="tier">
+                <div class="tier-name">Event Ticket</div>
+                <div class="tier-pts">150 pts</div>
+                <div class="tier-desc">Any campus event</div>
+            </div>
+            <div class="tier">
+                <div class="tier-name">Library Pass</div>
+                <div class="tier-pts">200 pts</div>
+                <div class="tier-desc">7 day borrow extension</div>
+            </div>
+            <div class="tier">
+                <div class="tier-name">Free Transit Week</div>
+                <div class="tier-pts">350 pts</div>
+                <div class="tier-desc">Unlimited rides — 7 days</div>
+            </div>
+            <div class="tier">
+                <div class="tier-name">Gym Session</div>
+                <div class="tier-pts">400 pts</div>
+                <div class="tier-desc">1 free PT session</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="fs">
+            <h3>Service Hours</h3>
+            <ul>
+                <li>Bus A: 6:00 AM – 5:00 PM daily</li>
+                <li>Bus B: 7:00 AM – 6:00 PM daily</li>
+                <li>Bus C: 7:00 AM – 6:30 PM Mon–Fri</li>
+                <li>Weekend: Reduced schedule</li>
+            </ul>
+        </div>
+        <div class="fs">
+            <h3>Contact</h3>
+            <ul>
+                
+                <li><a href="mailto:transit@oryuncampus.edu">transit@oryuncampus.edu</a></li>
+               
+            </ul>
+        </div>
+        <div class="fs">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="home.html">Campus Hub</a></li>
+                <li><a href="REWARD.html">My Rewards</a></li>
+              
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 ORYN Campus Transit. All rights reserved. | <a href="#terms">Terms</a> | <a href="#privacy">Privacy</a></p>
+    </div>
+</footer>
+
+<script>
+
+let cur = 0;
+const slides = document.querySelectorAll('.slide');
+const dots   = document.querySelectorAll('.dot');
+function showSlide(i) {
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    cur = (i + slides.length) % slides.length;
+    slides[cur].classList.add('active');
+    dots[cur].classList.add('active');
+}
+function goSlide(i) { showSlide(i); }
+setInterval(() => showSlide(cur + 1), 7000);
+
+
+function setTab(id, el) {
+    document.querySelectorAll('.bus-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    ['weekday','saturday','sunday'].forEach(k => {
+        document.getElementById('tab-' + k).style.display = k === id ? 'grid' : 'none';
+    });
+}
+
+function calcNext(times) {
+    const now  = new Date();
+    const nowM = now.getHours() * 60 + now.getMinutes();
+    for (const t of times) {
+        const [h, m] = t.split(':').map(Number);
+        const tM = h * 60 + m;
+        if (tM > nowM) {
+            const diff = tM - nowM;
+            return diff < 60 ? diff + ' min' : h + ':' + String(m).padStart(2,'0') + (h < 12 ? ' AM' : ' PM');
+        }
+    }
+    return 'Last bus done';
+}
+
+const busTimes = {
+    A: ['06:00','07:30','09:00','11:00','13:00','15:30','17:00'],
+    B: ['07:00','08:30','10:30','12:30','14:30','16:30','18:00'],
+    C: ['07:00','08:00','12:00','13:30','16:00','17:30','18:30'],
+};
+
+function updateNextTimes() {
+    Object.entries(busTimes).forEach(([bus, times]) => {
+        const v = calcNext(times);
+        const el = document.getElementById('bus' + bus + '-next');
+        if (el) el.textContent = v;
+    });
+}
+updateNextTimes();
+setInterval(updateNextTimes, 30000);
+let sharing = false, ptInterval, sessionPts = 0, sessionKm = 0;
+function toggleSharing() {
+    sharing = !sharing;
+    const ind   = document.getElementById('locInd');
+    const title = document.getElementById('locTitle');
+    const desc  = document.getElementById('locDesc');
+    const btn   = document.getElementById('shareBtn');
+    const stats = document.getElementById('locStats');
+
+    if (sharing) {
+        ind.className  = 'loc-indicator loc-on';
+        ind.textContent = 'ON';
+        title.textContent = 'Location Sharing: ACTIVE';
+        desc.textContent  = 'Real-time location shared — earning 1 point every 30 seconds!';
+        btn.className  = 'share-btn share-stop';
+        btn.textContent = 'Stop Sharing';
+        stats.style.display = 'flex';
+        ptInterval = setInterval(() => {
+            sessionPts++;
+            sessionKm = (parseFloat(sessionKm) + 0.04).toFixed(1);
+            document.getElementById('tripsVal').textContent = Math.ceil(sessionPts / 5);
+            document.getElementById('ptsVal').textContent   = sessionPts;
+            document.getElementById('kmVal').textContent    = sessionKm;
+            let tot = parseInt(localStorage.getItem('transit_points') || '0') + 1;
+            localStorage.setItem('transit_points', tot);
+            document.getElementById('totalPts').textContent = tot;
+        }, 30000);
+        showToast('Location sharing active! Earning rewards every 30 seconds.');
+    } else {
+        ind.className  = 'loc-indicator loc-off';
+        ind.textContent = 'OFF';
+        title.textContent = 'Location Sharing: Inactive';
+        desc.textContent  = 'Enable location sharing to earn 5 points per trip and help track buses';
+        btn.className  = 'share-btn share-start';
+        btn.textContent = 'Start Sharing Location';
+        clearInterval(ptInterval);
+        showToast('Sharing stopped. ' + sessionPts + ' points saved!');
+    }
+}
+
+function trackBus(name) {
+    showToast('Tracking ' + name + ' — live updates every 30 sec. You will be notified when it is near!');
+}
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    const pts = localStorage.getItem('transit_points') || '0';
+    document.getElementById('totalPts').textContent = pts;
+});
+</script>
+</body>
+</html>

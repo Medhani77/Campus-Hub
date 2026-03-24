@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORYN Cafe - Campus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            --accent:#19a6a1; --accent2:#7e5627;
+            --white:#fff; --glass:rgba(255,255,255,0.05);
+            --border:rgba(255,255,255,0.1); --muted:rgba(255,255,255,0.68);
+        }
+        body { font-family:'Inter',sans-serif; background:linear-gradient(135deg,#0a0a0a,#120b05,#0a0a0a); color:var(--white); line-height:1.6; }
+
+        header { background:rgba(255,255,255,0.04); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1000; }
+        nav { max-width:1400px; margin:0 auto; padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; }
+        .logo-section { display:flex; align-items:center; gap:1rem; }
+        .campus-logo { height:55px; object-fit:contain; filter:drop-shadow(0 2px 8px rgba(212,165,116,.4)); }
+        .brand-name { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:700; color:var(--white); text-decoration:none; }
+        .brand-name span { color:var(--accent); }
+        .btn-back { padding:.7rem 1.5rem; background:rgba(212,165,116,.15); color:var(--accent); border:2px solid var(--accent); border-radius:50px; font-weight:600; text-decoration:none; transition:all .3s; }
+        .btn-back:hover { background:var(--accent); color:#000; transform:translateY(-2px); }
+
+        .hero-slideshow { position:relative; height:580px; overflow:hidden; background:#000; }
+        .slide { position:absolute; top:0; left:0; width:100%; height:100%; opacity:0; transition:opacity 1.5s ease-in-out; }
+        .slide.active { opacity:1; }
+        .slide img { width:100%; height:100%; object-fit:cover; filter:brightness(.65); }
+        .slide-overlay { position:absolute; inset:0; background:linear-gradient(135deg,rgba(0,0,0,.72),rgba(212,165,116,.22)); display:flex; align-items:center; justify-content:center; }
+        .hero-content { text-align:center; color:var(--white); max-width:900px; padding:2rem; animation:slideUp 1s ease-out; }
+        @keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+        .hero-content h1 { font-family:'Playfair Display',serif; font-size:4rem; font-weight:800; margin-bottom:1rem; text-shadow:0 4px 20px rgba(0,0,0,.5); line-height:1.1; }
+        .hero-content p { font-size:1.3rem; margin-bottom:2rem; opacity:.95; }
+        .cta-btns { display:flex; gap:1.5rem; justify-content:center; flex-wrap:wrap; }
+        .cta-btn { padding:1.1rem 2.8rem; font-weight:700; border-radius:50px; text-decoration:none; transition:all .3s; font-size:1rem; border:2px solid transparent; cursor:pointer; font-family:'Inter',sans-serif; }
+        .cta-btn.primary { background:var(--accent); color:#000; border-color:var(--accent); }
+        .cta-btn.primary:hover { background:transparent; color:var(--accent); transform:translateY(-3px); box-shadow:0 8px 25px rgba(212,165,116,.4); }
+        .cta-btn.secondary { background:transparent; color:var(--white); border-color:var(--white); }
+        .cta-btn.secondary:hover { background:var(--white); color:#000; transform:translateY(-3px); }
+        .slide-dots { position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; gap:.75rem; z-index:10; }
+        .dot { width:12px; height:12px; border-radius:50%; background:rgba(255,255,255,.4); cursor:pointer; transition:all .3s; border:1px solid rgba(255,255,255,.3); }
+        .dot.active { background:var(--accent); width:35px; border-radius:6px; box-shadow:0 2px 15px rgba(212,165,116,.6); }
+
+        .container { max-width:1400px; margin:0 auto; padding:4rem 2rem; }
+        .section-title { font-family:'Playfair Display',serif; font-size:2.8rem; font-weight:700; color:var(--white); margin-bottom:.75rem; text-align:center; }
+        .section-title span { color:var(--accent); }
+        .section-sub { text-align:center; color:var(--muted); font-size:1.05rem; margin-bottom:3rem; }
+
+        .cat-tabs-wrap { margin-bottom:3rem; }
+        .cat-tabs { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:1rem; margin-bottom:2.5rem; }
+
+        .cat-tab {
+            position:relative; border-radius:16px; overflow:hidden;
+            border:2px solid var(--border); cursor:pointer;
+            transition:all .35s cubic-bezier(.175,.885,.32,1.275);
+            aspect-ratio:1 / 1;
+            background:var(--glass);
+        }
+        .cat-tab:hover { transform:translateY(-6px) scale(1.03); border-color:var(--accent); box-shadow:0 12px 35px rgba(212,165,116,.3); }
+        .cat-tab.active { border-color:var(--accent); box-shadow:0 0 0 3px rgba(212,165,116,.35), 0 12px 35px rgba(212,165,116,.3); transform:translateY(-4px); }
+        .cat-tab img { width:100%; height:100%; object-fit:cover; transition:transform .4s ease; filter:brightness(.8); }
+        .cat-tab:hover img, .cat-tab.active img { transform:scale(1.08); filter:brightness(1); }
+        .cat-tab-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,.78) 0%,transparent 55%); }
+        .cat-tab.active .cat-tab-overlay { background:linear-gradient(to top,rgba(0,0,0,.65) 0%,rgba(212,165,116,.12) 100%); }
+        .cat-tab-label { position:absolute; bottom:.7rem; left:0; right:0; text-align:center; font-size:.85rem; font-weight:700; color:var(--white); letter-spacing:.3px; text-shadow:0 2px 6px rgba(0,0,0,.9); padding:0 .4rem; }
+        .cat-tab.active .cat-tab-label { color:var(--accent); }
+        .active-bar { position:absolute; top:0; left:0; right:0; height:3px; background:var(--accent); border-radius:0 0 4px 4px; opacity:0; transition:opacity .3s; }
+        .cat-tab.active .active-bar { opacity:1; }
+
+        .menu-panel { display:none; animation:fadeIn .35s ease; }
+        .menu-panel.active { display:block; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+        .panel-header { display:flex; align-items:center; gap:1.5rem; margin-bottom:2rem; padding:1.5rem 2rem; background:var(--glass); border-radius:20px; border:1px solid var(--border); }
+        .panel-header img { width:80px; height:80px; border-radius:14px; object-fit:cover; border:2px solid rgba(212,165,116,.4); flex-shrink:0; }
+        .panel-header h3 { font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:var(--white); margin-bottom:.3rem; }
+        .panel-header p { color:var(--muted); font-size:.95rem; }
+
+        .items-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.5rem; margin-bottom:2rem; }
+        .item-card {
+            background:var(--glass); backdrop-filter:blur(16px);
+            border-radius:16px; border:1px solid var(--border);
+            padding:1.4rem 1.5rem;
+            display:flex; justify-content:space-between; align-items:center; gap:1rem;
+            transition:all .3s;
+        }
+        .item-card:hover { border-color:var(--accent); background:rgba(255,255,255,.08); transform:translateY(-4px); box-shadow:0 8px 28px rgba(212,165,116,.2); }
+        .item-left { flex:1; }
+        .item-name { font-weight:700; color:var(--white); font-size:1rem; margin-bottom:.25rem; }
+        .item-desc { color:var(--muted); font-size:.82rem; line-height:1.5; margin-bottom:.5rem; }
+        .item-badges { display:flex; gap:.4rem; flex-wrap:wrap; }
+        .ibadge { padding:.18rem .55rem; border-radius:20px; font-size:.72rem; font-weight:600; }
+        .ib-pop { background:rgba(255,107,53,.28); color:#FF6B35; border:1px solid rgba(255,107,53,.4); }
+        .ib-new { background:rgba(76,175,80,.28); color:#4CAF50; border:1px solid rgba(76,175,80,.4); }
+        .ib-veg { background:rgba(46,125,50,.28); color:#66BB6A; border:1px solid rgba(46,125,50,.4); }
+        .item-right { display:flex; flex-direction:column; align-items:flex-end; gap:.7rem; flex-shrink:0; }
+        .item-price { font-weight:800; color:var(--accent); font-size:1.15rem; white-space:nowrap; }
+        .btn-add { padding:.55rem 1.2rem; background:rgba(212,165,116,.2); border:2px solid var(--accent); color:var(--accent); border-radius:50px; font-weight:700; cursor:pointer; transition:all .3s; font-size:.85rem; white-space:nowrap; font-family:'Inter',sans-serif; }
+        .btn-add:hover { background:var(--accent); color:#000; }
+
+        .cart-float { position:fixed; bottom:2rem; right:2rem; background:var(--accent); color:#000; width:70px; height:70px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; z-index:999; box-shadow:0 4px 20px rgba(212,165,116,.6); transition:all .3s; font-weight:800; }
+        .cart-float:hover { transform:scale(1.1); }
+        .cart-icon { font-size:1.4rem; line-height:1; }
+        .cart-count { font-size:1rem; font-weight:800; line-height:1; }
+
+        .order-section { background:var(--glass); backdrop-filter:blur(20px); border-radius:24px; padding:3rem; border:1px solid var(--border); max-width:680px; margin:0 auto 4rem; }
+        .order-section h2 { font-family:'Playfair Display',serif; font-size:2rem; color:var(--white); margin-bottom:.4rem; text-align:center; }
+        .order-section .sub { color:var(--muted); font-size:.9rem; text-align:center; margin-bottom:2rem; }
+        .form-row2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+        .form-group { margin-bottom:1.4rem; }
+        .form-group label { display:block; color:var(--white); font-weight:600; margin-bottom:.45rem; font-size:.9rem; }
+        .form-ctrl { width:100%; padding:.95rem 1rem; background:rgba(255,255,255,.08); border:2px solid var(--border); border-radius:12px; color:var(--white); font-size:.95rem; font-family:'Inter',sans-serif; transition:all .3s; }
+        .form-ctrl::placeholder { color:rgba(255,255,255,.38); }
+        .form-ctrl:focus { outline:none; border-color:var(--accent); background:rgba(255,255,255,.12); }
+        .form-ctrl option { background:#1a1a1a; }
+        textarea.form-ctrl { resize:vertical; min-height:90px; }
+        .cart-summary-box { background:rgba(212,165,116,.08); border:1px solid rgba(212,165,116,.25); border-radius:14px; padding:1.2rem 1.4rem; margin-bottom:1.5rem; }
+        .cart-summary-box h4 { color:var(--accent); font-weight:700; margin-bottom:.75rem; font-size:.95rem; }
+        .cart-item-row { display:flex; justify-content:space-between; padding:.4rem 0; border-bottom:1px solid rgba(255,255,255,.06); font-size:.88rem; color:rgba(255,255,255,.85); }
+        .cart-item-row:last-child { border:none; }
+        .cart-total-row { display:flex; justify-content:space-between; padding:.6rem 0 0; font-weight:800; color:var(--accent); font-size:1rem; }
+        .empty-cart-msg { color:var(--muted); font-size:.88rem; text-align:center; padding:.5rem 0; }
+
+        .btn-order { width:100%; padding:1.2rem; background:var(--accent); color:#000; border:none; border-radius:12px; font-weight:700; font-size:1.05rem; cursor:pointer; transition:all .3s; font-family:'Inter',sans-serif; }
+        .btn-order:hover { background:var(--accent2); transform:translateY(-2px); box-shadow:0 6px 25px rgba(212,165,116,.5); }
+        .btn-clear { width:100%; padding:.85rem; background:rgba(239,68,68,.15); color:rgba(239,68,68,.8); border:2px solid rgba(239,68,68,.3); border-radius:12px; font-weight:600; font-size:.9rem; cursor:pointer; transition:all .3s; font-family:'Inter',sans-serif; margin-top:.75rem; }
+        .btn-clear:hover { background:rgba(239,68,68,.25); border-color:rgba(239,68,68,.5); }
+        .toast { display:none; position:fixed; top:80px; right:20px; background:var(--accent); color:#000; padding:1rem 1.5rem; border-radius:12px; font-weight:700; z-index:9999; box-shadow:0 4px 20px rgba(212,165,116,.5); }
+        .toast.show { display:block; animation:toastIn .3s ease; }
+        @keyframes toastIn { from{opacity:0;transform:translateX(60px)} to{opacity:1;transform:translateX(0)} }
+        footer { background:rgba(0,0,0,.8); backdrop-filter:blur(20px); padding:3rem 2rem 1.5rem; border-top:1px solid var(--border); margin-top:2rem; }
+        .footer-grid { max-width:1400px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:2rem; margin-bottom:2rem; }
+        .fs h3 { color:var(--accent); margin-bottom:1rem; font-size:1rem; }
+        .fs ul { list-style:none; }
+        .fs ul li,.fs a { color:var(--muted); text-decoration:none; display:block; margin-bottom:.5rem; font-size:.9rem; transition:color .3s; }
+        .fs a:hover { color:var(--accent); }
+        .footer-bottom { text-align:center; padding-top:2rem; border-top:1px solid var(--border); color:var(--muted); font-size:.85rem; }
+        .footer-bottom a { color:var(--accent); text-decoration:none; }
+
+        @media(max-width:900px) { .cat-tabs { grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); } }
+        @media(max-width:768px) { .hero-content h1{font-size:2.5rem;} .hero-slideshow{height:450px;} .cta-btns{flex-direction:column;align-items:center;} .section-title{font-size:2rem;} .form-row2{grid-template-columns:1fr;} .items-grid{grid-template-columns:1fr;} }
+        ::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-track{background:rgba(255,255,255,.04);} ::-webkit-scrollbar-thumb{background:rgba(212,165,116,.5);border-radius:3px;}
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <div class="logo-section">
+            <img src="LOGO.jpg" alt="ORYN Logo" class="campus-logo">
+            <a href="home.html" class="brand-name">ORYN <span>CAFE</span></a>
+        </div>
+        <a href="home.html" class="btn-back">Home</a>
+    </nav>
+</header>
+<div class="hero-slideshow">
+    <div class="slide active">
+        <img src="cafe1.jpg" alt="ORYN Cafe Interior">
+        <div class="slide-overlay">
+            <div class="hero-content">
+                <h1>Sip, Study and Savour</h1>
+                <p>Handcrafted beverages and wholesome meals — right on campus</p>
+                <div class="cta-btns">
+                    <a href="#menu" class="cta-btn primary">View Menu</a>
+                    <a href="#order" class="cta-btn secondary">Pre-Order Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide">
+        <img src="cafe2.jpg" alt="ORYN Cafe Dining">
+        <div class="slide-overlay">
+            <div class="hero-content">
+                <h1>Fresh Every Day</h1>
+                <p>Farm-to-table food that fuels your best academic performance</p>
+                <div class="cta-btns">
+                    <a href="#menu" class="cta-btn primary">Today's Menu</a>
+                    <a href="REWARD.html" class="cta-btn secondary">Earn Rewards</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-dots">
+        <div class="dot active" onclick="goSlide(0)"></div>
+        <div class="dot" onclick="goSlide(1)"></div>
+    </div>
+</div>
+
+<div class="container">
+    <h2 class="section-title" id="menu">Browse Our <span>Menu</span></h2>
+    <p class="section-sub">Click a category to see all items and prices — then add to your order</p>
+
+    <div class="cat-tabs-wrap">
+        <div class="cat-tabs">
+
+            <div class="cat-tab active" onclick="showPanel('hot_drinks', this)">
+                <div class="active-bar"></div>
+                <img src="hot_drinks.jpg" alt="Hot Drinks">
+                <div class="cat-tab-overlay"></div>
+                <div class="cat-tab-label">Hot Drinks</div>
+            </div>
+
+            <div class="cat-tab" onclick="showPanel('cool_drinks', this)">
+                <div class="active-bar"></div>
+                <img src="cool_drinks.jpg" alt="Cool Drinks">
+                <div class="cat-tab-overlay"></div>
+                <div class="cat-tab-label">Cool Drinks</div>
+            </div>
+
+            <div class="cat-tab" onclick="showPanel('main_dishes', this)">
+                <div class="active-bar"></div>
+                <img src="main_dishes.jpg" alt="Main Dishes">
+                <div class="cat-tab-overlay"></div>
+                <div class="cat-tab-label">Main Dishes</div>
+            </div>
+
+            <div class="cat-tab" onclick="showPanel('side_dishes', this)">
+                <div class="active-bar"></div>
+                <img src="side_dishes.jpg" alt="Side Dishes">
+                <div class="cat-tab-overlay"></div>
+                <div class="cat-tab-label">Side Dishes</div>
+            </div>
+
+            <div class="cat-tab" onclick="showPanel('snacks', this)">
+                <div class="active-bar"></div>
+                <img src="snacks.jpg" alt="Snacks">
+                <div class="cat-tab-overlay"></div>
+                <div class="cat-tab-label">Snacks</div>
+            </div>
+
+            <div class="cat-tab" onclick="showPanel('desserts', this)">
+                <div class="active-bar"></div>
+                <img src="desserts.jpg" alt="Desserts">
+                <div class="cat-tab-overlay"></div>
+                <div class="cat-tab-label">Desserts</div>
+            </div>
+
+            <div class="cat-tab" onclick="showPanel('pestry', this)">
+                <div class="active-bar"></div>
+                <img src="pestry.jpg" alt="Pastry Items">
+                <div class="cat-tab-overlay"></div>
+                <div class="cat-tab-label">Pastry Items</div>
+            </div>
+
+        </div>
+        <div class="menu-panel active" id="panel-hot_drinks">
+            <div class="panel-header">
+                <img src="hot_drinks.jpg" alt="Hot Drinks">
+                <div>
+                    <h3>Hot Drinks</h3>
+                    <p>Freshly brewed coffees, teas and specialty hot beverages — made to order by our baristas</p>
+                </div>
+            </div>
+            <div class="items-grid">
+                <div class="item-card"><div class="item-left"><div class="item-name">Cappuccino</div><div class="item-desc">Rich espresso with velvety steamed milk foam</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 350</span><button class="btn-add" onclick="addToCart('Cappuccino',350)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Latte</div><div class="item-desc">Smooth espresso with steamed milk, silky and mild</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 380</span><button class="btn-add" onclick="addToCart('Latte',380)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Mocha</div><div class="item-desc">Chocolate espresso delight with whipped cream</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 420</span><button class="btn-add" onclick="addToCart('Mocha',420)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Caramel Macchiato</div><div class="item-desc">Espresso, vanilla syrup and caramel drizzle</div><div class="item-badges"><span class="ibadge ib-new">New</span></div></div><div class="item-right"><span class="item-price">Rs. 480</span><button class="btn-add" onclick="addToCart('Caramel Macchiato',480)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Chai Latte</div><div class="item-desc">Aromatic spiced tea with steamed oat milk</div><div class="item-badges"><span class="ibadge ib-veg">Vegan</span></div></div><div class="item-right"><span class="item-price">Rs. 360</span><button class="btn-add" onclick="addToCart('Chai Latte',360)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Flat White</div><div class="item-desc">Double ristretto with velvety micro-foam milk</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 400</span><button class="btn-add" onclick="addToCart('Flat White',400)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Hot Chocolate</div><div class="item-desc">Rich Belgian cocoa blended with steamed milk</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 340</span><button class="btn-add" onclick="addToCart('Hot Chocolate',340)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Green Tea</div><div class="item-desc">Refreshing organic Japanese green tea, light and clean</div><div class="item-badges"><span class="ibadge ib-veg">Vegan</span></div></div><div class="item-right"><span class="item-price">Rs. 220</span><button class="btn-add" onclick="addToCart('Green Tea',220)">+ Add</button></div></div>
+            </div>
+        </div>
+        <div class="menu-panel" id="panel-cool_drinks">
+            <div class="panel-header">
+                <img src="cool_drinks.jpg" alt="Cool Drinks">
+                <div>
+                    <h3>Cool Drinks</h3>
+                    <p>Chilled beverages, smoothies, frappes and refreshing cold drinks for every mood</p>
+                </div>
+            </div>
+            <div class="items-grid">
+                <div class="item-card"><div class="item-left"><div class="item-name">Iced Caramel Latte</div><div class="item-desc">Cold espresso with caramel syrup over ice</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 520</span><button class="btn-add" onclick="addToCart('Iced Caramel Latte',520)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Mango Smoothie</div><div class="item-desc">Fresh blended mango with coconut milk</div><div class="item-badges"><span class="ibadge ib-veg">Vegan</span></div></div><div class="item-right"><span class="item-price">Rs. 450</span><button class="btn-add" onclick="addToCart('Mango Smoothie',450)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Matcha Frappe</div><div class="item-desc">Premium Japanese matcha blended with milk and ice</div><div class="item-badges"><span class="ibadge ib-new">New</span></div></div><div class="item-right"><span class="item-price">Rs. 580</span><button class="btn-add" onclick="addToCart('Matcha Frappe',580)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Passion Fruit Cooler</div><div class="item-desc">Tropical passion fruit with sparkling water and lime</div><div class="item-badges"><span class="ibadge ib-veg">Vegan</span></div></div><div class="item-right"><span class="item-price">Rs. 390</span><button class="btn-add" onclick="addToCart('Passion Fruit Cooler',390)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Strawberry Milkshake</div><div class="item-desc">Creamy fresh strawberry shake with vanilla ice cream</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 490</span><button class="btn-add" onclick="addToCart('Strawberry Milkshake',490)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Lemonade</div><div class="item-desc">Freshly squeezed lemon with mint and sparkling water</div><div class="item-badges"><span class="ibadge ib-veg">Vegan</span></div></div><div class="item-right"><span class="item-price">Rs. 280</span><button class="btn-add" onclick="addToCart('Lemonade',280)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Iced Coffee</div><div class="item-desc">Bold cold-brew coffee served over ice</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 350</span><button class="btn-add" onclick="addToCart('Iced Coffee',350)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Watermelon Juice</div><div class="item-desc">Pure fresh watermelon blended with a hint of mint</div><div class="item-badges"><span class="ibadge ib-veg">Vegan</span></div></div><div class="item-right"><span class="item-price">Rs. 300</span><button class="btn-add" onclick="addToCart('Watermelon Juice',300)">+ Add</button></div></div>
+            </div>
+        </div>
+        <div class="menu-panel" id="panel-main_dishes">
+            <div class="panel-header">
+                <img src="main_dishes.jpg" alt="Main Dishes">
+                <div>
+                    <h3>Main Dishes</h3>
+                    <p>Hearty, nutritious main courses freshly prepared every day by our campus kitchen team</p>
+                </div>
+            </div>
+            <div class="items-grid">
+                <div class="item-card"><div class="item-left"><div class="item-name">Grilled Chicken Rice Box</div><div class="item-desc">Herb-marinated chicken with jasmine rice and stir-fried greens</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 950</span><button class="btn-add" onclick="addToCart('Chicken Rice Box',950)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Buddha Bowl</div><div class="item-desc">Quinoa, roasted veggies, avocado and tahini dressing</div><div class="item-badges"><span class="ibadge ib-veg">Vegan</span><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 850</span><button class="btn-add" onclick="addToCart('Buddha Bowl',850)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Pasta Arrabbiata</div><div class="item-desc">Penne in spicy tomato garlic sauce with fresh basil</div><div class="item-badges"><span class="ibadge ib-veg">Vegan</span></div></div><div class="item-right"><span class="item-price">Rs. 780</span><button class="btn-add" onclick="addToCart('Pasta Arrabbiata',780)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Club Sandwich</div><div class="item-desc">Triple-decker with chicken, lettuce, tomato and garlic mayo</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 750</span><button class="btn-add" onclick="addToCart('Club Sandwich',750)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Beef Burger</div><div class="item-desc">Flame-grilled beef patty with lettuce, cheese and brioche bun</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 1,100</span><button class="btn-add" onclick="addToCart('Beef Burger',1100)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Fish and Chips</div><div class="item-desc">Crispy battered fish fillet with seasoned chips and tartar sauce</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 980</span><button class="btn-add" onclick="addToCart('Fish and Chips',980)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Kottu Roti</div><div class="item-desc">Sri Lankan spiced roti with vegetables and egg, a local favourite</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 650</span><button class="btn-add" onclick="addToCart('Kottu Roti',650)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Fried Rice</div><div class="item-desc">Wok-tossed jasmine rice with vegetables, egg and soy sauce</div><div class="item-badges"><span class="ibadge ib-new">New</span></div></div><div class="item-right"><span class="item-price">Rs. 700</span><button class="btn-add" onclick="addToCart('Fried Rice',700)">+ Add</button></div></div>
+            </div>
+        </div>
+        <div class="menu-panel" id="panel-side_dishes">
+            <div class="panel-header">
+                <img src="side_dishes.jpg" alt="Side Dishes">
+                <div>
+                    <h3>Side Dishes</h3>
+                    <p>Perfect companions to your main meal — salads, soups, fries and more</p>
+                </div>
+            </div>
+            <div class="items-grid">
+                <div class="item-card"><div class="item-left"><div class="item-name">Garden Salad</div><div class="item-desc">Mixed greens, cherry tomatoes, cucumber and vinaigrette</div><div class="item-badges"><span class="ibadge ib-veg">Vegan</span></div></div><div class="item-right"><span class="item-price">Rs. 280</span><button class="btn-add" onclick="addToCart('Garden Salad',280)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">French Fries</div><div class="item-desc">Golden crispy fries with your choice of dipping sauce</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 320</span><button class="btn-add" onclick="addToCart('French Fries',320)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Tomato Soup</div><div class="item-desc">Slow-cooked creamy tomato soup with herb croutons</div><div class="item-badges"><span class="ibadge ib-veg">Vegan</span></div></div><div class="item-right"><span class="item-price">Rs. 350</span><button class="btn-add" onclick="addToCart('Tomato Soup',350)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Caesar Salad</div><div class="item-desc">Crisp romaine, parmesan, croutons and caesar dressing</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 420</span><button class="btn-add" onclick="addToCart('Caesar Salad',420)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Coleslaw</div><div class="item-desc">Fresh shredded cabbage and carrot in creamy dressing</div><div class="item-badges"><span class="ibadge ib-veg">Vegan</span></div></div><div class="item-right"><span class="item-price">Rs. 180</span><button class="btn-add" onclick="addToCart('Coleslaw',180)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Garlic Bread</div><div class="item-desc">Toasted baguette with herb butter, warm and crispy</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 200</span><button class="btn-add" onclick="addToCart('Garlic Bread',200)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Hummus and Pita</div><div class="item-desc">Creamy chickpea hummus with warm pita bread and veggies</div><div class="item-badges"><span class="ibadge ib-veg">Vegan</span></div></div><div class="item-right"><span class="item-price">Rs. 380</span><button class="btn-add" onclick="addToCart('Hummus and Pita',380)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Onion Rings</div><div class="item-desc">Crispy battered onion rings with smoky dipping sauce</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 290</span><button class="btn-add" onclick="addToCart('Onion Rings',290)">+ Add</button></div></div>
+            </div>
+        </div>
+        <div class="menu-panel" id="panel-snacks">
+            <div class="panel-header">
+                <img src="snacks.jpg" alt="Snacks">
+                <div>
+                    <h3>Snacks</h3>
+                    <p>Quick bites, chips, cookies and packaged snacks perfect for between lectures</p>
+                </div>
+            </div>
+            <div class="items-grid">
+                <div class="item-card"><div class="item-left"><div class="item-name">Potato Chips</div><div class="item-desc">Assorted flavours — Classic, BBQ, Cheese and Sour Cream</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 120</span><button class="btn-add" onclick="addToCart('Potato Chips',120)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Protein Bar</div><div class="item-desc">Dark chocolate coated oat and nut bar, 20g protein</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 300</span><button class="btn-add" onclick="addToCart('Protein Bar',300)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Biscuits Pack</div><div class="item-desc">Assorted cream biscuits and digestive biscuit packs</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 90</span><button class="btn-add" onclick="addToCart('Biscuits Pack',90)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Choco Chip Cookies</div><div class="item-desc">Freshly baked cookies loaded with dark chocolate chips</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 180</span><button class="btn-add" onclick="addToCart('Choco Chip Cookies',180)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Chocolate Bar</div><div class="item-desc">Assorted chocolate bars — Milk, Dark and White varieties</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 150</span><button class="btn-add" onclick="addToCart('Chocolate Bar',150)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Popcorn</div><div class="item-desc">Lightly salted or caramel popcorn in snack-size packs</div><div class="item-badges"><span class="ibadge ib-veg">Vegan</span></div></div><div class="item-right"><span class="item-price">Rs. 140</span><button class="btn-add" onclick="addToCart('Popcorn',140)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Mixed Nuts</div><div class="item-desc">Roasted almonds, cashews and peanuts, lightly salted</div><div class="item-badges"><span class="ibadge ib-veg">Vegan</span></div></div><div class="item-right"><span class="item-price">Rs. 220</span><button class="btn-add" onclick="addToCart('Mixed Nuts',220)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Crackers and Dip</div><div class="item-desc">Assorted crackers served with cheese or hummus dip</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 260</span><button class="btn-add" onclick="addToCart('Crackers and Dip',260)">+ Add</button></div></div>
+            </div>
+        </div>
+        <div class="menu-panel" id="panel-desserts">
+            <div class="panel-header">
+                <img src="desserts.jpg" alt="Desserts">
+                <div>
+                    <h3>Desserts</h3>
+                    <p>Indulgent cakes, chocolate treats, cupcakes and sweet endings for every craving</p>
+                </div>
+            </div>
+            <div class="items-grid">
+                <div class="item-card"><div class="item-left"><div class="item-name">Chocolate Truffle Cake</div><div class="item-desc">Rich dark chocolate layered cake with ganache glaze</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 480</span><button class="btn-add" onclick="addToCart('Chocolate Truffle Cake',480)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Tiramisu</div><div class="item-desc">Classic Italian mascarpone dessert with espresso and cocoa</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 420</span><button class="btn-add" onclick="addToCart('Tiramisu',420)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Cupcakes (2 pcs)</div><div class="item-desc">Vanilla or chocolate cupcakes with buttercream frosting</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 350</span><button class="btn-add" onclick="addToCart('Cupcakes',350)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Chocolate Brownie</div><div class="item-desc">Dense fudgy brownie with a crispy top and soft centre</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 280</span><button class="btn-add" onclick="addToCart('Chocolate Brownie',280)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Cheesecake Slice</div><div class="item-desc">Creamy New York style cheesecake on a biscuit base</div><div class="item-badges"><span class="ibadge ib-new">New</span></div></div><div class="item-right"><span class="item-price">Rs. 390</span><button class="btn-add" onclick="addToCart('Cheesecake Slice',390)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Chocolate Truffles (3 pcs)</div><div class="item-desc">Handmade Belgian chocolate truffles in assorted flavours</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 320</span><button class="btn-add" onclick="addToCart('Chocolate Truffles',320)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Ice Cream Sundae</div><div class="item-desc">Two scoops with chocolate sauce, nuts and a wafer</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 360</span><button class="btn-add" onclick="addToCart('Ice Cream Sundae',360)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Waffles with Syrup</div><div class="item-desc">Golden Belgian waffles with maple syrup and butter</div><div class="item-badges"><span class="ibadge ib-new">New</span></div></div><div class="item-right"><span class="item-price">Rs. 450</span><button class="btn-add" onclick="addToCart('Waffles',450)">+ Add</button></div></div>
+            </div>
+        </div>
+        <div class="menu-panel" id="panel-pestry">
+            <div class="panel-header">
+                <img src="pestry.jpg" alt="Pastry Items">
+                <div>
+                    <h3>Pastry Items</h3>
+                    <p>Freshly baked croissants, muffins, buns and pastries made in our kitchen every morning</p>
+                </div>
+            </div>
+            <div class="items-grid">
+                <div class="item-card"><div class="item-left"><div class="item-name">Butter Croissant</div><div class="item-desc">Flaky buttery French croissant baked to golden perfection</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 250</span><button class="btn-add" onclick="addToCart('Butter Croissant',250)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Blueberry Muffin</div><div class="item-desc">Bursting with plump blueberries and a lemon zest glaze</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 220</span><button class="btn-add" onclick="addToCart('Blueberry Muffin',220)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Cheese Danish</div><div class="item-desc">Flaky pastry filled with sweet cream cheese and fruit preserve</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 290</span><button class="btn-add" onclick="addToCart('Cheese Danish',290)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Cinnamon Roll</div><div class="item-desc">Soft swirled roll with cinnamon sugar and cream cheese glaze</div><div class="item-badges"><span class="ibadge ib-new">New</span></div></div><div class="item-right"><span class="item-price">Rs. 310</span><button class="btn-add" onclick="addToCart('Cinnamon Roll',310)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Almond Croissant</div><div class="item-desc">Classic croissant filled with almond cream and flaked almonds</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 320</span><button class="btn-add" onclick="addToCart('Almond Croissant',320)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Chocolate Eclair</div><div class="item-desc">Choux pastry filled with custard cream and chocolate glaze</div><div class="item-badges"><span class="ibadge ib-pop">Popular</span></div></div><div class="item-right"><span class="item-price">Rs. 280</span><button class="btn-add" onclick="addToCart('Chocolate Eclair',280)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Banana Bread Slice</div><div class="item-desc">Moist banana loaf with walnuts, lightly spiced</div><div class="item-badges"><span class="ibadge ib-veg">Vegan</span></div></div><div class="item-right"><span class="item-price">Rs. 200</span><button class="btn-add" onclick="addToCart('Banana Bread',200)">+ Add</button></div></div>
+                <div class="item-card"><div class="item-left"><div class="item-name">Scones with Jam</div><div class="item-desc">Traditional butter scones served with strawberry jam and cream</div><div class="item-badges"></div></div><div class="item-right"><span class="item-price">Rs. 260</span><button class="btn-add" onclick="addToCart('Scones with Jam',260)">+ Add</button></div></div>
+            </div>
+        </div>
+
+    </div>
+    <div class="order-section" id="order">
+        <h2>Online <span style="color:var(--accent)">Order</span></h2>
+        <p class="sub">Review your cart and fill in your details to place a pick-up order</p>
+        <div class="cart-summary-box">
+            <h4>Your Cart</h4>
+            <div id="cartItemsDisplay">
+                <div class="empty-cart-msg">No items yet — browse the menu and click Add</div>
+            </div>
+            <div class="cart-total-row" id="cartTotalRow" style="display:none">
+                <span>Total</span><span id="cartTotalVal">Rs. 0</span>
+            </div>
+        </div>
+
+        <div class="form-row2">
+            <div class="form-group"><label>Full Name</label><input type="text" class="form-ctrl" placeholder="Your full name" id="oName"></div>
+            <div class="form-group"><label>Student ID</label><input type="text" class="form-ctrl" placeholder="STU123456" id="oStu"></div>
+        </div>
+        <div class="form-row2">
+            <div class="form-group"><label>Phone Number</label><input type="tel" class="form-ctrl" placeholder="+94 77 123 4567" id="oPhone"></div>
+            <div class="form-group"><label>Pickup Time</label>
+                <select class="form-ctrl" id="oTime">
+                    <option>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option><option>11:00 AM</option>
+                    <option>12:00 PM</option><option>1:00 PM</option><option>2:00 PM</option><option>3:00 PM</option>
+                    <option>4:00 PM</option><option>5:00 PM</option><option>6:00 PM</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group"><label>Special Instructions</label><textarea class="form-ctrl" rows="3" placeholder="Allergies, customisations, extra notes..." id="oNotes"></textarea></div>
+
+        <button class="btn-order" onclick="submitOrder()">Place Order</button>
+        <button class="btn-clear" onclick="clearCart()">Clear Cart</button>
+    </div>
+
+</div>
+<div class="cart-float" onclick="scrollToOrder()">
+    <span class="cart-icon">Cart</span>
+    <span class="cart-count" id="cartCount">0</span>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="fs"><h3>Cafe Hours</h3><ul><li>Mon to Fri: 7:00 AM to 6:00 PM</li><li>Saturday: 8:00 AM to 5:00 PM</li><li>Sunday: 9:00 AM to 4:00 PM</li></ul></div>
+        
+        <div class="fs"><h3>Quick Links</h3><ul><li><a href="home.html">Campus Hub</a></li><li><a href="REWARD.html">Reward Points</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><p>&copy; 2026 ORYN Campus Cafe. All rights reserved. | <a href="#terms">Terms</a> | <a href="#privacy">Privacy</a></p></div>
+</footer>
+
+<script>
+let cur = 0;
+const slides = document.querySelectorAll('.slide');
+const dots   = document.querySelectorAll('.dot');
+function showSlide(i) {
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    cur = (i + slides.length) % slides.length;
+    slides[cur].classList.add('active');
+    dots[cur].classList.add('active');
+}
+function goSlide(i) { showSlide(i); }
+setInterval(() => showSlide(cur + 1), 6000);
+function showPanel(id, tabEl) {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+    tabEl.classList.add('active');
+    document.getElementById('panel-' + id).classList.add('active');
+}
+
+let cart = [];
+
+function addToCart(name, price) {
+    const existing = cart.find(i => i.name === name);
+    if (existing) { existing.qty++; }
+    else { cart.push({ name, price, qty: 1 }); }
+    updateCartUI();
+    showToast(name + ' added to cart!');
+}
+
+function updateCartUI() {
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    document.getElementById('cartCount').textContent = count;
+
+    const display = document.getElementById('cartItemsDisplay');
+    const totalRow = document.getElementById('cartTotalRow');
+
+    if (cart.length === 0) {
+        display.innerHTML = '<div class="empty-cart-msg">No items yet — browse the menu and click Add</div>';
+        totalRow.style.display = 'none';
+    } else {
+        display.innerHTML = cart.map(i =>
+            '<div class="cart-item-row"><span>' + i.name + ' x' + i.qty + '</span><span>Rs. ' + (i.price * i.qty).toLocaleString() + '</span></div>'
+        ).join('');
+        totalRow.style.display = 'flex';
+        document.getElementById('cartTotalVal').textContent = 'Rs. ' + total.toLocaleString();
+    }
+}
+
+function clearCart() {
+    cart = [];
+    updateCartUI();
+    showToast('Cart cleared.');
+}
+
+function scrollToOrder() {
+    document.getElementById('order').scrollIntoView({ behavior: 'smooth' });
+}
+function submitOrder() {
+    const name  = document.getElementById('oName').value.trim();
+    const stu   = document.getElementById('oStu').value.trim();
+    const phone = document.getElementById('oPhone').value.trim();
+    const time  = document.getElementById('oTime').value;
+
+    if (!name || !stu) { showToast('Please enter your name and Student ID.'); return; }
+    if (cart.length === 0) { showToast('Your cart is empty — add items first!'); return; }
+
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const pts   = Math.floor(total / 50);
+    let stored  = parseInt(localStorage.getItem('reward_points') || '0') + pts;
+    localStorage.setItem('reward_points', stored);
+
+    alert(
+        'Order Confirmed!\n\n' +
+        'Name: ' + name + '\n' +
+        'Student ID: ' + stu + '\n' +
+        'Pickup: ' + time + '\n' +
+        'Total: Rs. ' + total.toLocaleString() + '\n' +
+        'Reward points earned: ' + pts + '\n\n' +
+        'Your order will be ready at the Cafe counter. See you there!'
+    );
+
+    cart = [];
+    updateCartUI();
+    document.getElementById('oName').value = '';
+    document.getElementById('oStu').value  = '';
+    document.getElementById('oPhone').value = '';
+    document.getElementById('oNotes').value = '';
+}
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+updateCartUI();
+</script>
+</body>
+</html>

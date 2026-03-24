@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facility Booking - ORYN Campus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root { --orange:#1a8e92; --green:#174618; --dark:#0a0a0a; }
+        body { font-family:'Inter',sans-serif; background:linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 50%,#0a0a0a 100%); color:#fff; }
+        header { background:rgba(255,255,255,0.05); backdrop-filter:blur(20px); border-bottom:1px solid rgba(255,255,255,0.1); position:sticky; top:0; z-index:1000; }
+        nav { max-width:1400px; margin:0 auto; padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; }
+        .logo-section { display:flex; align-items:center; gap:1rem; }
+        .campus-logo { height:60px; object-fit:contain; filter:drop-shadow(0 2px 8px rgba(26,142,146,0.3)); }
+        .brand-name { font-size:1.75rem; font-weight:800; color:#fff; text-decoration:none; }
+        .brand-name span { color:var(--orange); }
+        .btn-back { padding:0.75rem 1.5rem; background:rgba(26,142,146,0.2); color:var(--orange); border:2px solid var(--orange); border-radius:50px; font-weight:600; text-decoration:none; transition:all 0.3s; }
+        .btn-back:hover { background:var(--orange); color:#fff; transform:translateY(-2px); }
+
+        .hero-slideshow { position:relative; height:580px; overflow:hidden; background:#000; }
+        .slide { position:absolute; top:0; left:0; width:100%; height:100%; opacity:0; transition:opacity 1.5s ease-in-out; }
+        .slide.active { opacity:1; }
+        .slide img { width:100%; height:100%; object-fit:cover; }
+        .slide-overlay { position:absolute; inset:0; background:linear-gradient(135deg,rgba(0,0,0,0.75),rgba(26,142,146,0.2)); display:flex; align-items:center; justify-content:center; }
+        .slide-content { text-align:center; color:#fff; max-width:900px; padding:2rem; animation:slideUp 1s ease-out; }
+        @keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+        .slide-content h1 { font-size:4rem; font-weight:800; margin-bottom:1rem; text-shadow:0 4px 20px rgba(0,0,0,0.5); }
+        .slide-content p { font-size:1.3rem; margin-bottom:2rem; opacity:0.95; }
+        .cta-buttons { display:flex; gap:1.5rem; justify-content:center; flex-wrap:wrap; }
+        .cta-btn { padding:1.2rem 3rem; font-weight:700; border-radius:50px; text-decoration:none; transition:all 0.3s; font-size:1.1rem; border:2px solid transparent; cursor:pointer; font-family:'Inter',sans-serif; }
+        .cta-btn.primary { background:var(--orange); color:#fff; border-color:var(--orange); }
+        .cta-btn.primary:hover { background:transparent; transform:translateY(-3px); box-shadow:0 8px 25px rgba(26,142,146,0.4); }
+        .cta-btn.secondary { background:transparent; color:#fff; border-color:#fff; }
+        .cta-btn.secondary:hover { background:#fff; color:#002147; transform:translateY(-3px); }
+        .slide-dots { position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; gap:0.75rem; z-index:10; }
+        .dot { width:12px; height:12px; border-radius:50%; background:rgba(255,255,255,0.4); border:1px solid rgba(255,255,255,0.3); cursor:pointer; transition:all 0.3s; }
+        .dot.active { background:var(--orange); width:35px; border-radius:6px; }
+
+        .container { max-width:1400px; margin:0 auto; padding:4rem 2rem; }
+        .section-title { text-align:center; font-size:2.8rem; font-weight:800; color:#fff; margin-bottom:1rem; }
+        .section-title span { color:var(--orange); }
+        .section-sub { text-align:center; color:rgba(255,255,255,0.6); font-size:1.1rem; margin-bottom:3rem; }
+
+        .booking-tabs { display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap; margin-bottom:3rem; }
+        .tab-btn { padding:0.9rem 2rem; background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.15); color:#fff; border-radius:50px; font-weight:600; cursor:pointer; transition:all 0.3s; font-size:0.95rem; font-family:'Inter',sans-serif; }
+        .tab-btn:hover { border-color:var(--orange); color:var(--orange); }
+        .tab-btn.active { background:var(--orange); border-color:var(--orange); box-shadow:0 4px 20px rgba(26,142,146,0.4); }
+        .tab-panel { display:none; }
+        .tab-panel.active { display:block; }
+
+        .facilities-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:2rem; margin-bottom:3rem; }
+        .facility-card { background:rgba(255,255,255,0.05); backdrop-filter:blur(20px); border-radius:20px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); transition:all 0.3s; cursor:pointer; }
+        .facility-card:hover { transform:translateY(-10px); background:rgba(255,255,255,0.08); box-shadow:0 12px 40px rgba(26,142,146,0.3); border-color:var(--orange); }
+        .facility-img { height:200px; overflow:hidden; position:relative; }
+        .facility-img img { width:100%; height:100%; object-fit:cover; transition:transform 0.5s; }
+        .facility-card:hover .facility-img img { transform:scale(1.08); }
+        .facility-img-overlay { position:absolute; inset:0; background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,0.7)); }
+        .facility-badge { position:absolute; top:1rem; right:1rem; background:var(--orange); color:#fff; padding:0.3rem 0.9rem; border-radius:20px; font-size:0.8rem; font-weight:700; }
+        .facility-info { padding:1.8rem; }
+        .facility-name { font-size:1.4rem; font-weight:700; color:#fff; margin-bottom:0.5rem; }
+        .facility-desc { color:rgba(255,255,255,0.7); font-size:0.95rem; margin-bottom:1.2rem; line-height:1.6; }
+        .facility-meta { display:flex; gap:1.5rem; margin-bottom:1.5rem; font-size:0.9rem; color:rgba(255,255,255,0.55); }
+        .btn-book { width:100%; padding:1rem; background:rgba(26,142,146,0.2); border:2px solid var(--orange); color:var(--orange); border-radius:12px; font-weight:700; cursor:pointer; transition:all 0.3s; font-size:1rem; font-family:'Inter',sans-serif; }
+        .btn-book:hover { background:var(--orange); color:#fff; }
+
+        .events-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:2rem; }
+        .event-card { background:rgba(255,255,255,0.05); backdrop-filter:blur(15px); border-radius:20px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); transition:all 0.3s; }
+        .event-card:hover { transform:translateY(-10px); border-color:var(--orange); box-shadow:0 12px 40px rgba(26,142,146,0.3); }
+        .event-img { height:220px; overflow:hidden; position:relative; }
+        .event-img img { width:100%; height:100%; object-fit:cover; transition:transform 0.5s; }
+        .event-card:hover .event-img img { transform:scale(1.08); }
+        .event-date-badge { position:absolute; top:1rem; left:1rem; background:var(--orange); color:#fff; padding:0.4rem 1rem; border-radius:20px; font-size:0.85rem; font-weight:700; }
+        .event-category-badge { position:absolute; top:1rem; right:1rem; background:rgba(0,0,0,0.6); backdrop-filter:blur(10px); color:#fff; padding:0.4rem 1rem; border-radius:20px; font-size:0.8rem; font-weight:600; }
+        .event-info { padding:1.8rem; }
+        .event-title { font-size:1.3rem; font-weight:700; color:#fff; margin-bottom:0.5rem; }
+        .event-desc { color:rgba(255,255,255,0.7); font-size:0.9rem; margin-bottom:1.2rem; line-height:1.6; }
+        .event-meta { display:flex; gap:1rem; margin-bottom:1.5rem; font-size:0.85rem; color:rgba(255,255,255,0.55); flex-wrap:wrap; }
+        .btn-event-book { width:100%; padding:1rem; background:var(--orange); color:#fff; border:none; border-radius:12px; font-weight:700; cursor:pointer; transition:all 0.3s; font-size:1rem; font-family:'Inter',sans-serif; }
+        .btn-event-book:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(26,142,146,0.5); }
+
+        .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(10px); z-index:9999; align-items:center; justify-content:center; padding:2rem; }
+        .modal-overlay.active { display:flex; }
+        .modal { background:linear-gradient(135deg,#1a1a2e,#16213e); border:1px solid rgba(26,142,146,0.3); border-radius:24px; padding:3rem; max-width:550px; width:100%; max-height:90vh; overflow-y:auto; position:relative; animation:modalIn 0.3s ease-out; }
+        @keyframes modalIn { from{opacity:0;transform:scale(0.9)} to{opacity:1;transform:scale(1)} }
+        .modal-close { position:absolute; top:1.5rem; right:1.5rem; background:rgba(255,255,255,0.1); border:none; color:#fff; width:35px; height:35px; border-radius:50%; cursor:pointer; font-size:1rem; font-weight:700; transition:all 0.3s; font-family:'Inter',sans-serif; }
+        .modal-close:hover { background:var(--orange); }
+        .modal h2 { font-size:1.8rem; font-weight:800; color:#fff; margin-bottom:0.5rem; }
+        .modal-subtitle { color:rgba(255,255,255,0.6); margin-bottom:2rem; font-size:0.95rem; }
+        .form-group { margin-bottom:1.5rem; }
+        .form-group label { display:block; color:#fff; font-weight:600; margin-bottom:0.5rem; font-size:0.9rem; }
+        .form-input { width:100%; padding:1rem; background:rgba(255,255,255,0.08); border:2px solid rgba(255,255,255,0.15); border-radius:12px; color:#fff; font-size:1rem; transition:all 0.3s; font-family:'Inter',sans-serif; }
+        .form-input:focus { outline:none; border-color:var(--orange); background:rgba(255,255,255,0.12); }
+        .form-input option { background:#1a1a2e; }
+        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+        .btn-submit { width:100%; padding:1.2rem; background:var(--orange); color:#fff; border:none; border-radius:12px; font-weight:700; font-size:1.1rem; cursor:pointer; transition:all 0.3s; font-family:'Inter',sans-serif; }
+        .btn-submit:hover { transform:translateY(-2px); box-shadow:0 6px 25px rgba(26,142,146,0.5); }
+
+        .success-toast { display:none; position:fixed; bottom:2rem; right:2rem; background:var(--green); color:#fff; padding:1.2rem 2rem; border-radius:16px; font-weight:700; z-index:99999; box-shadow:0 8px 25px rgba(23,70,24,0.4); max-width:380px; }
+        .success-toast.show { display:block; animation:slideToast 0.5s ease-out; }
+        @keyframes slideToast { from{opacity:0;transform:translateX(100px)} to{opacity:1;transform:translateX(0)} }
+
+        footer { background:rgba(0,0,0,0.8); backdrop-filter:blur(20px); color:#fff; padding:3rem 2rem 1.5rem; border-top:1px solid rgba(255,255,255,0.1); margin-top:4rem; }
+        .footer-content { max-width:1400px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:2rem; margin-bottom:2rem; }
+        .footer-section h3 { color:var(--orange); margin-bottom:1rem; }
+        .footer-section a { color:rgba(255,255,255,0.8); text-decoration:none; display:block; margin-bottom:0.5rem; transition:color 0.3s; }
+        .footer-section a:hover { color:var(--orange); }
+        .footer-section p { color:rgba(255,255,255,0.7); line-height:1.8; }
+        .footer-bottom { text-align:center; padding-top:2rem; border-top:1px solid rgba(255,255,255,0.1); opacity:0.7; }
+        @media(max-width:768px) { .slide-content h1{font-size:2.5rem} .hero-slideshow{height:450px} .form-row{grid-template-columns:1fr} }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <div class="logo-section">
+            <img src="LOGO.jpg" alt="ORYN Logo" class="campus-logo">
+            <a href="home.html" class="brand-name">ORYN <span>CAMPUS</span></a>
+        </div>
+        <a href="home.html" class="btn-back">Home</a>
+    </nav>
+</header>
+
+<div class="hero-slideshow">
+    <div class="slide active">
+        <img src="room1.jpeg" alt="Room 1">
+        <div class="slide-overlay"><div class="slide-content">
+            <h1>Reserve Your Space</h1>
+            <p>Book labs, rooms, sports facilities and campus events with ease</p>
+            <div class="cta-buttons">
+                <button class="cta-btn primary" onclick="document.querySelector('.container').scrollIntoView({behavior:'smooth'})">Book a Facility</button>
+                <button class="cta-btn secondary" onclick="switchTab('events')">View Events</button>
+            </div>
+        </div></div>
+    </div>
+    <div class="slide">
+        <img src="lab1.jpeg" alt="Lab">
+        <div class="slide-overlay"><div class="slide-content">
+            <h1>World-Class Labs</h1>
+            <p>State-of-the-art computer labs and research facilities at your fingertips</p>
+            <div class="cta-buttons">
+                <button class="cta-btn primary" onclick="switchTab('labs')">Book a Lab</button>
+                <button class="cta-btn secondary" onclick="switchTab('rooms')">Meeting Rooms</button>
+            </div>
+        </div></div>
+    </div>
+    <div class="slide">
+        <img src="event1.jpeg" alt="Events">
+        <div class="slide-overlay"><div class="slide-content">
+            <h1>Campus Events</h1>
+            <p>Do not miss exciting campus events — register instantly with one click</p>
+            <div class="cta-buttons">
+                <button class="cta-btn primary" onclick="switchTab('events')">Explore Events</button>
+                <button class="cta-btn secondary" onclick="switchTab('sports')">Sports</button>
+            </div>
+        </div></div>
+    </div>
+    <div class="slide">
+        <img src="sport1.jpeg" alt="Sports">
+        <div class="slide-overlay"><div class="slide-content">
+            <h1>Sports Facilities</h1>
+            <p>Multi-sport indoor and outdoor facilities ready to book</p>
+            <div class="cta-buttons">
+                <button class="cta-btn primary" onclick="switchTab('sports')">Book Sports</button>
+                <button class="cta-btn secondary" onclick="switchTab('venues')">Venues</button>
+            </div>
+        </div></div>
+    </div>
+    <div class="slide">
+        <img src="room4.jpeg" alt="Auditorium">
+        <div class="slide-overlay"><div class="slide-content">
+            <h1>Special Venues</h1>
+            <p>Auditorium, photography studio, music rooms — all bookable online</p>
+            <div class="cta-buttons">
+                <button class="cta-btn primary" onclick="switchTab('venues')">Browse Venues</button>
+                <button class="cta-btn secondary" onclick="switchTab('all')">View All</button>
+            </div>
+        </div></div>
+    </div>
+    <div class="slide-dots">
+        <div class="dot active" onclick="goToSlide(0)"></div>
+        <div class="dot" onclick="goToSlide(1)"></div>
+        <div class="dot" onclick="goToSlide(2)"></div>
+        <div class="dot" onclick="goToSlide(3)"></div>
+        <div class="dot" onclick="goToSlide(4)"></div>
+    </div>
+</div>
+
+<div class="container">
+    <h2 class="section-title">Book <span>Campus Facilities</span></h2>
+    <p class="section-sub">Select a category, browse facilities, and reserve your spot in seconds</p>
+
+    <div class="booking-tabs">
+        <button class="tab-btn active" onclick="switchTab('all')">All</button>
+        <button class="tab-btn" onclick="switchTab('labs')">Labs</button>
+        <button class="tab-btn" onclick="switchTab('rooms')">Rooms</button>
+        <button class="tab-btn" onclick="switchTab('sports')">Sports</button>
+        <button class="tab-btn" onclick="switchTab('venues')">Venues</button>
+        <button class="tab-btn" onclick="switchTab('events')">Events</button>
+    </div>
+    <div id="panel-all" class="tab-panel active">
+        <div class="facilities-grid">
+            <div class="facility-card" onclick="openBookingModal('Computer Lab A','40 PCs — 8AM to 6PM — 40 seats')">
+                <div class="facility-img"><img src="lab1.jpeg" alt="Lab A"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Computer Lab A</div><div class="facility-desc">40 high-performance workstations with latest software suites and fast internet</div><div class="facility-meta"><span>8AM to 6PM</span><span>40 seats</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+            <div class="facility-card" onclick="openBookingModal('Research Lab','Research — 9AM to 5PM — 20 seats')">
+                <div class="facility-img"><img src="lab2.jpeg" alt="Lab"><div class="facility-img-overlay"></div><span class="facility-badge">OPEN</span></div>
+                <div class="facility-info"><div class="facility-name">Research Lab</div><div class="facility-desc">Specialized research environment with advanced equipment and GPU workstations</div><div class="facility-meta"><span>9AM to 5PM</span><span>20 seats</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+            <div class="facility-card" onclick="openBookingModal('Meeting Room 1','Projector — 24/7 — 15 people')">
+                <div class="facility-img"><img src="room2.jpeg" alt="Room"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Meeting Room 1</div><div class="facility-desc">Professional meeting space with 4K projector and whiteboard</div><div class="facility-meta"><span>24/7</span><span>15 people</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+            <div class="facility-card" onclick="openBookingModal('Sports Hall','Multi-sport — 6AM to 7PM — 100 people')">
+                <div class="facility-img"><img src="sport1.jpeg" alt="Sports"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Sports Hall</div><div class="facility-desc">Multi-purpose indoor hall for basketball, badminton, and volleyball</div><div class="facility-meta"><span>6AM to 7PM</span><span>100 people</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+            <div class="facility-card" onclick="openBookingModal('Main Auditorium','500-seat — 8AM to 8PM — A/V included')">
+                <div class="facility-img"><img src="room4.jpeg" alt="Auditorium"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Main Auditorium</div><div class="facility-desc">500-seat auditorium with professional A/V, lighting and stage setup</div><div class="facility-meta"><span>8AM to 8PM</span><span>500 seats</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+            <div class="facility-card" onclick="openBookingModal('Photography Studio','Studio — 9AM to 6PM — 10 people')">
+                <div class="facility-img"><img src="room5.jpeg" alt="Studio"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Photography Studio</div><div class="facility-desc">Professional lighting rig, backdrops and camera equipment included</div><div class="facility-meta"><span>9AM to 6PM</span><span>10 people</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+        </div>
+    </div>
+    <div id="panel-labs" class="tab-panel">
+        <div class="facilities-grid">
+            <div class="facility-card" onclick="openBookingModal('Computer Lab A','40 PCs — 8AM to 6PM')">
+                <div class="facility-img"><img src="lab1.jpeg" alt="Lab A"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Computer Lab A</div><div class="facility-desc">40 high-performance workstations with all major software suites</div><div class="facility-meta"><span>8AM to 6PM</span><span>40 seats</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+            <div class="facility-card" onclick="openBookingModal('Computer Lab B','30 PCs — 8AM to 8PM')">
+                <div class="facility-img"><img src="lab2.jpeg" alt="Lab B"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Computer Lab B</div><div class="facility-desc">Multimedia lab with graphic design and video editing stations</div><div class="facility-meta"><span>8AM to 8PM</span><span>30 seats</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+            <div class="facility-card" onclick="openBookingModal('Research Lab','Research — 9AM to 5PM')">
+                <div class="facility-img"><img src="lab3.jpeg" alt="Research"><div class="facility-img-overlay"></div><span class="facility-badge">OPEN</span></div>
+                <div class="facility-info"><div class="facility-name">Research Lab</div><div class="facility-desc">Advanced research environment with specialized equipment</div><div class="facility-meta"><span>9AM to 5PM</span><span>20 seats</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+            <div class="facility-card" onclick="openBookingModal('AI/ML Lab D','GPU Workstations — 10AM to 6PM')">
+                <div class="facility-img"><img src="lab4.jpeg" alt="Lab D"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">AI/ML Lab D</div><div class="facility-desc">High-performance GPU workstations for machine learning and AI research</div><div class="facility-meta"><span>10AM to 6PM</span><span>25 seats</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+        </div>
+    </div>
+    <div id="panel-rooms" class="tab-panel">
+        <div class="facilities-grid">
+            <div class="facility-card" onclick="openBookingModal('Meeting Room 1','Projector — 24/7 — 15 people')">
+                <div class="facility-img"><img src="room1.jpeg" alt="Room 1"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Meeting Room 1</div><div class="facility-desc">Professional meeting space with 4K projector and video conferencing</div><div class="facility-meta"><span>24/7</span><span>15 people</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+            <div class="facility-card" onclick="openBookingModal('Conference Room 2','Large — 8AM to 10PM — 25 people')">
+                <div class="facility-img"><img src="room2.jpeg" alt="Room 2"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Conference Room 2</div><div class="facility-desc">Spacious conference room with dual screens and Teams/Zoom integration</div><div class="facility-meta"><span>8AM to 10PM</span><span>25 people</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+            <div class="facility-card" onclick="openBookingModal('Study Pod C','Quiet — 24/7 — 6 people')">
+                <div class="facility-img"><img src="room3.jpeg" alt="Pod C"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Study Pod C</div><div class="facility-desc">Quiet collaborative study space with whiteboards and comfortable seating</div><div class="facility-meta"><span>24/7</span><span>6 people</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+        </div>
+    </div>
+    <div id="panel-sports" class="tab-panel">
+        <div class="facilities-grid">
+            <div class="facility-card" onclick="openBookingModal('Sports Hall','Basketball — Badminton — 6AM to 7PM')">
+                <div class="facility-img"><img src="sport1.jpeg" alt="Sports Hall"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Sports Hall</div><div class="facility-desc">Multi-purpose indoor hall for basketball, badminton, volleyball</div><div class="facility-meta"><span>6AM to 7PM</span><span>100 people</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+            <div class="facility-card" onclick="openBookingModal('Outdoor Courts','Tennis — 6AM to 8PM')">
+                <div class="facility-img"><img src="sport2.jpeg" alt="Courts"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Outdoor Courts</div><div class="facility-desc">Tennis and multi-sport outdoor courts with floodlighting</div><div class="facility-meta"><span>6AM to 8PM</span><span>20 people</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+            <div class="facility-card" onclick="openBookingModal('Swimming Pool','Lanes — 5:30AM to 7PM')">
+                <div class="facility-img"><img src="sport3.jpeg" alt="Pool"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Swimming Pool</div><div class="facility-desc">Olympic-size pool with lanes for competitive and leisure swimming</div><div class="facility-meta"><span>5:30AM to 7PM</span><span>50 lanes</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+            <div class="facility-card" onclick="openBookingModal('Athletics Track','Running — 6AM to 6PM')">
+                <div class="facility-img"><img src="sport4.jpeg" alt="Track"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Athletics Track</div><div class="facility-desc">400m synthetic track for running, sprint, and field events</div><div class="facility-meta"><span>6AM to 6PM</span><span>Open</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+        </div>
+    </div>
+    <div id="panel-venues" class="tab-panel">
+        <div class="facilities-grid">
+            <div class="facility-card" onclick="openBookingModal('Main Auditorium','500-seat — 8AM to 8PM')">
+                <div class="facility-img"><img src="room4.jpeg" alt="Auditorium"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Main Auditorium</div><div class="facility-desc">500-seat auditorium with professional A/V and stage lighting</div><div class="facility-meta"><span>8AM to 8PM</span><span>500 seats</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+            <div class="facility-card" onclick="openBookingModal('Photography Studio','Studio — 9AM to 6PM')">
+                <div class="facility-img"><img src="room5.jpeg" alt="Studio"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Photography Studio</div><div class="facility-desc">Professional lighting rig, multiple backdrops and camera equipment</div><div class="facility-meta"><span>9AM to 6PM</span><span>10 people</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+            <div class="facility-card" onclick="openBookingModal('Music Practice Room','Soundproof — 10AM to 8PM')">
+                <div class="facility-img"><img src="room3.jpeg" alt="Music"><div class="facility-img-overlay"></div><span class="facility-badge">AVAILABLE</span></div>
+                <div class="facility-info"><div class="facility-name">Music Practice Room</div><div class="facility-desc">Soundproof room with piano, amplifiers, drums and recording setup</div><div class="facility-meta"><span>10AM to 8PM</span><span>5 people</span></div><button class="btn-book">Book Now</button></div>
+            </div>
+        </div>
+    </div>
+    <div id="panel-events" class="tab-panel">
+        <div class="events-grid">
+            <div class="event-card">
+                <div class="event-img"><img src="event1.jpeg" alt="Tech Summit"><span class="event-date-badge">Apr 15, 2026</span><span class="event-category-badge">Tech</span></div>
+                <div class="event-info"><div class="event-title">ORYN Tech Summit 2026</div><div class="event-desc">Annual technology showcase featuring student projects, industry speakers and networking sessions</div><div class="event-meta"><span>Main Auditorium</span><span>9AM to 5PM</span><span>500 seats</span></div><button class="btn-event-book" onclick="openEventModal('ORYN Tech Summit 2026','Apr 15, 2026 — 9AM to 5PM — Main Auditorium')">Register for Event</button></div>
+            </div>
+            <div class="event-card">
+                <div class="event-img"><img src="event2.jpeg" alt="Cultural Night"><span class="event-date-badge">Apr 22, 2026</span><span class="event-category-badge">Culture</span></div>
+                <div class="event-info"><div class="event-title">Cultural Night 2026</div><div class="event-desc">A spectacular evening of performances, food, and cultural exchange from over 20 countries</div><div class="event-meta"><span>Outdoor Stage</span><span>6PM to 10PM</span><span>300 seats</span></div><button class="btn-event-book" onclick="openEventModal('Cultural Night 2026','Apr 22, 2026 — 6PM to 10PM — Outdoor Stage')">Register for Event</button></div>
+            </div>
+            <div class="event-card">
+                <div class="event-img"><img src="event3.jpeg" alt="Career Fair"><span class="event-date-badge">May 5, 2026</span><span class="event-category-badge">Careers</span></div>
+                <div class="event-info"><div class="event-title">Annual Career Fair</div><div class="event-desc">Connect with 80+ leading companies, attend workshops and secure internships and full-time roles</div><div class="event-meta"><span>Sports Hall</span><span>10AM to 4PM</span><span>1000</span></div><button class="btn-event-book" onclick="openEventModal('Annual Career Fair','May 5, 2026 — 10AM to 4PM — Sports Hall')">Register for Event</button></div>
+            </div>
+            <div class="event-card">
+                <div class="event-img"><img src="event4.jpeg" alt="Sports Day"><span class="event-date-badge">May 18, 2026</span><span class="event-category-badge">Sports</span></div>
+                <div class="event-info"><div class="event-title">Inter-Faculty Sports Championship</div><div class="event-desc">Compete for the coveted championship trophy across 12 sports disciplines</div><div class="event-meta"><span>Sports Complex</span><span>7AM to 6PM</span><span>Open</span></div><button class="btn-event-book" onclick="openEventModal('Inter-Faculty Sports Championship','May 18, 2026 — 7AM to 6PM — Sports Complex')">Register for Event</button></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal-overlay" id="bookingModal">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal()">X</button>
+        <h2>Book <span id="modalFacilityName" style="color:var(--orange)"></span></h2>
+        <p class="modal-subtitle" id="modalFacilityDetails"></p>
+        <form onsubmit="submitBooking(event)">
+            <div class="form-group"><label>Your Full Name</label><input type="text" class="form-input" required placeholder="e.g. Kamal Perera"></div>
+            <div class="form-group"><label>Student ID</label><input type="text" class="form-input" required placeholder="e.g. STU2026001"></div>
+            <div class="form-group"><label>Purpose of Booking</label><input type="text" class="form-input" required placeholder="e.g. Group Study, Project Meeting"></div>
+            <div class="form-row">
+                <div class="form-group"><label>Date</label><input type="date" class="form-input" required></div>
+                <div class="form-group"><label>No. of People</label><input type="number" class="form-input" required min="1" placeholder="e.g. 10"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Start Time</label><input type="time" class="form-input" required></div>
+                <div class="form-group"><label>End Time</label><input type="time" class="form-input" required></div>
+            </div>
+            <div class="form-group"><label>Additional Requirements</label><input type="text" class="form-input" placeholder="e.g. Projector, Whiteboard, Audio"></div>
+            <button type="submit" class="btn-submit">Confirm Booking</button>
+        </form>
+    </div>
+</div>
+
+<!-- EVENT REGISTRATION MODAL -->
+<div class="modal-overlay" id="eventModal">
+    <div class="modal">
+        <button class="modal-close" onclick="closeEventModal()">X</button>
+        <h2>Register: <span id="modalEventName" style="color:var(--orange)"></span></h2>
+        <p class="modal-subtitle" id="modalEventDetails"></p>
+        <form onsubmit="submitEventBooking(event)">
+            <div class="form-group"><label>Full Name</label><input type="text" class="form-input" required placeholder="e.g. Kamal Perera"></div>
+            <div class="form-group"><label>Student ID</label><input type="text" class="form-input" required placeholder="e.g. STU2026001"></div>
+            <div class="form-group"><label>Email Address</label><input type="email" class="form-input" required placeholder="student@oryuncampus.edu"></div>
+            <div class="form-group"><label>Faculty / Department</label><input type="text" class="form-input" required placeholder="e.g. Faculty of Engineering"></div>
+            <div class="form-group"><label>Ticket Type</label>
+                <select class="form-input">
+                    <option>General Admission — Free</option>
+                    <option>VIP Seat — Rs. 500</option>
+                    <option>Group (5+) — 20% Discount</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-submit">Register Now</button>
+        </form>
+    </div>
+</div>
+
+<div class="success-toast" id="successToast"></div>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>Booking Hours</h3>
+            <p>Mon to Fri: 7AM to 7PM<br>Sat to Sun: 8AM to 5PM</p>
+        </div>
+        <div class="footer-section">
+            <h3>Contact</h3>
+            <a href="mailto:booking@oryuncampus.edu">booking@oryuncampus.edu</a>
+        </div>
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <a href="home.html">Campus Hub</a>
+            <a href="fitness.html">Fitness Center</a>
+            <a href="LIBRARY.html">Library</a>
+            <a href="transit.html">Transit</a>
+        </div>
+    </div>
+    <div class="footer-bottom"><p>2026 ORYN Campus Booking System. All rights reserved.</p></div>
+</footer>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const dots   = document.querySelectorAll('.dot');
+
+function showSlide(i) {
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    if (i >= slides.length) i = 0;
+    if (i < 0) i = slides.length - 1;
+    currentSlide = i;
+    slides[i].classList.add('active');
+    dots[i].classList.add('active');
+}
+function goToSlide(i) { currentSlide = i; showSlide(i); }
+setInterval(() => { currentSlide++; showSlide(currentSlide); }, 5500);
+
+const tabMap = { all:0, labs:1, rooms:2, sports:3, venues:4, events:5 };
+function switchTab(id) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    document.querySelectorAll('.tab-btn')[tabMap[id]].classList.add('active');
+}
+
+function openBookingModal(name, details) {
+    document.getElementById('modalFacilityName').textContent = name;
+    document.getElementById('modalFacilityDetails').textContent = details;
+    document.getElementById('bookingModal').classList.add('active');
+}
+function closeModal() { document.getElementById('bookingModal').classList.remove('active'); }
+function submitBooking(e) {
+    e.preventDefault();
+    closeModal();
+    showToast('Booking confirmed! Check your email. Booking ID: BK' + Math.floor(Math.random() * 10000));
+    e.target.reset();
+}
+
+function openEventModal(name, details) {
+    document.getElementById('modalEventName').textContent = name;
+    document.getElementById('modalEventDetails').textContent = details;
+    document.getElementById('eventModal').classList.add('active');
+}
+function closeEventModal() { document.getElementById('eventModal').classList.remove('active'); }
+function submitEventBooking(e) {
+    e.preventDefault();
+    closeEventModal();
+    showToast('Registration successful! Your ticket has been sent to your email.');
+    e.target.reset();
+}
+
+document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('active');
+}));
+
+function showToast(msg) {
+    const t = document.getElementById('successToast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 4500);
+}
+</script>
+</body>
+</html>

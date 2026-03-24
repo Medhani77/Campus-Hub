@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers & Internships </title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            --bg: #080808;
+            --accent: #797709;
+            --accent2: #ea6a0a;
+            --blue: #3B82F6;
+            --green: #22C55E;
+            --purple: #8B5CF6;
+            --teal: #06B6D4;
+            --navy: #1E3A5F;
+            --white: #fff;
+            --glass: rgba(255,255,255,0.05);
+            --border: rgba(255,255,255,0.1);
+            --muted: rgba(255,255,255,0.65);
+        }
+        body { font-family:'Inter',sans-serif; background:linear-gradient(160deg,#080808 0%,#0f0a05 50%,#080808 100%); color:var(--white); min-height:100vh; }
+
+        header { background:rgba(255,255,255,0.03); backdrop-filter:blur(24px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1000; }
+        nav { max-width:1400px; margin:0 auto; padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; gap:1rem; }
+        .logo-section { display:flex; align-items:center; gap:1rem; }
+        .campus-logo { height:55px; object-fit:contain; filter:drop-shadow(0 2px 10px rgba(249,115,22,.4)); }
+        .brand-name { font-family:'Syne',sans-serif; font-size:1.55rem; font-weight:800; color:var(--white); text-decoration:none; letter-spacing:-.5px; }
+        .brand-name span { color:var(--accent); }
+        .nav-right { display:flex; align-items:center; gap:1rem; }
+        .btn-back { padding:.65rem 1.5rem; background:rgba(249,115,22,.15); color:var(--accent); border:2px solid var(--accent); border-radius:50px; font-weight:600; text-decoration:none; transition:all .3s; font-size:.9rem; }
+        .btn-back:hover { background:var(--accent); color:#000; transform:translateY(-2px); }
+
+        
+
+       
+        
+        .section-title { font-family:'Syne',sans-serif; font-size:2.8rem; font-weight:800; color:var(--white); margin-bottom:.6rem; text-align:center; }
+        .section-title span { color:var(--accent); }
+        .section-sub { text-align:center; color:var(--muted); font-size:1.05rem; margin-bottom:3rem; }
+
+ 
+        .streams-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:2rem; margin-bottom:5rem; }
+        .stream-card {
+            position:relative; border-radius:24px; overflow:hidden;
+            border:2px solid transparent;
+            cursor:pointer; transition:all .4s cubic-bezier(.175,.885,.32,1.275);
+            background:var(--glass);
+        }
+        .stream-card:hover { transform:translateY(-10px) scale(1.02); border-color:var(--card-accent,var(--accent)); box-shadow:0 20px 60px rgba(0,0,0,.5), 0 0 40px var(--card-glow,rgba(249,115,22,.2)); }
+        .stream-card img { width:100%; height:230px; object-fit:cover; display:block; transition:transform .5s ease; filter:brightness(.85); }
+        .stream-card:hover img { transform:scale(1.07); filter:brightness(1); }
+        .stream-overlay { position:absolute; bottom:0; left:0; right:0; padding:1.5rem; background:linear-gradient(transparent,rgba(0,0,0,.92) 60%); }
+        .stream-tag { display:inline-block; padding:.3rem .9rem; border-radius:20px; font-size:.75rem; font-weight:700; margin-bottom:.6rem; }
+        .stream-name { font-family:'Syne',sans-serif; font-size:1.35rem; font-weight:700; color:var(--white); margin-bottom:.3rem; }
+        .stream-sub { color:rgba(255,255,255,.75); font-size:.85rem; margin-bottom:1rem; }
+        .stream-footer { display:flex; justify-content:space-between; align-items:center; }
+        .job-count { color:rgba(255,255,255,.8); font-size:.85rem; }
+        .btn-explore { padding:.55rem 1.3rem; border-radius:50px; font-weight:700; font-size:.85rem; cursor:pointer; transition:all .3s; border:none; font-family:'Inter',sans-serif; }
+
+        .auto { --card-accent:#F97316; --card-glow:rgba(249,115,22,.25); }
+        .auto .btn-explore { background:#F97316; color:#000; }
+        .civil { --card-accent:#22C55E; --card-glow:rgba(34,197,94,.25); }
+        .civil .btn-explore { background:#22C55E; color:#000; }
+        .software { --card-accent:#3B82F6; --card-glow:rgba(59,130,246,.25); }
+        .software .btn-explore { background:#3B82F6; color:#fff; }
+        .management { --card-accent:#8B5CF6; --card-glow:rgba(139,92,246,.25); }
+        .management .btn-explore { background:#8B5CF6; color:#fff; }
+        .healthcare { --card-accent:#EC4899; --card-glow:rgba(236,72,153,.25); }
+        .healthcare .btn-explore { background:#EC4899; color:#fff; }
+        .navy-card { --card-accent:#06B6D4; --card-glow:rgba(6,182,212,.25); }
+        .navy-card .btn-explore { background:#06B6D4; color:#000; }
+        .aviation { --card-accent:#F59E0B; --card-glow:rgba(245,158,11,.25); }
+        .aviation .btn-explore { background:#F59E0B; color:#000; }
+
+        .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:2000; backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:1rem; }
+        .modal-overlay.open { display:flex; }
+        .modal { background:#0f0f0f; border:1px solid var(--border); border-radius:28px; width:100%; max-width:860px; max-height:90vh; overflow-y:auto; position:relative; }
+        .modal-header { padding:2rem 2.5rem 1.5rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-start; position:sticky; top:0; background:#0f0f0f; z-index:10; border-radius:28px 28px 0 0; }
+        .modal-title-row { display:flex; align-items:center; gap:1rem; }
+        .modal-icon { font-size:2.5rem; }
+        .modal-title { font-family:'Syne',sans-serif; font-size:1.8rem; font-weight:800; color:var(--white); }
+        .modal-sub { color:var(--muted); font-size:.9rem; margin-top:.2rem; }
+        .modal-close { background:rgba(255,255,255,.1); border:none; color:var(--white); width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:1.2rem; transition:all .3s; flex-shrink:0; }
+        .modal-close:hover { background:rgba(255,255,255,.2); transform:rotate(90deg); }
+        .modal-body { padding:2rem 2.5rem; }
+
+        .jobs-list { display:flex; flex-direction:column; gap:1.2rem; margin-bottom:2rem; }
+        .job-item { background:var(--glass); border-radius:16px; padding:1.5rem; border:1px solid var(--border); transition:all .3s; cursor:pointer; }
+        .job-item:hover { border-color:var(--item-accent,var(--accent)); background:rgba(255,255,255,.08); transform:translateX(4px); }
+        .job-item-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:.75rem; gap:1rem; }
+        .job-title-main { font-size:1.1rem; font-weight:700; color:var(--white); margin-bottom:.25rem; }
+        .company { color:var(--muted); font-size:.9rem; }
+        .job-badge { padding:.35rem .9rem; border-radius:20px; font-size:.78rem; font-weight:700; white-space:nowrap; }
+        .badge-intern { background:rgba(249,115,22,.25); color:#F97316; border:1px solid rgba(249,115,22,.4); }
+        .badge-full { background:rgba(34,197,94,.25); color:#22C55E; border:1px solid rgba(34,197,94,.4); }
+        .badge-part { background:rgba(139,92,246,.25); color:#8B5CF6; border:1px solid rgba(139,92,246,.4); }
+        .badge-research { background:rgba(6,182,212,.25); color:#06B6D4; border:1px solid rgba(6,182,212,.4); }
+        .badge-contract { background:rgba(245,158,11,.25); color:#F59E0B; border:1px solid rgba(245,158,11,.4); }
+        .job-meta { display:flex; gap:1.5rem; flex-wrap:wrap; font-size:.85rem; color:var(--muted); margin-bottom:.75rem; }
+        .job-meta span { display:flex; align-items:center; gap:.3rem; }
+        .job-desc { font-size:.9rem; color:rgba(255,255,255,.75); line-height:1.6; margin-bottom:1rem; }
+        .job-skills { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1rem; }
+        .skill-tag { padding:.25rem .7rem; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); border-radius:20px; font-size:.78rem; color:rgba(255,255,255,.8); }
+        .btn-apply-job { padding:.7rem 2rem; border-radius:50px; font-weight:700; font-size:.9rem; cursor:pointer; transition:all .3s; border:2px solid; font-family:'Inter',sans-serif; }
+
+        .app-form-wrap { display:none; }
+        .app-form-wrap.open { display:block; }
+        .form-section { background:var(--glass); border-radius:20px; padding:2rem; border:1px solid var(--border); margin-bottom:1.5rem; }
+        .form-section h3 { font-size:1.1rem; font-weight:700; color:var(--white); margin-bottom:1.5rem; display:flex; align-items:center; gap:.5rem; }
+        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+        .form-row.three { grid-template-columns:1fr 1fr 1fr; }
+        .form-group { margin-bottom:1.2rem; }
+        .form-group label { display:block; color:var(--white); font-weight:600; margin-bottom:.45rem; font-size:.9rem; }
+        .form-group label span { color:var(--accent); }
+        .form-ctrl { width:100%; padding:.9rem 1rem; background:rgba(255,255,255,.07); border:2px solid var(--border); border-radius:12px; color:var(--white); font-size:.95rem; font-family:'Inter',sans-serif; transition:all .3s; }
+        .form-ctrl::placeholder { color:rgba(255,255,255,.35); }
+        .form-ctrl:focus { outline:none; border-color:var(--accent); background:rgba(255,255,255,.1); }
+        .form-ctrl option { background:#1a1a1a; }
+        textarea.form-ctrl { resize:vertical; min-height:100px; }
+        .file-upload { width:100%; padding:1.5rem; background:rgba(255,255,255,.04); border:2px dashed rgba(255,255,255,.2); border-radius:12px; text-align:center; cursor:pointer; transition:all .3s; color:var(--muted); font-size:.9rem; }
+        .file-upload:hover { border-color:var(--accent); color:var(--accent); background:rgba(249,115,22,.05); }
+        .checkbox-group { display:flex; gap:.75rem; flex-wrap:wrap; }
+        .checkbox-item { display:flex; align-items:center; gap:.5rem; cursor:pointer; }
+        .checkbox-item input { accent-color:var(--accent); width:16px; height:16px; }
+        .checkbox-item span { color:rgba(255,255,255,.85); font-size:.9rem; }
+        .btn-submit-app { width:100%; padding:1.2rem; background:var(--accent); color:#000; border:none; border-radius:14px; font-weight:800; font-size:1.05rem; cursor:pointer; transition:all .3s; font-family:'Inter',sans-serif; letter-spacing:.3px; }
+        .btn-submit-app:hover { background:var(--accent2); transform:translateY(-2px); box-shadow:0 8px 30px rgba(249,115,22,.5); }
+        .back-to-jobs { background:none; border:none; color:var(--accent); cursor:pointer; font-weight:700; font-size:.9rem; font-family:'Inter',sans-serif; display:flex; align-items:center; gap:.5rem; margin-bottom:1.5rem; padding:0; transition:opacity .3s; }
+        .back-to-jobs:hover { opacity:.7; }
+
+        
+        .success-screen { display:none; text-align:center; padding:3rem 2rem; }
+        .success-screen.open { display:block; }
+        .success-icon { font-size:5rem; margin-bottom:1.5rem; animation:bounce .6s ease; }
+        @keyframes bounce { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
+        .success-screen h2 { font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; color:var(--white); margin-bottom:.75rem; }
+        .success-screen p { color:var(--muted); font-size:1rem; max-width:400px; margin:0 auto 2rem; line-height:1.7; }
+        .success-details { background:var(--glass); border-radius:16px; padding:1.5rem; border:1px solid var(--border); max-width:400px; margin:0 auto 2rem; text-align:left; }
+        .success-row { display:flex; justify-content:space-between; padding:.6rem 0; border-bottom:1px solid var(--border); font-size:.9rem; }
+        .success-row:last-child { border:none; }
+        .success-row .key { color:var(--muted); }
+        .success-row .val { color:var(--white); font-weight:600; }
+        .btn-done { padding:.9rem 2.5rem; background:var(--accent); color:#000; border:none; border-radius:50px; font-weight:800; cursor:pointer; font-family:'Inter',sans-serif; transition:all .3s; }
+        .btn-done:hover { background:var(--accent2); }
+
+       
+       
+        footer { background:rgba(0,0,0,.8); backdrop-filter:blur(20px); padding:3rem 2rem 1.5rem; border-top:1px solid var(--border); margin-top:2rem; }
+        .footer-grid { max-width:1400px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:2rem; margin-bottom:2rem; }
+        .fs h3 { color:var(--accent); margin-bottom:1rem; font-size:1rem; }
+        .fs ul { list-style:none; }
+        .fs ul li,.fs a { color:var(--muted); text-decoration:none; display:block; margin-bottom:.5rem; font-size:.9rem; transition:color .3s; }
+        .fs a:hover { color:var(--accent); }
+        .footer-bottom { text-align:center; padding-top:2rem; border-top:1px solid var(--border); color:var(--muted); font-size:.85rem; }
+        .footer-bottom a { color:var(--accent); text-decoration:none; }
+
+        @media(max-width:900px) { .streams-grid { grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); } }
+        @media(max-width:600px) { .hero h1{font-size:2.5rem;} .streams-grid{grid-template-columns:1fr;} .form-row,.form-row.three{grid-template-columns:1fr;} .modal{border-radius:20px;} .chat-panel{width:300px;} }
+        ::-webkit-scrollbar { width:6px; } ::-webkit-scrollbar-track { background:rgba(255,255,255,.04); } ::-webkit-scrollbar-thumb { background:rgba(249,115,22,.5); border-radius:3px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <div class="logo-section">
+            <img src="LOGO.jpg" alt="ORYN Logo" class="campus-logo">
+            <a href="home.html" class="brand-name">ORYN <span>CAMPUS</span></a>
+        </div>
+        <div class="nav-right">
+            <a href="home.html" class="btn-back">Home</a>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <h2 class="section-title">Choose Your Career Stream</span></h2>
+    <div class="streams-grid">
+        <div class="stream-card auto" onclick="openStream('auto')">
+            <img src="automobile.jpg" alt="Automobile Engineering">
+            <div class="stream-overlay">
+                
+                <div class="stream-name">Automobile Engineering</div>
+                <div class="stream-sub">Design, manufacture & innovate vehicles of the future</div>
+                <div class="stream-footer">
+                    <span class="job-count"> 14 positions open</span>
+                    <button class="btn-explore">Explore Jobs →</button>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="stream-card civil" onclick="openStream('civil')">
+            <img src="civil.jpg" alt="Civil Engineering">
+            <div class="stream-overlay">
+                <div class="stream-name">Civil Engineering</div>
+                <div class="stream-sub">Build the infrastructure that shapes tomorrow's cities</div>
+                <div class="stream-footer">
+                    <span class="job-count"> 18 positions open</span>
+                    <button class="btn-explore">Explore Jobs →</button>
+                </div>
+            </div>
+        </div>
+
+       
+        <div class="stream-card software" onclick="openStream('software')">
+            <img src="software.jpg" alt="Software Engineering">
+            <div class="stream-overlay">
+                <div class="stream-tag"> Technology</div>
+                <div class="stream-name">Software Engineering</div>
+                <div class="stream-sub">Code, create, and disrupt with cutting-edge technology</div>
+                <div class="stream-footer">
+                    <span class="job-count">32 positions open</span>
+                    <button class="btn-explore">Explore Jobs →</button>
+                </div>
+            </div>
+        </div>
+        <div class="stream-card management" onclick="openStream('management')">
+            <img src="managers.jpg" alt="Business Management">
+            <div class="stream-overlay">
+                <div class="stream-name">Business & Management</div>
+                <div class="stream-sub">Lead teams, drive strategy, and grow organisations</div>
+                <div class="stream-footer">
+                    <span class="job-count"> 22 positions open</span>
+                    <button class="btn-explore">Explore Jobs →</button>
+                </div>
+            </div>
+        </div>
+        <div class="stream-card healthcare" onclick="openStream('healthcare')">
+            <img src="docs&nurses.jpg" alt="Healthcare">
+            <div class="stream-overlay">
+                <div class="stream-name">Healthcare & Medicine</div>
+                <div class="stream-sub">Save lives and make a difference every single day</div>
+                <div class="stream-footer">
+                    <span class="job-count"> 20 positions open</span>
+                    <button class="btn-explore">Explore Jobs →</button>
+                </div>
+            </div>
+        </div>
+
+      
+        <div class="stream-card navy-card" onclick="openStream('navy')">
+            <img src="navy_cadetors.jpg" alt="Naval Services">
+            <div class="stream-overlay">
+                
+                <div class="stream-name">Naval & Defence Services</div>
+                <div class="stream-sub">Serve with honour and protect with pride at sea</div>
+                <div class="stream-footer">
+                    <span class="job-count"> 9 positions open</span>
+                    <button class="btn-explore">Explore Jobs →</button>
+                </div>
+            </div>
+        </div>
+
+       
+        <div class="stream-card aviation" onclick="openStream('aviation')">
+            <img src="pilots.jpg" alt="Aviation">
+            <div class="stream-overlay">
+                <div class="stream-name">Aviation & Aerospace</div>
+                <div class="stream-sub">Take command of the skies and redefine air travel</div>
+                <div class="stream-footer">
+                    <span class="job-count">13 positions open</span>
+                    <button class="btn-explore">Explore Jobs →</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal-overlay" id="modalOverlay" onclick="closeIfOutside(event)">
+    <div class="modal" id="modal">
+        <div class="modal-header">
+            <div class="modal-title-row">
+                <div class="modal-icon" id="modalIcon">💼</div>
+                <div>
+                    <div class="modal-title" id="modalTitle">Career Stream</div>
+                    <div class="modal-sub" id="modalSub">Available opportunities</div>
+                </div>
+            </div>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+
+        <div class="modal-body">
+            <div id="jobsView">
+                <div class="jobs-list" id="jobsList"></div>
+            </div>
+            <div class="app-form-wrap" id="formView">
+                <button class="back-to-jobs" onclick="showJobs()">← Back to Jobs</button>
+                <div id="applyingFor" style="background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:1rem 1.5rem;margin-bottom:1.5rem;color:var(--white);font-weight:600;font-size:.95rem;"></div>
+
+                <div class="form-section">
+                    <h3>👤 Personal Information</h3>
+                    <div class="form-row">
+                        <div class="form-group"><label>First Name <span>*</span></label><input type="text" class="form-ctrl" id="fFirst" placeholder="Your first name"></div>
+                        <div class="form-group"><label>Last Name <span>*</span></label><input type="text" class="form-ctrl" id="fLast" placeholder="Your last name"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Email Address <span>*</span></label><input type="email" class="form-ctrl" id="fEmail" placeholder="you@oryuncampus.edu"></div>
+                        <div class="form-group"><label>Phone Number <span>*</span></label><input type="tel" class="form-ctrl" id="fPhone" placeholder="+94 77 123 4567"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Date of Birth</label><input type="date" class="form-ctrl" id="fDob"></div>
+                        <div class="form-group"><label>Nationality</label><input type="text" class="form-ctrl" id="fNation" placeholder="Sri Lankan"></div>
+                    </div>
+                    <div class="form-group"><label>Current Address</label><input type="text" class="form-ctrl" id="fAddr" placeholder="No. 12, Main Street, Colombo 03"></div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Academic Background</h3>
+                    <div class="form-row">
+                        <div class="form-group"><label>Student ID <span>*</span></label><input type="text" class="form-ctrl" id="fStu" placeholder="STU2026001"></div>
+                        <div class="form-group"><label>Academic Year <span>*</span></label>
+                            <select class="form-ctrl" id="fYear">
+                                <option value="">Select year</option>
+                                <option>Year 1</option><option>Year 2</option><option>Year 3</option><option>Year 4</option>
+                                <option>Postgraduate</option><option>Graduate (Alumni)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Department / Faculty <span>*</span></label>
+                            <select class="form-ctrl" id="fDept">
+                                <option value="">Select department</option>
+                                <option>Automobile Engineering</option><option>Civil Engineering</option>
+                                <option>Software Engineering</option><option>Computer Science</option>
+                                <option>Business Administration</option><option>Aviation Management</option>
+                                <option>Naval Architecture</option><option>Healthcare & Medicine</option>
+                                <option>Mechanical Engineering</option><option>Electrical Engineering</option>
+                                <option>Finance & Accounting</option><option>International Business</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Current GPA / Grade</label><input type="text" class="form-ctrl" id="fGpa" placeholder="e.g. 3.8 / 4.0 or A"></div>
+                    </div>
+                    <div class="form-group"><label>Key Achievements / Awards</label><textarea class="form-ctrl" id="fAwards" placeholder="Dean's list, competition wins, scholarships..."></textarea></div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Work Experience & Skills</h3>
+                    <div class="form-group"><label>Previous Experience</label><textarea class="form-ctrl" id="fExp" rows="4" placeholder="Describe any internships, part-time jobs, or relevant experience..."></textarea></div>
+                    <div class="form-group"><label>Key Technical Skills</label><input type="text" class="form-ctrl" id="fSkills" placeholder="e.g. Python, AutoCAD, SQL, Project Management..."></div>
+                    <div class="form-group"><label>Languages Spoken</label><input type="text" class="form-ctrl" id="fLangs" placeholder="e.g. English (Fluent), Sinhala (Native), Tamil (Basic)"></div>
+                    <div class="form-group"><label>Availability</label>
+                        <select class="form-ctrl" id="fAvail">
+                            <option>Immediately</option><option>2 weeks notice</option><option>1 month notice</option>
+                            <option>After exams (June 2026)</option><option>After graduation (Dec 2026)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3> Application Details</h3>
+                    <div class="form-group"><label>Cover Letter / Motivation <span>*</span></label><textarea class="form-ctrl" id="fCover" rows="5" placeholder="Why are you the right candidate for this role? What excites you about this opportunity?"></textarea></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Preferred Work Type</label>
+                            <select class="form-ctrl" id="fWorkType">
+                                <option>On-site</option><option>Remote</option><option>Hybrid</option><option>Flexible</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Salary Expectation (Rs./month)</label><input type="text" class="form-ctrl" id="fSalary" placeholder="e.g. 80,000 – 100,000"></div>
+                    </div>
+                    <div class="form-group"><label>How did you hear about this role?</label>
+                        <select class="form-ctrl" id="fSource">
+                            <option>ORYN Campus Portal</option><option>Faculty Recommendation</option>
+                            <option>Career Fair</option><option>LinkedIn</option><option>Friend / Colleague</option><option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Upload CV / Resume</label>
+                        <div class="file-upload" onclick="alert('📎 File picker would open here!\n\nIn production: Upload PDF, DOCX (max 5MB)')">
+                            📎 Click to upload your CV / Resume (PDF or DOCX, max 5MB)
+                        </div>
+                    </div>
+                    <div class="form-group"><label>Upload Portfolio / Certificates (optional)</label>
+                        <div class="file-upload" onclick="alert('File picker would open here!\n\nIn production: Upload ZIP, PDF (max 20MB)')">
+                             Click to upload portfolio, certificates, or work samples (optional)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <label class="checkbox-item"><input type="checkbox" id="fAgree"><span>I confirm all information provided is accurate and complete</span></label>
+                            <label class="checkbox-item"><input type="checkbox" id="fTerms"><span>I agree to the <a href="#" style="color:var(--accent)">Terms & Privacy Policy</a></span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-submit-app" onclick="submitApplication()"> Submit Application</button>
+            </div>
+            <div class="success-screen" id="successView">
+                <div class="success-icon">🎉</div>
+                <h2>Application Submitted!</h2>
+                <p>Your application has been received. Our careers team will review it and get back to you within 5–7 business days.</p>
+                <div class="success-details" id="successDetails"></div>
+                <button class="btn-done" onclick="resetModal()">✓ Browse More Jobs</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<footer>
+    <div class="footer-grid">
+        <div class="fs"><h3>Contacts</h3><ul><li><a href="tel:+94111234570">+94 11 123 4570</a></li><li><a href="mailto:careers@oryuncampus.edu">careers@oryuncampus.edu</a></li></ul></div>
+       </div>
+    <div class="footer-bottom"><p>&copy; 2026 ORYN Campus Careers. All rights reserved. | <a href="#terms">Terms</a> | <a href="#privacy">Privacy</a></p></div>
+</footer>
+
+<script>
+const streamData = {
+    auto: {
+        icon:'⚙️', title:'Automobile Engineering', sub:'14 positions across design, manufacturing & R&D',
+        color:'#F97316',
+        jobs:[
+            { id:'A1', title:'Automotive Design Engineer Intern', company:'Toyota Lanka Ltd', type:'intern', loc:'Colombo · Hybrid', pay:'Rs. 90,000/mo', dur:'6 months', start:'June 2026', desc:'Work on vehicle body design using CATIA V5 and SolidWorks. Collaborate with senior engineers on next-gen EV prototypes.', skills:['CATIA V5','SolidWorks','AutoCAD','Teamwork'] },
+            { id:'A2', title:'Vehicle Systems Engineer', company:'AutoTech Solutions', type:'full', loc:'Colombo · On-site', pay:'Rs. 150,000/mo', dur:'Full-time', start:'July 2026', desc:'Develop and test powertrain systems for hybrid vehicles. Drive innovation in fuel efficiency and emissions reduction.', skills:['Powertrain','MATLAB','Simulink','CAN Bus'] },
+            { id:'A3', title:'Quality Control Analyst', company:'Lanka Motors Corp', type:'part', loc:'Gampaha · On-site', pay:'Rs. 60,000/mo', dur:'Part-time', start:'Immediate', desc:'Inspect manufactured components, run quality audits, and ensure ISO compliance across the production line.', skills:['ISO 9001','CMM','Six Sigma','Lean'] },
+            { id:'A4', title:'EV Battery Research Assistant', company:'GreenDrive Labs', type:'research', loc:'Remote/Hybrid', pay:'Rs. 75,000/mo', dur:'12 months', start:'August 2026', desc:'Research lithium-ion battery management systems for electric vehicles. Publish findings in collaboration with university faculty.', skills:['Battery Chemistry','Python','Research','MATLAB'] },
+        ]
+    },
+    civil: {
+        icon:'🏗️', title:'Civil Engineering', sub:'18 positions in construction, infrastructure & urban planning',
+        color:'#22C55E',
+        jobs:[
+            { id:'C1', title:'Site Civil Engineer Intern', company:'BuildTech Lanka', type:'intern', loc:'Colombo · On-site', pay:'Rs. 80,000/mo', dur:'6 months', start:'June 2026', desc:'Assist in site supervision, quality control, and construction management for a 25-storey residential project in Colombo.', skills:['AutoCAD','Revit','MS Project','Site Safety'] },
+            { id:'C2', title:'Structural Design Engineer', company:'SkyArch Consultants', type:'full', loc:'Colombo · Hybrid', pay:'Rs. 140,000/mo', dur:'Full-time', start:'July 2026', desc:'Design structural systems for commercial and residential buildings. Use SAP2000 and ETABS for analysis and detailing.', skills:['SAP2000','ETABS','ACI 318','Revit'] },
+            { id:'C3', title:'Urban Planning Analyst', company:'Colombo Municipality', type:'contract', loc:'Colombo · On-site', pay:'Rs. 110,000/mo', dur:'1 year contract', start:'May 2026', desc:'Support urban planning initiatives, zoning analysis, and infrastructure development for greater Colombo metro expansion.', skills:['GIS','ArcMap','Urban Design','AutoCAD Civil 3D'] },
+            { id:'C4', title:'Environmental Impact Researcher', company:'EcoEng Associates', type:'research', loc:'Remote', pay:'Rs. 65,000/mo', dur:'8 months', start:'June 2026', desc:'Conduct environmental impact assessments for large-scale infrastructure projects. Prepare EIA reports and recommendations.', skills:['EIA','SEPA','GIS','Report Writing'] },
+        ]
+    },
+    software: {
+        icon:'💻', title:'Software Engineering', sub:'32 positions in development, AI, cybersecurity & cloud',
+        color:'#3B82F6',
+        jobs:[
+            { id:'S1', title:'Full-Stack Developer Intern', company:'TechCorp Solutions', type:'intern', loc:'Remote / Hybrid', pay:'Rs. 95,000/mo', dur:'3 months', start:'June 2026', desc:'Build scalable web applications using React, Node.js, and PostgreSQL. Work on real products used by thousands of users.', skills:['React','Node.js','PostgreSQL','Docker'] },
+            { id:'S2', title:'AI/ML Engineer', company:'IntelliSoft Lanka', type:'full', loc:'Colombo · Hybrid', pay:'Rs. 200,000/mo', dur:'Full-time', start:'July 2026', desc:'Develop and deploy machine learning models for NLP and computer vision applications. Work with TensorFlow and PyTorch.', skills:['TensorFlow','PyTorch','Python','MLOps'] },
+            { id:'S3', title:'Cybersecurity Analyst', company:'SecureNet Lanka', type:'full', loc:'Colombo · On-site', pay:'Rs. 180,000/mo', dur:'Full-time', start:'Immediate', desc:'Monitor and defend enterprise networks, conduct penetration testing, and develop security protocols and incident response plans.', skills:['Penetration Testing','SIEM','Wireshark','CEH'] },
+            { id:'S4', title:'Mobile App Developer', company:'AppFactory LK', type:'intern', loc:'Remote', pay:'Rs. 70,000/mo', dur:'4 months', start:'June 2026', desc:'Build cross-platform mobile applications using Flutter and React Native. Deliver engaging UIs and seamless user experiences.', skills:['Flutter','React Native','Firebase','Figma'] },
+            { id:'S5', title:'Cloud Infrastructure Engineer', company:'CloudBridge Lanka', type:'contract', loc:'Remote / Colombo', pay:'Rs. 160,000/mo', dur:'6 months', start:'May 2026', desc:'Architect and manage AWS/Azure cloud environments. Implement CI/CD pipelines, infrastructure-as-code, and auto-scaling.', skills:['AWS','Terraform','Kubernetes','CI/CD'] },
+        ]
+    },
+    management: {
+        icon:'📊', title:'Business & Management', sub:'22 positions in strategy, finance, marketing & HR',
+        color:'#8B5CF6',
+        jobs:[
+            { id:'M1', title:'Business Strategy Intern', company:'ConsultPro Lanka', type:'intern', loc:'Colombo · On-site', pay:'Rs. 85,000/mo', dur:'4 months', start:'June 2026', desc:'Support strategy consultants on client engagements. Conduct market research, build financial models, and prepare board-level presentations.', skills:['Excel','PowerPoint','Market Research','Strategy'] },
+            { id:'M2', title:'Financial Analyst', company:'CapitalOne Lanka', type:'full', loc:'Colombo · Hybrid', pay:'Rs. 160,000/mo', dur:'Full-time', start:'July 2026', desc:'Analyze financial data, build forecasting models, and present investment recommendations to senior management.', skills:['Financial Modelling','Excel','Bloomberg','CFA Level 1'] },
+            { id:'M3', title:'Digital Marketing Manager', company:'BrandSolutions Co', type:'full', loc:'Colombo · Hybrid', pay:'Rs. 130,000/mo', dur:'Full-time', start:'June 2026', desc:'Lead digital marketing campaigns across social media, SEO, PPC, and email. Drive customer acquisition and brand growth.', skills:['Google Ads','SEO','Meta Ads','Analytics'] },
+            { id:'M4', title:'HR & Talent Acquisition Intern', company:'PeopleFirst Lanka', type:'intern', loc:'Colombo · On-site', pay:'Rs. 65,000/mo', dur:'3 months', start:'June 2026', desc:'Assist in recruitment, onboarding, and employee engagement initiatives. Learn modern HR tools and talent strategies.', skills:['HR Software','Communication','Excel','ATS'] },
+        ]
+    },
+    healthcare: {
+        icon:'🏥', title:'Healthcare & Medicine', sub:'20 positions in clinical, research & healthcare management',
+        color:'#EC4899',
+        jobs:[
+            { id:'H1', title:'Clinical Intern – General Medicine', company:'National Hospital Colombo', type:'intern', loc:'Colombo · On-site', pay:'Rs. 60,000/mo', dur:'6 months', start:'June 2026', desc:'Rotate through medical wards, outpatient clinics, and emergency units under supervision of senior consultants.', skills:['Clinical Skills','Patient Care','EHR','Documentation'] },
+            { id:'H2', title:'Nursing Officer – ICU', company:'Lanka Hospitals PLC', type:'full', loc:'Colombo · On-site', pay:'Rs. 95,000/mo', dur:'Full-time', start:'Immediate', desc:'Provide critical care nursing in the Intensive Care Unit. Monitor patients, administer medications, and coordinate with clinical teams.', skills:['ICU Care','Ventilator','IV Therapy','Triage'] },
+            { id:'H3', title:'Medical Research Associate', company:'Sri Lanka Medical Institute', type:'research', loc:'Colombo · Hybrid', pay:'Rs. 70,000/mo', dur:'12 months', start:'July 2026', desc:'Assist lead researchers in clinical trials and epidemiological studies. Collect data, manage patient records, and prepare reports.', skills:['Clinical Research','SPSS','Ethics','Documentation'] },
+            { id:'H4', title:'Healthcare Data Analyst', company:'MedTech Lanka', type:'full', loc:'Remote / Colombo', pay:'Rs. 120,000/mo', dur:'Full-time', start:'June 2026', desc:'Analyse healthcare datasets to improve patient outcomes, resource allocation, and hospital performance metrics.', skills:['SQL','Python','Power BI','HIPAA'] },
+        ]
+    },
+    navy: {
+        icon:'⚓', title:'Naval & Defence Services', sub:'9 positions in Sri Lanka Navy and maritime sectors',
+        color:'#06B6D4',
+        jobs:[
+            { id:'N1', title:'Naval Cadet Trainee', company:'Sri Lanka Navy', type:'full', loc:'Trincomalee · On-site', pay:'Rs. 75,000/mo', dur:'Full-time', start:'September 2026', desc:'Join the Sri Lanka Navy as a commissioned officer. Complete 18-month naval training at SLNS Parakrama before deployment.', skills:['Leadership','Navigation','Discipline','First Aid'] },
+            { id:'N2', title:'Maritime Engineer Intern', company:'Sri Lanka Ports Authority', type:'intern', loc:'Colombo Port · On-site', pay:'Rs. 70,000/mo', dur:'6 months', start:'June 2026', desc:'Work alongside marine engineers on vessel maintenance, harbour operations, and port infrastructure projects.', skills:['Marine Engineering','AutoCAD','Safety Protocols','Mechanical'] },
+            { id:'N3', title:'Naval Intelligence Analyst', company:'Ministry of Defence (SL)', type:'contract', loc:'Colombo · Classified', pay:'Negotiable', dur:'2 years', start:'January 2027', desc:'Provide intelligence analysis and strategic assessments for Sri Lanka Naval Command. Requires security clearance.', skills:['Intelligence Analysis','OSINT','Classified Protocols','GIS'] },
+            { id:'N4', title:'Marine Logistics Officer', company:'Expolanka Freight', type:'full', loc:'Colombo · Hybrid', pay:'Rs. 110,000/mo', dur:'Full-time', start:'July 2026', desc:'Manage international shipping logistics, customs clearance, and freight forwarding operations for global trade routes.', skills:['Logistics','INCOTERMS','Customs','ERP'] },
+        ]
+    },
+    aviation: {
+        icon:'✈️', title:'Aviation & Aerospace', sub:'13 positions across airlines, airports & aerospace',
+        color:'#F59E0B',
+        jobs:[
+            { id:'AV1', title:'Cadet Pilot Programme', company:'SriLankan Airlines', type:'full', loc:'Katunayake · On-site', pay:'Rs. 120,000/mo (training)', dur:'18 months', start:'August 2026', desc:'Join SriLankan Airlines Cadet Pilot Programme. Complete JAA/ICAO-compliant CPL training with type rating on A320.', skills:['PPL/CPL','ATPL Theory','ICAO English','Simulator'] },
+            { id:'AV2', title:'Airport Operations Intern', company:'Bandaranaike International Airport', type:'intern', loc:'Katunayake · On-site', pay:'Rs. 65,000/mo', dur:'4 months', start:'June 2026', desc:'Gain hands-on experience in airside operations, passenger services, security compliance, and ICAO safety standards.', skills:['ICAO Standards','Safety','Communication','MS Office'] },
+            { id:'AV3', title:'Aircraft Maintenance Engineer', company:'SriLankan Catering', type:'full', loc:'Katunayake · On-site', pay:'Rs. 170,000/mo', dur:'Full-time', start:'July 2026', desc:'Maintain and inspect commercial aircraft under CAASL approval. Perform scheduled maintenance on A320/737 fleets.', skills:['CAASL Part 66','A320','B737','Safety Checks'] },
+            { id:'AV4', title:'Aerospace Systems Researcher', company:'SLSDC Space Agency', type:'research', loc:'Colombo · Hybrid', pay:'Rs. 90,000/mo', dur:'12 months', start:'September 2026', desc:'Research satellite communication systems, earth observation technologies, and aerospace propulsion for Sri Lanka\'s space development programme.', skills:['MATLAB','Systems Engineering','Satellite Comms','Python'] },
+        ]
+    }
+};
+
+let currentStream = null;
+let currentJob = null;
+
+function openStream(key) {
+    currentStream = key;
+    const data = streamData[key];
+    document.getElementById('modalIcon').textContent = data.icon;
+    document.getElementById('modalTitle').textContent = data.title;
+    document.getElementById('modalSub').textContent = data.sub;
+    showJobs();
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function showJobs() {
+    document.getElementById('jobsView').style.display = 'block';
+    document.getElementById('formView').classList.remove('open');
+    document.getElementById('successView').classList.remove('open');
+    const data = streamData[currentStream];
+    const list = document.getElementById('jobsList');
+    list.innerHTML = data.jobs.map(j => `
+        <div class="job-item" style="--item-accent:${data.color}">
+            <div class="job-item-top">
+                <div>
+                    <div class="job-title-main">${j.title}</div>
+                    <div class="company">🏢 ${j.company}</div>
+                </div>
+                <div class="job-badge badge-${j.type}">${badgeLabel(j.type)}</div>
+            </div>
+            <div class="job-meta">
+                <span>📍 ${j.loc}</span>
+                <span>💰 ${j.pay}</span>
+                <span>⏱️ ${j.dur}</span>
+                <span>📅 ${j.start}</span>
+            </div>
+            <div class="job-desc">${j.desc}</div>
+            <div class="job-skills">${j.skills.map(s=>`<span class="skill-tag">${s}</span>`).join('')}</div>
+            <button class="btn-apply-job" style="background:rgba(${hexToRgb(data.color)},.15);border-color:${data.color};color:${data.color}" onclick="openApplyForm('${j.id}')">
+                Apply for this Role →
+            </button>
+        </div>
+    `).join('');
+}
+
+function badgeLabel(type) {
+    const map = { intern:'🎓 Internship', full:'✅ Full-Time', part:'⏰ Part-Time', research:'🔬 Research', contract:'📋 Contract' };
+    return map[type] || type;
+}
+
+function hexToRgb(hex) {
+    const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+    return `${r},${g},${b}`;
+}
+
+function openApplyForm(jobId) {
+    const data = streamData[currentStream];
+    const job = data.jobs.find(j => j.id === jobId);
+    if (!job) return;
+    currentJob = job;
+    document.getElementById('applyingFor').innerHTML = `✏️ Applying for: <span style="color:${data.color}">${job.title}</span> at <strong>${job.company}</strong>`;
+    document.getElementById('jobsView').style.display = 'none';
+    document.getElementById('formView').classList.add('open');
+    document.getElementById('modal').scrollTop = 0;
+}
+
+function submitApplication() {
+    const first = document.getElementById('fFirst').value.trim();
+    const last = document.getElementById('fLast').value.trim();
+    const email = document.getElementById('fEmail').value.trim();
+    const phone = document.getElementById('fPhone').value.trim();
+    const stu = document.getElementById('fStu').value.trim();
+    const dept = document.getElementById('fDept').value;
+    const cover = document.getElementById('fCover').value.trim();
+    const agree = document.getElementById('fAgree').checked;
+    const terms = document.getElementById('fTerms').checked;
+
+    if (!first || !last || !email || !phone || !stu || !dept || !cover) {
+        alert('⚠️ Please fill in all required fields (marked with *)');
+        return;
+    }
+    if (!agree || !terms) {
+        alert('⚠️ Please confirm accuracy and agree to our Terms & Privacy Policy before submitting.');
+        return;
+    }
+
+    const ref = 'ORYN-' + currentStream.toUpperCase() + '-' + Date.now().toString().slice(-5);
+    const data = streamData[currentStream];
+    document.getElementById('successDetails').innerHTML = `
+        <div class="success-row"><span class="key">Reference #</span><span class="val" style="color:${data.color}">${ref}</span></div>
+        <div class="success-row"><span class="key">Applicant</span><span class="val">${first} ${last}</span></div>
+        <div class="success-row"><span class="key">Role</span><span class="val">${currentJob?.title || ''}</span></div>
+        <div class="success-row"><span class="key">Company</span><span class="val">${currentJob?.company || ''}</span></div>
+        <div class="success-row"><span class="key">Status</span><span class="val" style="color:#22C55E">✅ Under Review</span></div>
+        <div class="success-row"><span class="key">Expected Response</span><span class="val">5–7 Business Days</span></div>
+    `;
+    document.getElementById('formView').classList.remove('open');
+    document.getElementById('successView').classList.add('open');
+    document.getElementById('modal').scrollTop = 0;
+    clearForm();
+}
+
+function clearForm() {
+    ['fFirst','fLast','fEmail','fPhone','fDob','fNation','fAddr','fStu','fGpa','fAwards','fExp','fSkills','fLangs','fCover','fSalary'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+    ['fYear','fDept','fAvail','fWorkType','fSource'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.selectedIndex = 0;
+    });
+    document.getElementById('fAgree').checked = false;
+    document.getElementById('fTerms').checked = false;
+}
+
+function resetModal() { showJobs(); }
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow = ''; }
+function closeIfOutside(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
+
+
+function toggleChat() { document.getElementById('chatPanel').classList.toggle('open'); }
+function sendMsg() { const inp=document.getElementById('chatInp'); const msg=inp.value.trim(); if(!msg)return; addMsg(msg,'user'); inp.value=''; setTimeout(()=>{ const l=msg.toLowerCase(); let r="🤔 Try asking about available streams, how to apply, salary ranges, interview tips, or our placement rate!"; for(const[k,v] of Object.entries(replies)){if(l.includes(k)){r=v;break;}} addMsg(r,'bot'); },600); }
+function addMsg(t,type) { const c=document.getElementById('chatMsgs'); const d=document.createElement('div'); d.className=`cmsg ${type}`; d.textContent=t; c.appendChild(d); c.scrollTop=c.scrollHeight; }
+</script>
+</body>
+</html>
