@@ -1095,23 +1095,19 @@ app.post("/api/gym/book", (req, res) => {
     });
 });
 
-// ============= CLUB ENDPOINTS (Matching your exact database schema) =============
-
-// Get all clubs
 app.get("/api/clubs", (req, res) => {
     db.query("SELECT * FROM clubs ORDER BY club_name ASC", (err, results) => {
         if (err) {
             console.error("Error fetching clubs:", err);
             return res.status(500).json({
                 success: false,
-                message: "Database error"
+                message: "Database error: " + err.message
             });
         }
         res.json({ success: true, clubs: results });
     });
 });
 
-// Get club by ID
 app.get("/api/clubs/:id", (req, res) => {
     const clubId = req.params.id;
 
@@ -1120,7 +1116,7 @@ app.get("/api/clubs/:id", (req, res) => {
             console.error("Error fetching club:", err);
             return res.status(500).json({
                 success: false,
-                message: "Database error"
+                message: "Database error: " + err.message
             });
         }
         if (results.length === 0) {
@@ -1132,12 +1128,9 @@ app.get("/api/clubs/:id", (req, res) => {
         res.json({ success: true, club: results[0] });
     });
 });
-
-// Join a club
 app.post("/api/clubs/join", (req, res) => {
     const { user_id, club_id } = req.body;
 
-    // Validate input
     if (!user_id || !club_id) {
         return res.status(400).json({
             success: false,
@@ -1145,13 +1138,13 @@ app.post("/api/clubs/join", (req, res) => {
         });
     }
 
-    // Check if user exists
-    db.query("SELECT id, first_name, last_name FROM users WHERE id = ?", [user_id], (err, userResults) => {
+
+    db.query("SELECT id, first_name, last_name, email FROM users WHERE id = ?", [user_id], (err, userResults) => {
         if (err) {
             console.error("Error checking user:", err);
             return res.status(500).json({
                 success: false,
-                message: "Database error"
+                message: "Database error: " + err.message
             });
         }
         if (userResults.length === 0) {
@@ -1161,13 +1154,13 @@ app.post("/api/clubs/join", (req, res) => {
             });
         }
 
-        // Check if club exists and get club details
+
         db.query("SELECT id, club_name, member_count FROM clubs WHERE id = ?", [club_id], (err, clubResults) => {
             if (err) {
                 console.error("Error checking club:", err);
                 return res.status(500).json({
                     success: false,
-                    message: "Database error"
+                    message: "Database error: " + err.message
                 });
             }
             if (clubResults.length === 0) {
@@ -1180,106 +1173,177 @@ app.post("/api/clubs/join", (req, res) => {
             const clubName = clubResults[0].club_name;
             const currentMemberCount = clubResults[0].member_count || 0;
 
-            // Check if already a member
-            db.query("SELECT id FROM club_members WHERE user_id = ? AND club_id = ?", [user_id, club_id], (err, existing) => {
+
+            db.query("SELECT id, status FROM club_members WHERE user_id = ? AND club_id = ?", [user_id, club_id], (err, existing) => {
                 if (err) {
                     console.error("Error checking membership:", err);
                     return res.status(500).json({
                         success: false,
-                        message: "Database error"
-                    });
-                }
-                if (existing.length > 0) {
-                    return res.status(400).json({
-                        success: false,
-                        message: "You are already a member of this club"
+                        message: "Database error: " + err.message
                     });
                 }
 
-                // Start transaction
-                db.beginTransaction(err => {
-                    if (err) {
-                        console.error("Transaction error:", err);
-                        return res.status(500).json({
+                if (existing.length > 0) {
+                    const membership = existing[0];
+                    if (membership.status === 'active') {
+                        return res.status(400).json({
                             success: false,
-                            message: "Database error"
+                            message: "You are already an active member of this club"
+                        });
+                    } else if (membership.status === 'inactive') {
+
+                        db.beginTransaction(err => {
+                            if (err) {
+                                console.error("Transaction error:", err);
+                                return res.status(500).json({
+                                    success: false,
+                                    message: "Database error"
+                                });
+                            }
+
+                            db.query("UPDATE club_members SET status = 'active', joined_date = CURDATE() WHERE user_id = ? AND club_id = ?", [user_id, club_id], (err) => {
+                                if (err) {
+                                    return db.rollback(() => {
+                                        console.error("Update error:", err);
+                                        res.status(500).json({
+                                            success: false,
+                                            message: "Failed to reactivate membership"
+                                        });
+                                    });
+                                }
+
+                                db.query("UPDATE clubs SET member_count = member_count + 1 WHERE id = ?", [club_id], (err) => {
+                                    if (err) {
+                                        return db.rollback(() => {
+                                            console.error("Update count error:", err);
+                                            res.status(500).json({
+                                                success: false,
+                                                message: "Failed to update member count"
+                                            });
+                                        });
+                                    }
+
+
+                                    db.query("UPDATE users SET reward_points = reward_points + 50 WHERE id = ?", [user_id], (err) => {
+                                        if (err) {
+                                            console.error("Reward points error:", err);
+                                        }
+
+                                        db.query("INSERT INTO reward_transactions (user_id, points, reason) VALUES (?, ?, ?)", [user_id, 50, `Rejoined ${clubName} club`], (err) => {
+                                            if (err) console.error("Transaction log error:", err);
+
+                                            db.commit(err => {
+                                                if (err) {
+                                                    return db.rollback(() => {
+                                                        console.error("Commit error:", err);
+                                                        res.status(500).json({
+                                                            success: false,
+                                                            message: "Database error"
+                                                        });
+                                                    });
+                                                }
+
+                                                res.json({
+                                                    success: true,
+                                                    message: `Welcome back to ${clubName}! +50 points awarded!`,
+                                                    membership: {
+                                                        user_id: user_id,
+                                                        club_id: club_id,
+                                                        role: 'member',
+                                                        status: 'active'
+                                                    }
+                                                });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
                         });
                     }
+                } else {
 
-                    // Insert membership - matching your exact club_members table structure
-                    db.query(`INSERT INTO club_members 
-                              (user_id, club_id, joined_date, role, status) 
-                              VALUES (?, ?, CURDATE(), 'member', 'active')`, [user_id, club_id], (err, result) => {
+                    db.beginTransaction(err => {
                         if (err) {
-                            return db.rollback(() => {
-                                console.error("Insert error:", err);
-                                res.status(500).json({
-                                    success: false,
-                                    message: "Failed to join club"
-                                });
+                            console.error("Transaction error:", err);
+                            return res.status(500).json({
+                                success: false,
+                                message: "Database error"
                             });
                         }
 
-                        // Update member count in clubs table
-                        db.query("UPDATE clubs SET member_count = ? WHERE id = ?", [currentMemberCount + 1, club_id], (err) => {
+
+                        db.query(`INSERT INTO club_members 
+                                  (user_id, club_id, joined_date, role, status) 
+                                  VALUES (?, ?, CURDATE(), 'member', 'active')`, [user_id, club_id], (err) => {
                             if (err) {
                                 return db.rollback(() => {
-                                    console.error("Update error:", err);
+                                    console.error("Insert error:", err);
                                     res.status(500).json({
                                         success: false,
-                                        message: "Failed to update member count"
+                                        message: "Failed to join club: " + err.message
                                     });
                                 });
                             }
 
-                            // Add reward points for joining a club
-                            db.query("UPDATE users SET reward_points = reward_points + 50 WHERE id = ?", [user_id], (err) => {
+
+                            db.query("UPDATE clubs SET member_count = ? WHERE id = ?", [currentMemberCount + 1, club_id], (err) => {
                                 if (err) {
-                                    console.error("Reward points error:", err);
-                                    // Don't rollback for reward points failure, just log it
-                                    console.log("Reward points update failed, but membership was created");
+                                    return db.rollback(() => {
+                                        console.error("Update error:", err);
+                                        res.status(500).json({
+                                            success: false,
+                                            message: "Failed to update member count"
+                                        });
+                                    });
                                 }
 
-                                // Log transaction in reward_transactions
-                                db.query("INSERT INTO reward_transactions (user_id, points, reason) VALUES (?, ?, ?)", [user_id, 50, `Joined ${clubName} club`], (err) => {
+
+                                db.query("UPDATE users SET reward_points = reward_points + 50 WHERE id = ?", [user_id], (err) => {
                                     if (err) {
-                                        console.error("Transaction log error:", err);
+                                        console.error("Reward points error:", err);
+
                                     }
 
-                                    // Commit transaction
-                                    db.commit(err => {
+
+                                    db.query("INSERT INTO reward_transactions (user_id, points, reason) VALUES (?, ?, ?)", [user_id, 50, `Joined ${clubName} club`], (err) => {
                                         if (err) {
-                                            return db.rollback(() => {
-                                                console.error("Commit error:", err);
-                                                res.status(500).json({
-                                                    success: false,
-                                                    message: "Database error"
-                                                });
-                                            });
+                                            console.error("Transaction log error:", err);
                                         }
 
-                                        res.json({
-                                            success: true,
-                                            message: `Successfully joined ${clubName}! +50 points awarded!`,
-                                            membership: {
-                                                user_id: user_id,
-                                                club_id: club_id,
-                                                role: 'member',
-                                                status: 'active'
+
+                                        db.commit(err => {
+                                            if (err) {
+                                                return db.rollback(() => {
+                                                    console.error("Commit error:", err);
+                                                    res.status(500).json({
+                                                        success: false,
+                                                        message: "Database error"
+                                                    });
+                                                });
                                             }
+
+                                            res.json({
+                                                success: true,
+                                                message: `Successfully joined ${clubName}! +50 points awarded!`,
+                                                membership: {
+                                                    user_id: user_id,
+                                                    club_id: club_id,
+                                                    role: 'member',
+                                                    status: 'active'
+                                                }
+                                            });
                                         });
                                     });
                                 });
                             });
                         });
                     });
-                });
+                }
             });
         });
     });
 });
 
-// Get user's clubs (with role and status)
 app.get("/api/users/:user_id/clubs", (req, res) => {
     const userId = req.params.user_id;
 
@@ -1287,21 +1351,20 @@ app.get("/api/users/:user_id/clubs", (req, res) => {
         SELECT c.*, cm.joined_date, cm.role, cm.status 
         FROM clubs c 
         INNER JOIN club_members cm ON c.id = cm.club_id 
-        WHERE cm.user_id = ? 
+        WHERE cm.user_id = ? AND cm.status = 'active'
         ORDER BY cm.joined_date DESC
     `, [userId], (err, results) => {
         if (err) {
             console.error("Error fetching user clubs:", err);
             return res.status(500).json({
                 success: false,
-                message: "Database error"
+                message: "Database error: " + err.message
             });
         }
         res.json({ success: true, clubs: results });
     });
 });
 
-// Leave a club (soft delete - update status)
 app.delete("/api/clubs/leave", (req, res) => {
     const { user_id, club_id } = req.body;
 
@@ -1312,13 +1375,12 @@ app.delete("/api/clubs/leave", (req, res) => {
         });
     }
 
-    // Get current member count and check membership
     db.query("SELECT member_count FROM clubs WHERE id = ?", [club_id], (err, clubResults) => {
         if (err) {
             console.error("Error fetching club:", err);
             return res.status(500).json({
                 success: false,
-                message: "Database error"
+                message: "Database error: " + err.message
             });
         }
         if (clubResults.length === 0) {
@@ -1330,13 +1392,13 @@ app.delete("/api/clubs/leave", (req, res) => {
 
         const currentMemberCount = clubResults[0].member_count || 0;
 
-        // Check if member exists and is active
+
         db.query("SELECT id, role FROM club_members WHERE user_id = ? AND club_id = ? AND status = 'active'", [user_id, club_id], (err, membershipResults) => {
             if (err) {
                 console.error("Error checking membership:", err);
                 return res.status(500).json({
                     success: false,
-                    message: "Database error"
+                    message: "Database error: " + err.message
                 });
             }
 
@@ -1356,7 +1418,7 @@ app.delete("/api/clubs/leave", (req, res) => {
                     });
                 }
 
-                // Soft delete - update status to 'inactive' instead of deleting
+
                 db.query("UPDATE club_members SET status = 'inactive' WHERE user_id = ? AND club_id = ?", [user_id, club_id], (err) => {
                     if (err) {
                         return db.rollback(() => {
@@ -1368,7 +1430,7 @@ app.delete("/api/clubs/leave", (req, res) => {
                         });
                     }
 
-                    // Update member count (ensure it doesn't go negative)
+
                     const newCount = Math.max(0, currentMemberCount - 1);
                     db.query("UPDATE clubs SET member_count = ? WHERE id = ?", [newCount, club_id], (err) => {
                         if (err) {
@@ -1403,8 +1465,6 @@ app.delete("/api/clubs/leave", (req, res) => {
         });
     });
 });
-
-// Get club members (only active members)
 app.get("/api/clubs/:club_id/members", (req, res) => {
     const clubId = req.params.club_id;
 
@@ -1427,14 +1487,13 @@ app.get("/api/clubs/:club_id/members", (req, res) => {
             console.error("Error fetching members:", err);
             return res.status(500).json({
                 success: false,
-                message: "Database error"
+                message: "Database error: " + err.message
             });
         }
         res.json({ success: true, members: results });
     });
 });
 
-// Update member role (for club leaders/admin)
 app.put("/api/clubs/update-member-role", (req, res) => {
     const { user_id, club_id, new_role } = req.body;
 
@@ -1445,13 +1504,12 @@ app.put("/api/clubs/update-member-role", (req, res) => {
         });
     }
 
-    // Check if user is a member
     db.query("SELECT id FROM club_members WHERE user_id = ? AND club_id = ? AND status = 'active'", [user_id, club_id], (err, results) => {
         if (err) {
             console.error("Error checking membership:", err);
             return res.status(500).json({
                 success: false,
-                message: "Database error"
+                message: "Database error: " + err.message
             });
         }
 
@@ -1462,7 +1520,7 @@ app.put("/api/clubs/update-member-role", (req, res) => {
             });
         }
 
-        // Update role
+
         db.query("UPDATE club_members SET role = ? WHERE user_id = ? AND club_id = ?", [new_role, user_id, club_id], (err) => {
             if (err) {
                 console.error("Error updating role:", err);
@@ -1480,7 +1538,6 @@ app.put("/api/clubs/update-member-role", (req, res) => {
     });
 });
 
-// Get club details with full information
 app.get("/api/clubs/:club_id/details", (req, res) => {
     const clubId = req.params.club_id;
 
@@ -1489,7 +1546,8 @@ app.get("/api/clubs/:club_id/details", (req, res) => {
                COUNT(DISTINCT cm.user_id) as active_members,
                SUM(CASE WHEN cm.role = 'president' THEN 1 ELSE 0 END) as presidents,
                SUM(CASE WHEN cm.role = 'vice_president' THEN 1 ELSE 0 END) as vice_presidents,
-               (SELECT COUNT(*) FROM events WHERE category = c.category) as related_events
+               SUM(CASE WHEN cm.role = 'secretary' THEN 1 ELSE 0 END) as secretaries,
+               SUM(CASE WHEN cm.role = 'treasurer' THEN 1 ELSE 0 END) as treasurers
         FROM clubs c
         LEFT JOIN club_members cm ON c.id = cm.club_id AND cm.status = 'active'
         WHERE c.id = ?
@@ -1499,7 +1557,7 @@ app.get("/api/clubs/:club_id/details", (req, res) => {
             console.error("Error fetching club details:", err);
             return res.status(500).json({
                 success: false,
-                message: "Database error"
+                message: "Database error: " + err.message
             });
         }
         if (results.length === 0) {
@@ -1512,7 +1570,6 @@ app.get("/api/clubs/:club_id/details", (req, res) => {
     });
 });
 
-// Get club statistics
 app.get("/api/clubs/statistics", (req, res) => {
     db.query(`
         SELECT 
@@ -1528,10 +1585,59 @@ app.get("/api/clubs/statistics", (req, res) => {
             console.error("Error fetching club statistics:", err);
             return res.status(500).json({
                 success: false,
-                message: "Database error"
+                message: "Database error: " + err.message
             });
         }
         res.json({ success: true, statistics: results });
+    });
+});
+
+app.get("/api/users/:user_id", (req, res) => {
+    const userId = req.params.user_id;
+
+    db.query("SELECT id, first_name, last_name, email, reward_points FROM users WHERE id = ?", [userId], (err, results) => {
+        if (err) {
+            console.error("Error fetching user:", err);
+            return res.status(500).json({
+                success: false,
+                message: "Database error: " + err.message
+            });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+        res.json({ success: true, user: results[0] });
+    });
+});
+
+app.get("/api/users", (req, res) => {
+    const { index_no } = req.query;
+
+    if (!index_no) {
+        return res.status(400).json({
+            success: false,
+            message: "Index number is required"
+        });
+    }
+
+    db.query("SELECT id, first_name, last_name, email, reward_points FROM users WHERE index_no = ?", [index_no], (err, results) => {
+        if (err) {
+            console.error("Error fetching user:", err);
+            return res.status(500).json({
+                success: false,
+                message: "Database error: " + err.message
+            });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+        res.json({ success: true, user: results[0] });
     });
 });
 

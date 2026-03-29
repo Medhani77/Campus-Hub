@@ -784,8 +784,8 @@
     </footer>
 
     <script>
+        // API Configuration
         const API_BASE = 'http://localhost:5500/api';
-
         let clubsData = [];
         let currentUserId = null;
 
@@ -857,44 +857,39 @@
         function loadDemoClubs() {
             clubsData = [{
                 id: 1,
-                name: 'Athletic Club',
+                club_name: 'Athletic Club',
                 category: 'Sports',
                 description: 'Sports and Fitness Club',
                 member_count: 280,
-                image: 'athletic.jpg',
-                created_at: new Date().toISOString()
+                image: 'athletic.jpg'
             }, {
                 id: 2,
-                name: 'Aesthetic Club',
+                club_name: 'Aesthetic Club',
                 category: 'Arts',
                 description: 'Arts and Culture Club',
                 member_count: 160,
-                image: 'aesthetic.jpg',
-                created_at: new Date().toISOString()
+                image: 'aesthetic.jpg'
             }, {
                 id: 3,
-                name: 'AIESEC',
+                club_name: 'AIESEC',
                 category: 'Leadership',
                 description: 'Global Leadership Organization',
                 member_count: 120,
-                image: 'aiesec.jpg',
-                created_at: new Date().toISOString()
+                image: 'aiesec.jpg'
             }, {
                 id: 4,
-                name: 'LEO Club',
+                club_name: 'LEO Club',
                 category: 'Service',
                 description: 'Community Service Club',
                 member_count: 95,
-                image: 'leo.jpg',
-                created_at: new Date().toISOString()
+                image: 'leo.jpg'
             }, {
                 id: 5,
-                name: 'IEEE Club',
+                club_name: 'IEEE Club',
                 category: 'Technology',
                 description: 'Engineering and Technology Club',
                 member_count: 140,
-                image: 'ieee.jpg',
-                created_at: new Date().toISOString()
+                image: 'ieee.jpg'
             }];
         }
 
@@ -922,17 +917,17 @@
             // Render tabs
             tabsContainer.innerHTML = clubsData.map((club, idx) => `
                 <div class="cit ${idx === 0 ? 'active' : ''}" data-club-id="${club.id}" onclick="showClub(${club.id})">
-                    <img src="${club.image || club.name.toLowerCase().replace(/[ &]/g, '_') + '.jpg'}" 
-                         alt="${club.name}" 
-                         onerror="this.src='https://placehold.co/300x400/F97316/white?text=${club.name.charAt(0)}'">
+                    <img src="${club.image || club.club_name.toLowerCase().replace(/[ &]/g, '_') + '.jpg'}" 
+                         alt="${club.club_name}" 
+                         onerror="this.src='https://placehold.co/300x400/F97316/white?text=${club.club_name.charAt(0)}'">
                     <div class="cit-overlay"></div>
-                    <div class="cit-label">${escapeHtml(club.name)}</div>
+                    <div class="cit-label">${escapeHtml(club.club_name)}</div>
                 </div>
             `).join('');
 
             // Render panels
             panelsContainer.innerHTML = clubsData.map((club, idx) => {
-                const details = clubDetailsMap[club.name] || {
+                const details = clubDetailsMap[club.club_name] || {
                     tag: club.category,
                     category: club.category,
                     desc: club.description || 'Join our community and make new friends!'
@@ -942,13 +937,13 @@
                     <div class="club-panel ${idx === 0 ? 'active' : ''}" id="panel-${club.id}">
                         <div class="club-detail">
                             <div class="cd-img">
-                                <img src="${club.image || club.name.toLowerCase().replace(/[ &]/g, '_') + '.jpg'}" 
-                                     alt="${club.name}" 
-                                     onerror="this.src='https://placehold.co/600x400/F97316/white?text=${club.name}'">
+                                <img src="${club.image || club.club_name.toLowerCase().replace(/[ &]/g, '_') + '.jpg'}" 
+                                     alt="${club.club_name}" 
+                                     onerror="this.src='https://placehold.co/600x400/F97316/white?text=${club.club_name}'">
                             </div>
                             <div class="cd-info">
                                 <span class="cd-tag">${escapeHtml(details.tag)}</span>
-                                <div class="cd-name">${escapeHtml(club.name)}</div>
+                                <div class="cd-name">${escapeHtml(club.club_name)}</div>
                                 <div class="cd-category">${escapeHtml(details.category)}</div>
                                 <p class="cd-desc">${escapeHtml(details.desc)}</p>
                                 <div class="cd-stats">
@@ -956,13 +951,13 @@
                                     <div class="cd-stat"><div class="v">Monthly</div><div class="k">Events</div></div>
                                     <div class="cd-stat"><div class="v">Free</div><div class="k">To Join</div></div>
                                 </div>
-                                <button class="btn-join-main" onclick="scrollToForm(${club.id})">Join ${escapeHtml(club.name)}</button>
+                                <button class="btn-join-main" onclick="scrollToForm(${club.id})">Join ${escapeHtml(club.club_name)}</button>
                             </div>
                         </div>
                         <div class="join-form-wrap" id="form-${club.id}">
-                            <h3>Join ${escapeHtml(club.name)}</h3>
+                            <h3>Join ${escapeHtml(club.club_name)}</h3>
                             <p class="jf-sub">Fill in the form below to apply for membership. Our coordinator will contact you within 48 hours.</p>
-                            <form onsubmit="submitJoin(event, ${club.id}, '${escapeHtml(club.name)}')">
+                            <form onsubmit="submitJoin(event, ${club.id}, '${escapeHtml(club.club_name)}')">
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label>Full Name *</label>
@@ -996,7 +991,7 @@
 
             // Update footer club list
             if (footerList) {
-                footerList.innerHTML = clubsData.map(club => `<li>${escapeHtml(club.name)}</li>`).join('');
+                footerList.innerHTML = clubsData.map(club => `<li>${escapeHtml(club.club_name)}</li>`).join('');
             }
         }
 
@@ -1030,7 +1025,6 @@
             const userId = parseInt(document.getElementById(`userid-${clubId}`).value);
             const fullName = document.getElementById(`name-${clubId}`).value.trim();
             const email = document.getElementById(`email-${clubId}`).value.trim();
-            const motivation = document.getElementById(`motivation-${clubId}`).value.trim();
 
             if (!userId || !fullName || !email) {
                 showToast('Missing Information', 'Please fill in all required fields marked with *', 'error');
@@ -1130,8 +1124,6 @@
                 toast.classList.remove('error');
                 if (type === 'error') {
                     toast.classList.add('error');
-                } else {
-                    toast.classList.remove('error');
                 }
 
                 toast.classList.add('show');
