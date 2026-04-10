@@ -1,6 +1,8 @@
 # 🎓 ORYN Campus Hub
 
-> *A comprehensive student campus management portal* — providing a unified digital space for campus bookings, events, services, and community engagement.
+A comprehensive student campus management portal — providing a unified digital space for campus bookings, events, services, and community engagement.
+
+![Status](https://img.shields.io/badge/Status-Complete-brightgreen) ![Version](https://img.shields.io/badge/Version-2.0.0-blue) ![License](https://img.shields.io/badge/License-Academic-orange)
 
 ---
 
@@ -11,10 +13,6 @@
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Database Setup](#database-setup)
-  - [Running the App](#running-the-app)
 - [API Endpoints](#api-endpoints)
 - [Team](#team)
 - [Project Management](#project-management)
@@ -25,364 +23,398 @@
 
 ## 🏫 About the Project
 
-*ORYN Campus Hub* is an MVP web application developed as part of the *5CS024 module* collaborative software development project. The platform serves as a one-stop digital hub for university students, enabling them to access campus facilities, book resources, stay informed about events, and engage with campus services — all from a single interface.
+**ORYN Campus Hub** is a fully completed web application developed as part of the **5CS024 — Collaborative Software Development** module. The platform serves as a one-stop digital hub for university students, enabling them to access campus facilities, book resources, stay informed about events, and engage with campus services — all from a single interface.
 
-The system is built with a *Node.js/Express backend, a **MySQL relational database, and a **vanilla HTML/CSS/JavaScript frontend*.
+The system is built with a **Node.js/Express** backend, a **MySQL** relational database, and a **vanilla HTML/CSS/JavaScript** frontend. Both Sprint 1 and Sprint 2 have been successfully delivered, including JWT authentication, secure password hashing, a fully functional booking system, student dashboard, admin panel, and rewards backend.
 
 ---
 
 ## ✨ Features
 
-| Module | Description |
-|--------|-------------|
-| 🏠 *Home Portal* | Central landing page with navigation to all campus services |
-| 🔐 *Student Login* | Secure student authentication portal |
-| 📝 *Student Registration* | Full student account creation with personal and academic details |
-| 📅 *Facility Booking* | Book campus facilities (sports halls, labs, meeting rooms, study spaces) and register for events |
-| 🎉 *Campus Events* | Browse and register for upcoming campus events |
-| 📚 *Digital Library* | Access library resources, extend loans, and reserve study rooms |
-| ☕ *ORYN Café* | View the campus café menu — main dishes, snacks, hot drinks, and desserts |
-| 🏋️ *Fitness Centre* | Explore gym facilities and fitness class schedules |
-| 🏛️ *Clubs & Societies* | Discover and join student clubs and societies |
-| 🗺️ *Campus Map* | Interactive campus navigation and building directory |
-| 🚌 *Transit* | Campus bus routes and transport schedules |
-| 🛒 *Marketplace* | Student peer-to-peer marketplace for buying and selling items |
-| 🎁 *Rewards* | Student loyalty rewards and points system |
-| 💼 *Careers* | Internship listings and career opportunity board |
-| 💬 *Social Feedback* | Student feedback and social interaction module |
-| ℹ️ *About* | Campus information and university overview |
+| Module | Description | Status |
+|---|---|---|
+| 🏠 Home Portal | Central landing page with navigation to all campus services | ✅ Complete |
+| 🔐 Student Login | Secure JWT-authenticated student login | ✅ Complete |
+| 📝 Student Registration | Full student account creation with personal and academic details | ✅ Complete |
+| 📅 Facility Booking | Book campus facilities and register for events (full API) | ✅ Complete |
+| 🎉 Campus Events | Browse and register for upcoming campus events | ✅ Complete |
+| 📚 Digital Library | Access library resources, extend loans, reserve study rooms | ✅ Complete |
+| ☕ ORYN Café | View the campus café menu — main dishes, snacks, hot drinks, desserts | ✅ Complete |
+| 🏋️ Fitness Centre | Explore gym facilities and fitness class schedules | ✅ Complete |
+| 🏛️ Clubs & Societies | Discover and join student clubs and societies | ✅ Complete |
+| 🗺️ Campus Map | Interactive campus navigation and building directory | ✅ Complete |
+| 🚌 Transit | Campus bus routes and transport schedules | ✅ Complete |
+| 🛒 Marketplace | Student peer-to-peer marketplace for buying and selling items | ✅ Complete |
+| 🎁 Rewards | Student loyalty rewards and points system (with backend) | ✅ Complete |
+| 💼 Careers | Internship listings and career opportunity board | ✅ Complete |
+| 💬 Social Feedback | Student feedback and social interaction module | ✅ Complete |
+| 🧑‍💼 Student Dashboard | Personalised dashboard showing bookings, rewards, and profile | ✅ Complete |
+| 🛡️ Admin Panel | Admin interface for managing students, bookings, and events | ✅ Complete |
+| ℹ️ About | Campus information and university overview | ✅ Complete |
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Backend
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
-![Express](https://img.shields.io/badge/Express.js-000000?style=flat&logo=express&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
 
 | Technology | Purpose |
-|-----------|---------|
-| *Node.js* | Server-side JavaScript runtime |
-| *Express.js* | REST API framework and middleware |
-| *MySQL* | Relational database for student and booking data |
-| *mysql2* | Node.js MySQL client with connection pooling |
-| *cors* | Cross-Origin Resource Sharing middleware |
+|---|---|
+| Node.js | Server-side JavaScript runtime |
+| Express.js | REST API framework and middleware |
+| MySQL | Relational database for student and booking data |
+| mysql2 | Node.js MySQL client with connection pooling |
+| jsonwebtoken | JWT-based authentication |
+| bcrypt | Secure password hashing |
+| cors | Cross-Origin Resource Sharing middleware |
+| dotenv | Environment variable management |
 
 ### Frontend
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
 
 | Technology | Purpose |
-|-----------|---------|
-| *HTML5* | Page structure and UI layout |
-| *CSS3* | Styling, animations, responsive design |
-| *Vanilla JavaScript* | Client-side interactivity and API calls |
-| *Google Fonts* | Typography (Inter, Plus Jakarta Sans, Fraunces, Playfair Display) |
+|---|---|
+| HTML5 | Page structure and UI layout |
+| CSS3 | Styling, animations, responsive design |
+| Vanilla JavaScript | Client-side interactivity and API calls |
+| Google Fonts | Typography (Inter, Plus Jakarta Sans, Fraunces, Playfair Display) |
 
 ### Development Tools
-| Tool | Purpose |
-|------|---------|
-| *VS Code* | Primary code editor |
-| *Postman* | API testing and endpoint verification |
-| *GitHub* | Version control and source code management |
 
-### Project Management Tools
 | Tool | Purpose |
-|------|---------|
-| *Jira* | Sprint planning, issue tracking, velocity reporting |
-| *Trello* | Visual Kanban board for task management |
-| *Basecamp* | Team communication, file sharing, meeting notes |
-| *Excel* | Sprint progress tracker and workload distribution |
-| *Google Forms* | Weekly team check-in surveys |
+|---|---|
+| VS Code | Primary code editor |
+| Postman | API testing and endpoint verification |
+| GitHub | Version control and source code management |
 
 ---
 
 ## 📁 Project Structure
 
-
+```
 oryn-campus-hub/
 │
-├── frontend/                    # All HTML/CSS/JS frontend pages
-
-│   ├── home.html                # Main student portal landing page
-
-│   ├── student-login.html       # Student login page
-
-│   ├── Register.html            # Student registration page
-
-│   ├── Booking.html             # Facility booking & event registration
-
-│   ├── Events.html              # Campus events listing
-
-│   ├── LIBRARY.html             # Digital library module
-
-│   ├── Cafe.html                # Campus café menu
-
-│   ├── fitness.html             # Fitness centre information
-
-│   ├── clubs.html               # Student clubs & societies
-
-│   ├── map.html                 # Campus map
-
-│   ├── transit.html             # Campus transport
-
-│   ├── Marketplace.html         # Student marketplace
-
-│   ├── REWARD.html              # Loyalty rewards system
-
-│   ├── careers.html             # Careers & internships board
-
-│   ├── social_feedback.html     # Social feedback module
-
-│   ├── About.html               # About the campus
-
-│   └── assets/                  # Images and media files
+├── frontend/                      # All HTML/CSS/JS frontend pages
+│   ├── home.html                  # Main student portal landing page
+│   ├── student-login.html         # Student login page
+│   ├── Register.html              # Student registration page
+│   ├── Booking.html               # Facility booking & event registration
+│   ├── Events.html                # Campus events listing
+│   ├── LIBRARY.html               # Digital library module
+│   ├── Cafe.html                  # Campus café menu
+│   ├── fitness.html               # Fitness centre information
+│   ├── clubs.html                 # Student clubs & societies
+│   ├── map.html                   # Campus map
+│   ├── transit.html               # Campus transport
+│   ├── Marketplace.html           # Student marketplace
+│   ├── REWARD.html                # Loyalty rewards system
+│   ├── careers.html               # Careers & internships board
+│   ├── social_feedback.html       # Social feedback module
+│   ├── dashboard.html             # Student dashboard
+│   ├── admin.html                 # Admin panel
+│   ├── About.html                 # About the campus
+│   └── assets/                    # Images and media files
 │
-├── backend/                     # Node.js / Express server
-
-│   ├── server.js                # Main Express application entry point
-
-│   ├── routes/                  # API route handlers
-
-│   │   ├── auth.js              # Login / registration routes
-
-│   │   └── booking.js           # Booking routes
-
+├── backend/                       # Node.js / Express server
+│   ├── server.js                  # Main Express application entry point
+│   ├── middleware/
+│   │   └── auth.js                # JWT verification middleware
+│   ├── routes/
+│   │   ├── auth.js                # Login / registration routes
+│   │   ├── booking.js             # Booking routes (POST/GET)
+│   │   ├── rewards.js             # Rewards system routes
+│   │   └── admin.js               # Admin panel routes
 │   ├── db/
-
-│   │   └── connection.js        # MySQL connection pool setup
-
-│   └── package.json             # Node dependencies
-
+│   │   └── connection.js          # MySQL connection pool setup
+│   └── package.json               # Node dependencies
 │
 ├── database/
-
-│   └── schema.sql               # MySQL database schema
-
+│   └── schema.sql                 # MySQL database schema
 │
-└── README.md                    # This file
+└── README.md                      # This file
+```
 
-
------------------
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-Make sure you have the following installed on your machine:
+Make sure you have the following installed:
 
-- [Node.js](https://nodejs.org/) (v16 or higher)
-- [MySQL](https://www.mysql.com/) (v8.0 or higher)
-- [Git](https://git-scm.com/)
-- A code editor — [VS Code](https://code.visualstudio.com/) recommended
-
----
+- **Node.js** (v16 or higher)
+- **MySQL** (v8.0 or higher)
+- **Git**
+- A code editor — VS Code recommended
 
 ### Installation
 
-*1. Clone the repository*
+**1. Clone the repository**
 
-bash
+```bash
 git clone https://github.com/YOUR_USERNAME/oryn-campus-hub.git
 cd oryn-campus-hub
+```
 
+**2. Install backend dependencies**
 
-*2. Install backend dependencies*
-
-bash
+```bash
 cd backend
 npm install
-
+```
 
 The following packages will be installed:
 
-
-express
-mysql2
-cors
-dotenv
-
-
----
+```
+express  mysql2  cors  dotenv  jsonwebtoken  bcrypt
+```
 
 ### Database Setup
 
-*1. Start your MySQL server and log in*
+**1. Start your MySQL server and log in**
 
-bash
+```bash
 mysql -u root -p
+```
 
+**2. Create the database**
 
-*2. Create the database*
-
-sql
+```sql
 CREATE DATABASE oryn_campus_hub;
 USE oryn_campus_hub;
+```
 
+**3. Run the schema file**
 
-*3. Run the schema file*
-
-bash
+```bash
 mysql -u root -p oryn_campus_hub < database/schema.sql
+```
 
+**4. Database schema overview**
 
-*4. The students table schema:*
-
-sql
+```sql
+-- Students table
 CREATE TABLE students (
   id          INT AUTO_INCREMENT PRIMARY KEY,
-  fullName    VARCHAR(100)  NOT NULL,
-  email       VARCHAR(100)  NOT NULL UNIQUE,
+  fullName    VARCHAR(100) NOT NULL,
+  email       VARCHAR(100) NOT NULL UNIQUE,
   mobile      VARCHAR(20),
   nic         VARCHAR(20),
   address     TEXT,
-  indexNo     VARCHAR(30)   NOT NULL UNIQUE,
+  indexNo     VARCHAR(30) NOT NULL UNIQUE,
   faculty     VARCHAR(100),
   programme   VARCHAR(100),
   year        VARCHAR(10),
-  username    VARCHAR(50)   NOT NULL UNIQUE,
-  password    VARCHAR(255)  NOT NULL,
+  username    VARCHAR(50) NOT NULL UNIQUE,
+  password    VARCHAR(255) NOT NULL,          -- bcrypt hashed
   dob         DATE,
   gender      VARCHAR(20),
   createdAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Bookings table
+CREATE TABLE bookings (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  studentId   INT NOT NULL,
+  facilityId  INT NOT NULL,
+  date        DATE NOT NULL,
+  time        VARCHAR(20) NOT NULL,
+  status      ENUM('pending','confirmed','cancelled') DEFAULT 'pending',
+  createdAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (studentId) REFERENCES students(id)
+);
 
-> ⚠️ *Security Note:* Password hashing (bcrypt) will be implemented in Sprint 2. Do *not* deploy with plain-text passwords in production.
+-- Rewards table
+CREATE TABLE rewards (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  studentId   INT NOT NULL UNIQUE,
+  points      INT DEFAULT 0,
+  tier        ENUM('Bronze','Silver','Gold','Platinum') DEFAULT 'Bronze',
+  updatedAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (studentId) REFERENCES students(id)
+);
+```
 
-*5. Configure environment variables*
+**5. Configure environment variables**
 
-Create a .env file in the backend/ directory:
+Create a `.env` file in the `backend/` directory:
 
-env
+```env
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=your_mysql_password
 DB_NAME=oryn_campus_hub
 PORT=3000
+JWT_SECRET=your_jwt_secret_key
+```
 
-
-> ⚠️ *Important:* Never commit your .env file. It is listed in .gitignore.
-
----
+> ⚠️ **Important:** Never commit your `.env` file. It is listed in `.gitignore`.
 
 ### Running the App
 
-*1. Start the backend server*
+**1. Start the backend server**
 
-bash
+```bash
 cd backend
 node server.js
-
+```
 
 You should see:
 
-
+```
 Server running on http://localhost:3000
 Connected to MySQL database: oryn_campus_hub
+```
 
+**2. Open the frontend**
 
-*2. Open the frontend*
+Open any HTML file directly in your browser, or use the **Live Server** extension in VS Code:
 
-Open any HTML file directly in your browser, or use a local server extension such as *Live Server* (VS Code):
+```
+frontend/home.html → Open with Live Server
+```
 
-
-frontend/home.html  →  Open with Live Server
-
-
-> The frontend connects to the backend at http://localhost:3000.
+The frontend connects to the backend at `http://localhost:3000`.
 
 ---
 
 ## 🔌 API Endpoints
 
-Base URL: http://localhost:3000
+**Base URL:** `http://localhost:3000`
 
-| Method | Endpoint | Description | Request Body |
-|--------|----------|-------------|-------------|
-| POST | /register | Register a new student | { fullName, email, mobile, nic, address, indexNo, faculty, programme, year, username, password, dob, gender } |
-| POST | /login | Student login (Sprint 2) | { username, password } |
-| POST | /booking | Create a facility booking (Sprint 2) | { studentId, facilityId, date, time } |
-| GET  | /bookings/:id | Get bookings for a student (Sprint 2) | — |
+### Auth Routes
 
-### Example — Register Student
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| POST | `/register` | Register a new student | ❌ |
+| POST | `/login` | Student login — returns JWT token | ❌ |
 
-*Request:*
-http
-POST /register
+### Booking Routes
+
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| POST | `/booking` | Create a facility booking | ✅ JWT |
+| GET | `/bookings/:id` | Get all bookings for a student | ✅ JWT |
+| PUT | `/booking/:id/cancel` | Cancel a booking | ✅ JWT |
+
+### Rewards Routes
+
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| GET | `/rewards/:id` | Get rewards points and tier for a student | ✅ JWT |
+| POST | `/rewards/:id/add` | Add points to a student's account | ✅ JWT |
+
+### Admin Routes
+
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| GET | `/admin/students` | List all registered students | ✅ Admin JWT |
+| GET | `/admin/bookings` | List all bookings | ✅ Admin JWT |
+| DELETE | `/admin/student/:id` | Remove a student | ✅ Admin JWT |
+
+---
+
+### Example — Login Student
+
+**Request:**
+```http
+POST /login
 Content-Type: application/json
 
 {
-  "fullName": "Medhani Niwoda",
-  "email": "medhani@university.ac.lk",
-  "mobile": "0771234567",
-  "indexNo": "CS2021001",
-  "faculty": "Computing",
-  "programme": "BSc Computer Science",
-  "year": "2",
   "username": "medhani21",
-  "password": "securepassword",
-  "dob": "2002-05-14",
-  "gender": "Female"
+  "password": "securepassword"
 }
+```
 
-
-*Response (Success):*
-json
+**Response (Success):**
+```json
 {
   "success": true,
-  "message": "Student registered successfully"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "student": {
+    "id": 1,
+    "fullName": "Medhani Niwoda",
+    "indexNo": "CS2021001",
+    "faculty": "Computing"
+  }
 }
+```
 
-
-*Response (Error):*
-json
+**Response (Error):**
+```json
 {
   "success": false,
-  "message": "Username or email already exists"
+  "message": "Invalid username or password"
 }
+```
 
+---
+
+### Example — Create Booking
+
+**Request:**
+```http
+POST /booking
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "studentId": 1,
+  "facilityId": 3,
+  "date": "2024-05-20",
+  "time": "10:00"
+}
+```
+
+**Response (Success):**
+```json
+{
+  "success": true,
+  "message": "Booking confirmed",
+  "bookingId": 42
+}
+```
 
 ---
 
 ## 👥 Team
 
 | Name | Role |
-|------|------|
-| *Medhani Niwoda* | 📋 Project Manager |
-| *Pulindu Balasooriya* | ⚙️ Backend Developer |
-| *Saduni Priyalakshi* | 🎨 Frontend Developer |
-| *Dewmi Umegha* | 🧪 QA Tester |
-| *Udara Nethmi* | 🗄️ Database Administrator |
-| *Ginuka Weragoda* | 📊 Business Analyst |
+|---|---|
+| Medhani Niwoda | 📋 Project Manager |
+| Pulindu Balasooriya | ⚙️ Backend Developer |
+| Saduni Priyalakshi | 🎨 Frontend Developer |
+| Dewmi Umegha | 🧪 QA Tester |
+| Udara Nethmi | 🗄️ Database Administrator |
+| Ginuka Weragoda | 📊 Business Analyst |
 
 ---
 
 ## 📊 Project Management
 
-This project follows an *Agile Sprint methodology*.
+This project follows an **Agile Sprint** methodology across two completed sprints.
 
 | Tool | Usage |
-|------|-------|
-| [Jira](https://jira.atlassian.com) | Sprint planning, issue tracking, velocity |
-| [Trello](https://trello.com) | Kanban task board |
-| [Basecamp](https://basecamp.com) | Team communication & file sharing |
-| [GitHub](https://github.com) | Version control, pull requests, issues |
+|---|---|
+| Jira | Sprint planning, issue tracking, velocity |
+| Trello | Kanban task board |
+| Basecamp | Team communication & file sharing |
+| GitHub | Version control, pull requests, issues |
 
 ### Branching Strategy
 
+```
+main        ← stable, release-ready code
+├── dev     ← integration branch
+│   ├── feature/jwt-authentication
+│   ├── feature/booking-api
+│   ├── feature/student-dashboard
+│   ├── feature/admin-panel
+│   ├── feature/rewards-backend
+│   └── fix/password-hashing
+```
 
-main          ← stable, demo-ready code only
-├── dev       ← integration branch
-│   ├── feature/registration-api
-│   ├── feature/booking-ui
-│   ├── feature/login-page
-│   └── fix/cors-config
-
-
-> All feature work is done on feature branches. PRs must be reviewed before merging into dev. main is only updated before demos.
+All feature work is done on feature branches. PRs must be reviewed before merging into `dev`. `main` is only updated for releases and demos.
 
 ---
 
@@ -391,7 +423,7 @@ main          ← stable, demo-ready code only
 ### Sprint 1 — ✅ Complete
 
 | Feature | Status |
-|---------|--------|
+|---|---|
 | Student Registration (Frontend) | ✅ Done |
 | Student Registration (Backend API) | ✅ Done |
 | MySQL Database Setup | ✅ Done |
@@ -403,25 +435,26 @@ main          ← stable, demo-ready code only
 | Library Page | ✅ Done |
 | Clubs & Societies Page | ✅ Done |
 
-### Sprint 2 — 🔄 Planned
+### Sprint 2 — ✅ Complete
 
 | Feature | Status |
-|---------|--------|
-| JWT Authentication | 🔄 Planned |
-| Password Hashing (bcrypt) | 🔄 Planned |
-| Booking API (POST/GET) | 🔄 Planned |
-| Student Dashboard | 🔄 Planned |
-| Admin Panel | 🔄 Planned |
-| Rewards System Backend | 🔄 Planned |
+|---|---|
+| JWT Authentication | ✅ Done |
+| Password Hashing (bcrypt) | ✅ Done |
+| Booking API (POST / GET / Cancel) | ✅ Done |
+| Student Dashboard | ✅ Done |
+| Admin Panel | ✅ Done |
+| Rewards System Backend | ✅ Done |
+| Auth Middleware (route protection) | ✅ Done |
+| Full API Integration (Frontend ↔ Backend) | ✅ Done |
+| End-to-End Testing (QA) | ✅ Done |
 
 ---
 
 ## 📄 License
 
-This project was developed for academic purposes as part of *5CS024 — Collaborative Software Development*.
+This project was developed for academic purposes as part of **5CS024 — Collaborative Software Development**.
 
 ---
 
-<div align="center">
-  <strong>ORYN Campus Hub</strong> · Built with ❤️ by Medhani · Pulindu · Saduni · Dewmi · Udara · Ginuka · 5CS024 MVP Sprint 1
-</div>
+> ORYN Campus Hub · Built with ❤️ by **Medhani · Pulindu · Saduni · Dewmi · Udara · Ginuka** · 5CS024 · Final Release
