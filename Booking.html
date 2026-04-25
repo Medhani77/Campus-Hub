@@ -781,10 +781,8 @@
             <button class="tab-btn" onclick="switchTab('events')">Events</button>
         </div>
 
-        <!-- All Facilities Panel -->
         <div id="panel-all" class="tab-panel active">
             <div class="facilities-grid" id="facilitiesGrid">
-                <!-- Facilities will be dynamically loaded from database -->
             </div>
         </div>
         <div id="panel-labs" class="tab-panel">
@@ -804,7 +802,6 @@
         </div>
     </div>
 
-    <!-- Facility Booking Modal -->
     <div class="modal-overlay" id="bookingModal">
         <div class="modal">
             <button class="modal-close" onclick="closeModal()">X</button>
@@ -828,8 +825,6 @@
             </form>
         </div>
     </div>
-
-    <!-- Event Registration Modal -->
     <div class="modal-overlay" id="eventModal">
         <div class="modal">
             <button class="modal-close" onclick="closeEventModal()">X</button>
@@ -865,13 +860,11 @@
     </footer>
 
     <script>
-        // API Base URL
         const API_BASE = 'http://localhost:5500/api';
 
         let facilitiesData = [];
         let eventsData = [];
 
-        // Function to fetch facilities from database
         async function fetchFacilities() {
             try {
                 const response = await fetch(`${API_BASE}/facilities`);
@@ -890,7 +883,6 @@
             }
         }
 
-        // Function to fetch events from database
         async function fetchEvents() {
             try {
                 const response = await fetch(`${API_BASE}/events`);
@@ -909,7 +901,6 @@
             }
         }
 
-        // Fallback data if backend not available
         function useFallbackFacilities() {
             facilitiesData = [{
                 id: 1,
@@ -1196,7 +1187,6 @@
                     showToast(`✅ ${result.message}`, 'success');
                     closeEventModal();
                     document.getElementById('eventForm').reset();
-                    // Refresh events to update registration count
                     await fetchEvents();
                 } else {
                     showToast(`❌ Registration failed: ${result.message || 'Unknown error'}`, 'error');
@@ -1226,7 +1216,6 @@
             setTimeout(() => toast.classList.remove('show'), 4500);
         }
 
-        // Tab switching
         function switchTab(tabId) {
             const panels = ['all', 'labs', 'rooms', 'sports', 'venues', 'events'];
             panels.forEach(id => {
@@ -1234,8 +1223,6 @@
                 if (panel) panel.classList.remove('active');
             });
             document.getElementById(`panel-${tabId}`).classList.add('active');
-
-            // Update button active states
             document.querySelectorAll('.tab-btn').forEach((btn) => {
                 const btnText = btn.innerText.toLowerCase();
                 if ((tabId === 'all' && btnText === 'all') || (tabId === btnText) || (tabId === 'venues' && btnText === 'venues')) {
@@ -1245,7 +1232,6 @@
                 }
             });
 
-            // Render appropriate content
             if (tabId === 'events') {
                 renderEvents();
             } else {
@@ -1253,7 +1239,6 @@
             }
         }
 
-        // Slideshow
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
         const dots = document.querySelectorAll('.dot');
@@ -1274,12 +1259,9 @@
             showSlide(currentSlide + 1);
         }, 5500);
 
-        // Modal click outside close
         document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', function(e) {
             if (e.target === this) this.classList.remove('active');
         }));
-
-        // Check backend connection on load
         async function checkBackend() {
             try {
                 const res = await fetch(`${API_BASE}/test`);
@@ -1294,17 +1276,14 @@
             }
         }
 
-        // Initialize page
         async function init() {
             await checkBackend();
             await fetchFacilities();
             await fetchEvents();
         }
 
-        // Set default date to today in booking modal
         document.getElementById('bookingDate').valueAsDate = new Date();
 
-        // Start the app
         init();
     </script>
 </body>
